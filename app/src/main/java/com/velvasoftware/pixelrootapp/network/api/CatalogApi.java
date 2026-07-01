@@ -46,4 +46,8 @@ public interface CatalogApi {
     // GET /api/juegos/plataformas
     @GET("juegos/plataformas")
     Call<ApiResponse<List<Platform>>> getPlatforms();
+
+    // GET /api/juegos/buscar?q=texto&pagina=1
+    @GET("juegos/buscar")
+    Call<ApiResponse<GamesPageResponse>> buscarJuegos(@Query("q") String query, @Query("pagina") int pagina);
 }
