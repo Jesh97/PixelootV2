@@ -1,9 +1,11 @@
 package com.velvasoftware.pixelrootapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,17 +15,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.velvasoftware.pixelrootapp.databinding.FragmentCartBinding;
 import com.velvasoftware.pixelrootapp.databinding.ItemCartProductBinding;
-import com.velvasoftware.pixelrootapp.models.Product;
+import com.velvasoftware.pixelrootapp.models.CartItem;
+import com.velvasoftware.pixelrootapp.network.api.CartApi;
+import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
+import com.velvasoftware.pixelrootapp.network.request.UpdateCartRequest;
+import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
+import com.velvasoftware.pixelrootapp.network.response.CartResponse;
 import com.velvasoftware.pixelrootapp.ui.common.GenericAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CartFragment extends Fragment {
 
     private FragmentCartBinding binding;
-    private GenericAdapter<ItemCartProductBinding, Product> adapter;
-    private List<Product> cartItems = new ArrayList<>();
+    private GenericAdapter<ItemCartProductBinding, CartItem> adapter;
+    private final List<CartItem> cartItems = new ArrayList<>();
 
     public CartFragment() {}
 
@@ -38,33 +49,44 @@ public class CartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
         loadCart();
-        
-        binding.btnCheckout.setOnClickListener(v -> 
-            Navigation.findNavController(v).navigate(R.id.checkoutFragment)
-        );
+
+        binding.btnCheckout.setOnClickListener(v -> {
+            if (cartItems.isEmpty()) {
+                Toast.makeText(getContext(), "Tu carrito está vacío", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Navigation.findNavController(v).navigate(R.id.checkoutFragment);
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Por si el usuario agregó/quitó productos desde el catálogo o el detalle y volvió aquí.
+        loadCart();
     }
 
     private void setupRecyclerView() {
         adapter = new GenericAdapter<>(cartItems, ItemCartProductBinding::inflate, (itemBinding, data) -> {
-            // =========================================================================
-            // BLOQUE DE VINCULACIÓN DE DATOS (PARA DESARROLLADOR BACKEND)
-            // =========================================================================
-            // Mapeo de controles del item_cart_product.xml
-            
-            // 1. Título del producto en el carrito
             itemBinding.txtTitle.setText(data.getTitle());
-            
-            // 2. Precio unitario
-            // itemBinding.txtPrice.setText("$" + data.getPrice());
-            
-            // 3. Cantidad y acciones (Añadir botones de +/- si existen en el layout)
-            
-            // 4. Imagen (Glide/Picasso)
-            // Glide.with(getContext()).load(data.getImageUrl()).into(itemBinding.imgProduct);
-            
-            // 5. Eliminar del carrito
-            // itemBinding.btnRemove.setOnClickListener(v -> { ... });
-            // =========================================================================
+            itemBinding.txtSubtitle.setText(String.format("$%.2f c/u", data.getUnitPrice()));
+            itemBinding.txtCurrentPrice.setText(String.format("$%.2f", data.getSubtotal()));
+            itemBinding.txtQuantity.setText(String.valueOf(data.getQuantity()));
+
+            // TODO: cuando se agregue una librería de imágenes, cargar data.getImageUrl() en imgProduct
+
+            itemBinding.btnPlus.setOnClickListener(v -> updateQuantity(data.getJuegoId(), data.getQuantity() + 1));
+
+            itemBinding.btnMinus.setOnClickListener(v -> {
+                int nueva = data.getQuantity() - 1;
+                if (nueva <= 0) {
+                    removeItem(data.getJuegoId());
+                } else {
+                    updateQuantity(data.getJuegoId(), nueva);
+                }
+            });
+
+            itemBinding.btnRemove.setOnClickListener(v -> removeItem(data.getJuegoId()));
         });
 
         binding.rvCartItems.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -72,15 +94,83 @@ public class CartFragment extends Fragment {
     }
 
     private void loadCart() {
-        // TODO: Cargar items desde base de datos local (Room) o API
-        loadMockData();
+        CartApi api = RetrofitClient.getCartApi();
+        api.getCart().enqueue(new Callback<ApiResponse<CartResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Response<ApiResponse<CartResponse>> response) {
+                if (binding == null) return;
+
+                ApiResponse<CartResponse> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    bindCart(body.getData());
+                } else {
+                    Log.e("CART_API", "Respuesta no exitosa: " + response.code());
+                    Toast.makeText(getContext(), "No se pudo cargar el carrito", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Throwable t) {
+                if (binding == null) return;
+                Log.e("CART_API", "Fallo de conexión", t);
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    private void loadMockData() {
+    private void bindCart(CartResponse cart) {
         cartItems.clear();
-        cartItems.add(new Product(1, "Neon Abyss II", "Action", 59.99, "4.9"));
-        cartItems.add(new Product(2, "Dragon Realm IV", "RPG", 44.99, "4.8"));
+        if (cart.getItems() != null) {
+            cartItems.addAll(cart.getItems());
+        }
         adapter.notifyDataSetChanged();
+
+        binding.txtBadge.setText(String.valueOf(cartItems.size()));
+        binding.txtOrderTotalValue.setText(String.format("$%.2f", cart.getSubtotal()));
+    }
+
+    private void updateQuantity(int juegoId, int nuevaCantidad) {
+        CartApi api = RetrofitClient.getCartApi();
+        api.updateProduct(juegoId, new UpdateCartRequest(nuevaCantidad)).enqueue(new Callback<ApiResponse<CartResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Response<ApiResponse<CartResponse>> response) {
+                if (binding == null) return;
+                ApiResponse<CartResponse> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    bindCart(body.getData());
+                } else {
+                    Toast.makeText(getContext(), "No se pudo actualizar la cantidad", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Throwable t) {
+                if (binding == null) return;
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void removeItem(int juegoId) {
+        CartApi api = RetrofitClient.getCartApi();
+        api.removeProduct(juegoId).enqueue(new Callback<ApiResponse<CartResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Response<ApiResponse<CartResponse>> response) {
+                if (binding == null) return;
+                ApiResponse<CartResponse> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    bindCart(body.getData());
+                } else {
+                    Toast.makeText(getContext(), "No se pudo eliminar el producto", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Throwable t) {
+                if (binding == null) return;
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

@@ -19,7 +19,10 @@ public class RetrofitClient {
 
     private static Retrofit retrofit = null;
 
-
+    /**
+     * Debe llamarse una vez (por ejemplo desde la Application o la primera Activity)
+     * para que el cliente pueda leer el token guardado en SessionManager.
+     */
     public static void init(Context context) {
         if (retrofit != null) return;
 
@@ -73,6 +76,7 @@ public class RetrofitClient {
 
     public static AuthApi getAuthApi() { return createService(AuthApi.class); }
     public static CatalogApi getCatalogApi() { return createService(CatalogApi.class); }
+    public static CartApi getCartApi() { return createService(CartApi.class); }
     public static OrderApi getOrderApi() { return createService(OrderApi.class); }
     public static TicketApi getTicketApi() { return createService(TicketApi.class); }
     public static BranchApi getBranchApi() { return createService(BranchApi.class); }

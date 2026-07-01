@@ -132,6 +132,10 @@ public class MenuActivity extends AppCompatActivity {
             navController.navigate(R.id.notificationsFragment);
             return true;
         }
+        if (item.getItemId() == R.id.action_cart) {
+            navController.navigate(R.id.cartFragment);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
