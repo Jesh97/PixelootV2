@@ -1,39 +1,47 @@
 package com.velvasoftware.pixelrootapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Order {
-    private String orderId;
-    private String date;
+
+    @SerializedName("pedido_id")
+    private int orderId;
+
+    @SerializedName("estado")
     private String status;
+
+    @SerializedName("subtotal")
+    private double subtotal;
+
+    @SerializedName("impuesto")
+    private double tax;
+
+    @SerializedName("total")
     private double total;
-    private List<Product> products;
-    private String qrCode;
+
+    @SerializedName("metodo_pago")
+    private String paymentMethod;
+
+    @SerializedName("sucursal_id")
+    private Integer branchId;
+
+    @SerializedName("fecha_pedido")
+    private String date;
+
+    @SerializedName("items")
+    private List<CartItem> items;
 
     public Order() {}
 
-    public Order(String orderId, String date, String status, double total) {
-        this.orderId = orderId;
-        this.date = date;
-        this.status = status;
-        this.total = total;
-    }
-
-    public String getOrderId() { return orderId; }
-    public void setOrderId(String orderId) { this.orderId = orderId; }
-
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
-
+    public int getOrderId() { return orderId; }
     public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
+    public double getSubtotal() { return subtotal; }
+    public double getTax() { return tax; }
     public double getTotal() { return total; }
-    public void setTotal(double total) { this.total = total; }
-
-    public List<Product> getProducts() { return products; }
-    public void setProducts(List<Product> products) { this.products = products; }
-
-    public String getQrCode() { return qrCode; }
-    public void setQrCode(String qrCode) { this.qrCode = qrCode; }
+    public String getPaymentMethod() { return paymentMethod; }
+    public Integer getBranchId() { return branchId; }
+    public String getDate() { return date; }
+    public List<CartItem> getItems() { return items; }
 }

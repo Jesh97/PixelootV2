@@ -1,9 +1,11 @@
 package com.velvasoftware.pixelrootapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,16 +16,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.velvasoftware.pixelrootapp.databinding.FragmentBranchBinding;
 import com.velvasoftware.pixelrootapp.databinding.ItemBranchCardBinding;
 import com.velvasoftware.pixelrootapp.models.Branch;
+import com.velvasoftware.pixelrootapp.network.api.BranchApi;
+import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
+import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 import com.velvasoftware.pixelrootapp.ui.common.GenericAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class BranchFragment extends Fragment {
 
     private FragmentBranchBinding binding;
     private GenericAdapter<ItemBranchCardBinding, Branch> adapter;
-    private List<Branch> branchList = new ArrayList<>();
+    private final List<Branch> branchList = new ArrayList<>();
 
     public BranchFragment() {}
 
@@ -36,12 +45,12 @@ public class BranchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         setupRecyclerView();
         fetchBranches();
-        
-        binding.btnMapView.setOnClickListener(v -> 
-            Navigation.findNavController(v).navigate(R.id.mapsFragment)
+
+        binding.btnMapView.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.mapsFragment)
         );
 
         binding.toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
@@ -53,28 +62,19 @@ public class BranchFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new GenericAdapter<>(branchList, ItemBranchCardBinding::inflate, (itemBinding, data) -> {
-            // =========================================================================
-            // BLOQUE DE VINCULACIÓN DE DATOS (PARA DESARROLLADOR BACKEND)
-            // =========================================================================
-            // Mapeo de controles del item_branch_card.xml
-            
-            // 1. Nombre de la sucursal
             itemBinding.txtBranchName.setText(data.getName());
-            
-            // 2. Dirección física
             itemBinding.txtBranchAddress.setText(data.getAddress());
-            
-            // 3. Distancia calculada
-            itemBinding.txtDistance.setText(data.getDistance() + " de distancia");
-            
-            // 4. Acción al pulsar "Ver en Mapa"
+
+            // El backend no calcula distancia al usuario (necesitaría su ubicación en vivo);
+            // mientras tanto mostramos la ciudad real de la sucursal en ese mismo espacio.
+            itemBinding.txtDistance.setText(data.getCity() != null ? data.getCity() : "");
+
             itemBinding.btnViewOnMap.setOnClickListener(v -> {
                 Bundle args = new Bundle();
                 args.putDouble("lat", data.getLatitude());
                 args.putDouble("lng", data.getLongitude());
                 Navigation.findNavController(v).navigate(R.id.mapsFragment, args);
             });
-            // =========================================================================
         });
 
         binding.rvBranches.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -82,15 +82,30 @@ public class BranchFragment extends Fragment {
     }
 
     private void fetchBranches() {
-        // TODO: Implementar llamada a API de Sucursales
-        loadMockData();
-    }
+        BranchApi api = RetrofitClient.getBranchApi();
+        api.getBranches().enqueue(new Callback<ApiResponse<List<Branch>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<Branch>>> call, @NonNull Response<ApiResponse<List<Branch>>> response) {
+                if (binding == null) return;
 
-    private void loadMockData() {
-        branchList.clear();
-        branchList.add(new Branch(1, "PixelHouse Centro", "C. Elías Aguirre 123", "0.5 km"));
-        branchList.add(new Branch(2, "PixelHouse Norte", "Av. Bolognesi 2342", "1.2 km"));
-        adapter.notifyDataSetChanged();
+                ApiResponse<List<Branch>> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    branchList.clear();
+                    branchList.addAll(body.getData());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.e("BRANCH_API", "Respuesta no exitosa: " + response.code());
+                    Toast.makeText(getContext(), "No se pudieron cargar las sucursales", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<Branch>>> call, @NonNull Throwable t) {
+                if (binding == null) return;
+                Log.e("BRANCH_API", "Fallo de conexión", t);
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

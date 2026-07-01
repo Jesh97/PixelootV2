@@ -74,27 +74,45 @@
 
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_small">
                         <TextView style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/checkout_subtotal" />
-                        <TextView style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$159.97" android:textColor="@color/blanco_claro" />
+                        <TextView android:id="@+id/txtSubtotalValue" style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$0.00" android:textColor="@color/blanco_claro" />
                     </RelativeLayout>
 
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_small">
-                        <TextView style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/checkout_descuento" />
-                        <TextView style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$20.00" android:textColor="@color/blanco_claro" />
+                        <TextView style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="IGV (18%)" />
+                        <TextView android:id="@+id/txtTaxValue" style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$0.00" android:textColor="@color/blanco_claro" />
                     </RelativeLayout>
 
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                         <TextView style="@style/AppText.Subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TOTAL" />
                         <TextView
+                            android:id="@+id/txtTotalValue"
                             style="@style/AppText.Subtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text="$139.97"
+                            android:text="$0.00"
                             android:textColor="@color/verde_claro_pixel"
                             android:textSize="22sp" />
                     </RelativeLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Sucursal de recojo -->
+            <TextView
+                style="@style/AppText.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="SUCURSAL DE RECOJO"
+                android:textStyle="bold" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgBranches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                app:singleSelection="true" />
+
 
             <!-- Payment Method -->
             <TextView
@@ -174,7 +192,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/button_height"
             android:paddingHorizontal="@dimen/spacing_large"
-            android:text="$139.97" />
+            android:text="$0.00" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

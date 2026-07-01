@@ -23,14 +23,24 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.velvasoftware.pixelrootapp.databinding.FragmentOrderConfirmationBinding;
+import com.velvasoftware.pixelrootapp.models.CartItem;
+import com.velvasoftware.pixelrootapp.models.Order;
+import com.velvasoftware.pixelrootapp.network.api.OrderApi;
+import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
+import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class OrderConfirmationFragment extends Fragment {
 
     private FragmentOrderConfirmationBinding binding;
+    private Order currentOrder;
 
     public OrderConfirmationFragment() {}
 
@@ -44,21 +54,51 @@ public class OrderConfirmationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setupListeners();
+        int orderId = getArguments() != null ? getArguments().getInt("orderId", -1) : -1;
+        double total = getArguments() != null ? getArguments().getDouble("total", 0) : 0;
+
+        binding.txtOrderIdConfirmation.setText(String.format("Pedido #%d — $%.2f", orderId, total));
+
+        setupListeners(orderId);
+        loadOrderDetail(orderId);
     }
 
-    private void setupListeners() {
-        binding.btnDownloadReceipt.setOnClickListener(v -> generateOrderPdf("PR-85920", "Neon Abyss II", 59.99));
-        
-        binding.btnBackHome.setOnClickListener(v -> 
-            Navigation.findNavController(v).navigate(R.id.homeFragment)
+    private void setupListeners(int orderId) {
+        binding.btnDownloadReceipt.setOnClickListener(v -> {
+            if (currentOrder != null) {
+                generateOrderPdf(currentOrder);
+            } else {
+                Toast.makeText(getContext(), "Espera un momento, cargando el pedido...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.btnBackHome.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.homeFragment)
         );
     }
 
-    private void generateOrderPdf(String orderId, String gameTitle, double price) {
-        // =========================================================================
-        // GENERACIÓN DE RECIBO PDF CON DISEÑO Y CÓDIGO QR
-        // =========================================================================
+    private void loadOrderDetail(int orderId) {
+        if (orderId <= 0) return;
+
+        OrderApi api = RetrofitClient.getOrderApi();
+        api.getOrderDetail(orderId).enqueue(new Callback<ApiResponse<Order>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<Order>> call, @NonNull Response<ApiResponse<Order>> response) {
+                ApiResponse<Order> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    currentOrder = body.getData();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
+                // El usuario igual puede volver a Home; el recibo simplemente no se podrá generar
+                // hasta que haya conexión.
+            }
+        });
+    }
+
+    private void generateOrderPdf(Order order) {
         PdfDocument document = new PdfDocument();
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(300, 600, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
@@ -66,34 +106,50 @@ public class OrderConfirmationFragment extends Fragment {
         Canvas canvas = page.getCanvas();
         Paint paint = new Paint();
 
-        // Estilo de la App (Fondo oscuro)
         canvas.drawColor(Color.parseColor("#0F0F0F"));
-        
-        // Título de la tienda
-        paint.setColor(Color.parseColor("#39FF14")); // Verde Pixel
+
+        paint.setColor(Color.parseColor("#39FF14"));
         paint.setTextSize(22f);
         paint.setFakeBoldText(true);
         canvas.drawText("PIXEL ROOT STORE", 50, 60, paint);
 
-        // Línea divisoria
         paint.setStrokeWidth(2f);
         canvas.drawLine(20, 80, 280, 80, paint);
 
-        // Datos del Pedido
         paint.setColor(Color.WHITE);
         paint.setFakeBoldText(false);
         paint.setTextSize(14f);
-        canvas.drawText("ID de Pedido: " + orderId, 20, 120, paint);
-        canvas.drawText("Producto: " + gameTitle, 20, 150, paint);
-        canvas.drawText("Precio Total: $" + price, 20, 180, paint);
-        canvas.drawText("Estado: Confirmado", 20, 210, paint);
 
-        // GENERACIÓN DEL QR DINÁMICO
+        int y = 120;
+        canvas.drawText("ID de Pedido: #" + order.getOrderId(), 20, y, paint);
+        y += 25;
+
+        if (order.getItems() != null) {
+            for (CartItem item : order.getItems()) {
+                String linea = item.getQuantity() + "x " + item.getTitle();
+                canvas.drawText(linea, 20, y, paint);
+                y += 20;
+            }
+        }
+
+        y += 10;
+        canvas.drawText(String.format("Subtotal: $%.2f", order.getSubtotal()), 20, y, paint);
+        y += 20;
+        canvas.drawText(String.format("IGV: $%.2f", order.getTax()), 20, y, paint);
+        y += 20;
+        paint.setColor(Color.parseColor("#39FF14"));
+        paint.setFakeBoldText(true);
+        canvas.drawText(String.format("Total: $%.2f", order.getTotal()), 20, y, paint);
+        y += 30;
+
+        paint.setColor(Color.WHITE);
+        paint.setFakeBoldText(false);
+        canvas.drawText("Estado: " + order.getStatus(), 20, y, paint);
+
         try {
-            Bitmap qrBitmap = generateQrCode(orderId);
+            Bitmap qrBitmap = generateQrCode("PEDIDO-" + order.getOrderId());
             if (qrBitmap != null) {
-                // Centrar el QR en el PDF
-                canvas.drawBitmap(qrBitmap, 50, 280, paint);
+                canvas.drawBitmap(qrBitmap, 50, 300, paint);
             }
         } catch (WriterException e) {
             e.printStackTrace();
@@ -105,8 +161,8 @@ public class OrderConfirmationFragment extends Fragment {
 
         document.finishPage(page);
 
-        // Guardar el archivo en el almacenamiento del dispositivo
-        File filePath = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "Recibo_" + orderId + ".pdf");
+        File filePath = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
+                "Recibo_" + order.getOrderId() + ".pdf");
         try {
             document.writeTo(new FileOutputStream(filePath));
             Toast.makeText(getContext(), "Recibo guardado en: " + filePath.getAbsolutePath(), Toast.LENGTH_LONG).show();
@@ -115,7 +171,6 @@ public class OrderConfirmationFragment extends Fragment {
             Toast.makeText(getContext(), "Error al guardar el archivo", Toast.LENGTH_SHORT).show();
         }
         document.close();
-        // =========================================================================
     }
 
     private Bitmap generateQrCode(String text) throws WriterException {

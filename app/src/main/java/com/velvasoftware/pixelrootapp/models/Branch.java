@@ -1,21 +1,31 @@
 package com.velvasoftware.pixelrootapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Branch {
+
+    @SerializedName("sucursal_id")
     private int id;
+
+    @SerializedName("nombre")
     private String name;
+
+    @SerializedName("direccion")
     private String address;
-    private String distance;
+
+    @SerializedName("ciudad")
+    private String city;
+
+    @SerializedName("telefono")
+    private String phone;
+
+    @SerializedName("latitud")
     private double latitude;
+
+    @SerializedName("longitud")
     private double longitude;
 
     public Branch() {}
-
-    public Branch(int id, String name, String address, String distance) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.distance = distance;
-    }
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -26,8 +36,11 @@ public class Branch {
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
 
-    public String getDistance() { return distance; }
-    public void setDistance(String distance) { this.distance = distance; }
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
     public double getLatitude() { return latitude; }
     public void setLatitude(double latitude) { this.latitude = latitude; }

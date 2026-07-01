@@ -1,15 +1,32 @@
 package com.velvasoftware.pixelrootapp.network.api;
 
 import com.velvasoftware.pixelrootapp.models.Order;
+import com.velvasoftware.pixelrootapp.network.request.ConfirmOrderRequest;
+import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
+
 import java.util.List;
+
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface OrderApi {
-    @GET("orders")
-    Call<List<Order>> getOrders();
 
-    @GET("orders/{id}")
-    Call<Order> getOrderDetail(@Path("id") String orderId);
+    // POST /api/pedidos/confirmar -> convierte el carrito (estado='CARRITO') en un pedido real
+    @POST("pedidos/confirmar")
+    Call<ApiResponse<Order>> confirmarPedido(@Body ConfirmOrderRequest request);
+
+    // GET /api/pedidos/
+    @GET("pedidos/")
+    Call<ApiResponse<List<Order>>> getOrders();
+
+    // GET /api/pedidos/{id}
+    @GET("pedidos/{id}")
+    Call<ApiResponse<Order>> getOrderDetail(@Path("id") int orderId);
+
+    // GET /api/pedidos/{id}/seguimiento
+    @GET("pedidos/{id}/seguimiento")
+    Call<ApiResponse<Order>> getOrderTracking(@Path("id") int orderId);
 }
