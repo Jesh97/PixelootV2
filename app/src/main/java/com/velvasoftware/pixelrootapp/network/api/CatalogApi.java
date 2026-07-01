@@ -1,6 +1,7 @@
 package com.velvasoftware.pixelrootapp.network.api;
 
 import com.velvasoftware.pixelrootapp.models.Category;
+import com.velvasoftware.pixelrootapp.models.Platform;
 import com.velvasoftware.pixelrootapp.models.Product;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 import com.velvasoftware.pixelrootapp.network.response.GamesPageResponse;
@@ -41,4 +42,8 @@ public interface CatalogApi {
     // GET /api/juegos/recomendados -> data = lista simple de juegos
     @GET("juegos/recomendados")
     Call<ApiResponse<List<Product>>> getRecommendedProducts();
+
+    // GET /api/juegos/plataformas
+    @GET("juegos/plataformas")
+    Call<ApiResponse<List<Platform>>> getPlatforms();
 }

@@ -19,10 +19,7 @@ public class RetrofitClient {
 
     private static Retrofit retrofit = null;
 
-    /**
-     * Debe llamarse una vez (por ejemplo desde la Application o la primera Activity)
-     * para que el cliente pueda leer el token guardado en SessionManager.
-     */
+
     public static void init(Context context) {
         if (retrofit != null) return;
 
