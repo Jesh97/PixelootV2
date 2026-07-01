@@ -13,8 +13,8 @@
           android:startY="480"
           android:endX="960"
           android:endY="480"
-          android:startColor="@color/verde_claro_pixel"
-          android:endColor="@color/amarillo_claro_pixel"
+          android:startColor="#11ED5A"
+          android:endColor="#A5E51A"
           android:type="linear" />
     </aapt:attr>
 

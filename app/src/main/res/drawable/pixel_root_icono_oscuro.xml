@@ -23,9 +23,9 @@
                   
             <gradient android:endX="1513.1" android:endY="1711" android:startX="333.3" android:startY="333.3" android:type="linear">
                         
-                <item android:color="@color/verde_claro_pixel" android:offset="0"/>
-                        
-                <item android:color="@color/amarillo_claro_pixel" android:offset="1"/>
+                <item android:color="#11ED5A" android:offset="0"/>
+
+                <item android:color="#A5E51A" android:offset="1"/>
                       
             </gradient>
                 
