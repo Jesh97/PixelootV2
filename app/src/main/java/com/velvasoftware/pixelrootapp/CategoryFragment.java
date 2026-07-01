@@ -18,6 +18,7 @@ import com.velvasoftware.pixelrootapp.databinding.ItemCategoryBinding;
 import com.velvasoftware.pixelrootapp.models.Category;
 import com.velvasoftware.pixelrootapp.network.api.CatalogApi;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
+import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 import com.velvasoftware.pixelrootapp.ui.common.GenericAdapter;
 
 import java.util.ArrayList;
@@ -54,23 +55,23 @@ public class CategoryFragment extends Fragment {
             // BLOQUE DE VINCULACIÓN DE DATOS (PARA DESARROLLADOR BACKEND)
             // =========================================================================
             // Aquí se enlazan los campos del modelo con los IDs del layout 'item_category.xml'
-            
+
             // 1. Título de la categoría
-            itemBinding.txtCategoryName.setText(data.getName()); 
-            
+            itemBinding.txtCategoryName.setText(data.getName());
+
             // 2. Descripción de la categoría
             itemBinding.txtCategoryDescription.setText(data.getDescription());
-            
+
             // 3. Icono de la categoría (Implementar Glide/Picasso para data.getIconUrl())
-            // itemBinding.imgCategoryIcon.setImageResource(R.drawable.icon_default); 
-            
+            // itemBinding.imgCategoryIcon.setImageResource(R.drawable.icon_default);
+
             // 4. Acción de navegación al hacer clic en el item
             View.OnClickListener navigateAction = v -> {
                 Bundle args = new Bundle();
                 args.putInt("categoryId", data.getId());
                 Navigation.findNavController(v).navigate(R.id.catalogFragment, args);
             };
-            
+
             itemBinding.getRoot().setOnClickListener(navigateAction);
             itemBinding.btnExploreCategory.setOnClickListener(navigateAction);
             // =========================================================================
@@ -84,15 +85,16 @@ public class CategoryFragment extends Fragment {
         // =========================================================================
         // ESTRUCTURA DE LLAMADA A API (RETROFIT)
         // =========================================================================
-        CatalogApi api = RetrofitClient.createService(CatalogApi.class);
-        Call<List<Category>> call = api.getCategories();
-        
-        call.enqueue(new Callback<List<Category>>() {
+        CatalogApi api = RetrofitClient.getCatalogApi();
+        Call<ApiResponse<List<Category>>> call = api.getCategories();
+
+        call.enqueue(new Callback<ApiResponse<List<Category>>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Category>> call, @NonNull Response<List<Category>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+            public void onResponse(@NonNull Call<ApiResponse<List<Category>>> call, @NonNull Response<ApiResponse<List<Category>>> response) {
+                ApiResponse<List<Category>> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
                     categoryList.clear();
-                    categoryList.addAll(response.body());
+                    categoryList.addAll(body.getData());
                     adapter.notifyDataSetChanged();
                 } else {
                     Log.e("API_ERROR", "Error al cargar categorías: " + response.code());
@@ -101,7 +103,7 @@ public class CategoryFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Category>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse<List<Category>>> call, @NonNull Throwable t) {
                 Log.e("API_FAILURE", t.getMessage());
                 Toast.makeText(getContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
                 loadMockData(); // Fallback

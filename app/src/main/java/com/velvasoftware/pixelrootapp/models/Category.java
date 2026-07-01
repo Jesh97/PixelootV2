@@ -1,10 +1,24 @@
 package com.velvasoftware.pixelrootapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Representa una categoría tal como la devuelve GET /api/categorias.
+ * Campos reales del backend: categoria_id, nombre, descripcion.
+ */
 public class Category {
+
+    @SerializedName("categoria_id")
     private int id;
+
+    @SerializedName("nombre")
     private String name;
+
+    @SerializedName("descripcion")
     private String description;
-    private String iconUrl;
+
+    // No viene del backend todavía; queda listo para cuando se agregue en la BD/API.
+    private transient String iconUrl;
 
     public Category() {}
 

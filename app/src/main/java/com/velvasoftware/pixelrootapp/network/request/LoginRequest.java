@@ -1,17 +1,27 @@
 package com.velvasoftware.pixelrootapp.network.request;
 
-public class LoginRequest {
-    private String email;
-    private String password;
+import com.google.gson.annotations.SerializedName;
 
-    public LoginRequest(String email, String password) {
-        this.email = email;
-        this.password = password;
+/**
+ * Body de POST /api/auth/login.
+ * El backend Flask espera exactamente estos nombres de campo.
+ */
+public class LoginRequest {
+
+    @SerializedName("correo")
+    private String correo;
+
+    @SerializedName("contrasena")
+    private String contrasena;
+
+    public LoginRequest(String correo, String contrasena) {
+        this.correo = correo;
+        this.contrasena = contrasena;
     }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getCorreo() { return correo; }
+    public void setCorreo(String correo) { this.correo = correo; }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getContrasena() { return contrasena; }
+    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
 }

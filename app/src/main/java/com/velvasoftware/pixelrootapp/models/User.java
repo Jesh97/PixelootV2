@@ -1,18 +1,41 @@
 package com.velvasoftware.pixelrootapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Representa el objeto "data" que devuelve POST /api/auth/login:
+ * { usuario_id, correo, nombre, apellido, rol_id, sucursal_id, token }
+ */
 public class User {
-    private String id;
-    private String firstName;
-    private String lastName;
+
+    @SerializedName("usuario_id")
+    private int id;
+
+    @SerializedName("correo")
     private String email;
-    private String phone;
-    private String role;
+
+    @SerializedName("nombre")
+    private String firstName;
+
+    @SerializedName("apellido")
+    private String lastName;
+
+    @SerializedName("rol_id")
+    private int rolId;
+
+    @SerializedName("sucursal_id")
+    private Integer sucursalId;
+
+    @SerializedName("token")
     private String token;
 
     public User() {}
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -20,14 +43,11 @@ public class User {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public int getRolId() { return rolId; }
+    public void setRolId(int rolId) { this.rolId = rolId; }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public Integer getSucursalId() { return sucursalId; }
+    public void setSucursalId(Integer sucursalId) { this.sucursalId = sucursalId; }
 
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }

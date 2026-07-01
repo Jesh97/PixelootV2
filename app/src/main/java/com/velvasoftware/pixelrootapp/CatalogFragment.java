@@ -1,9 +1,11 @@
 package com.velvasoftware.pixelrootapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,10 +20,18 @@ import com.velvasoftware.pixelrootapp.databinding.FragmentCatalogBinding;
 import com.velvasoftware.pixelrootapp.databinding.ItemCategoryTabBinding;
 import com.velvasoftware.pixelrootapp.databinding.ItemGameCardVerticalBinding;
 import com.velvasoftware.pixelrootapp.models.Product;
+import com.velvasoftware.pixelrootapp.network.api.CatalogApi;
+import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
+import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
+import com.velvasoftware.pixelrootapp.network.response.GamesPageResponse;
 import com.velvasoftware.pixelrootapp.ui.common.GenericAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CatalogFragment extends Fragment {
 
@@ -43,11 +53,11 @@ public class CatalogFragment extends Fragment {
 
         setupCategoryTabs();
         setupGamesGrid();
-        
+
         binding.btnOpenFiltersResults.setOnClickListener(v -> showFilterBottomSheet());
 
-        binding.etSearchCatalog.setOnClickListener(v -> 
-            Navigation.findNavController(v).navigate(R.id.searchFragment)
+        binding.etSearchCatalog.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.searchFragment)
         );
     }
 
@@ -61,7 +71,6 @@ public class CatalogFragment extends Fragment {
         binding.rvCategoryTabs.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         binding.rvCategoryTabs.setAdapter(new GenericAdapter<>(tabs, ItemCategoryTabBinding::inflate, (itemBinding, data) -> {
             itemBinding.txtTabName.setText(data);
-            // Lógica de selección visual
             if ("Action".equals(data)) {
                 itemBinding.getRoot().setBackgroundResource(R.drawable.bg_filter_button);
                 itemBinding.txtTabName.setTextColor(getResources().getColor(R.color.negro_oscuro));
@@ -71,48 +80,52 @@ public class CatalogFragment extends Fragment {
 
     private void setupGamesGrid() {
         gamesAdapter = new GenericAdapter<>(gameList, ItemGameCardVerticalBinding::inflate, (itemBinding, data) -> {
-            // =========================================================================
-            // BLOQUE DE VINCULACIÓN DE DATOS (PARA DESARROLLADOR BACKEND)
-            // =========================================================================
-            // Mapeo de controles del item_game_card_vertical.xml
-            
-            // 1. Título del juego
             itemBinding.txtGameTitle.setText(data.getTitle());
-            
-            // 2. Género / Categoría
-            itemBinding.txtCategory.setText(data.getCategory());
-            
-            // 3. Precio formateado
+            itemBinding.txtCategory.setText(data.getCategory() != null ? data.getCategory() : "");
             itemBinding.txtPrice.setText("$" + data.getPrice());
-            
-            // 4. Puntuación
             itemBinding.txtRating.setText(data.getRating());
 
-            // 5. Navegación al detalle
+            // TODO: cuando se agregue una librería de imágenes (Glide/Coil), cargar data.getImageUrl()
+
             itemBinding.getRoot().setOnClickListener(v -> {
                 Bundle args = new Bundle();
                 args.putInt("productId", data.getId());
                 Navigation.findNavController(v).navigate(R.id.productDetailFragment, args);
             });
-            // =========================================================================
         });
 
         binding.rvCatalog.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.rvCatalog.setAdapter(gamesAdapter);
-        
+
         loadGames();
     }
 
     private void loadGames() {
-        // TODO: Llamar a CatalogApi
-        loadMockData();
-    }
+        CatalogApi api = RetrofitClient.getCatalogApi();
 
-    private void loadMockData() {
-        gameList.clear();
-        gameList.add(new Product(1, "Neon Abyss II", "Action / RPG", 59.99, "★ 4.9"));
-        gameList.add(new Product(2, "Dragon Realm IV", "RPG / Fantasy", 44.99, "★ 4.8"));
-        gamesAdapter.notifyDataSetChanged();
+        api.getProducts(1).enqueue(new Callback<ApiResponse<GamesPageResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<GamesPageResponse>> call,
+                                   @NonNull Response<ApiResponse<GamesPageResponse>> response) {
+                ApiResponse<GamesPageResponse> body = response.body();
+
+                if (response.isSuccessful() && body != null && body.isStatus()
+                        && body.getData() != null && body.getData().getJuegos() != null) {
+                    gameList.clear();
+                    gameList.addAll(body.getData().getJuegos());
+                    gamesAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e("CATALOG_API", "Respuesta no exitosa: " + response.code());
+                    Toast.makeText(getContext(), "No se pudieron cargar los juegos", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<GamesPageResponse>> call, @NonNull Throwable t) {
+                Log.e("CATALOG_API", "Fallo de conexión", t);
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void showFilterBottomSheet() {
