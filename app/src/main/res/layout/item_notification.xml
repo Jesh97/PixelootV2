@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacing_medium"
+    android:layout_marginVertical="@dimen/spacing_small">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_medium">
+
+        <ImageView
+            android:id="@+id/ivReadStatus"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:src="@drawable/ic_notification_status"
+            app:layout_constraintTop_toTopOf="@id/tvNotificationTitle"
+            app:layout_constraintBottom_toBottomOf="@id/tvNotificationTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="Estado" />
+
+        <TextView
+            android:id="@+id/tvNotificationTitle"
+            style="@style/AppText.Subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Título de la Notificación"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivReadStatus"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvNotificationDescription"
+            style="@style/AppText.Body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Descripción de la notificación."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvNotificationTitle"
+            app:layout_constraintTop_toBottomOf="@id/tvNotificationTitle" />
+
+        <TextView
+            android:id="@+id/tvNotificationDateTime"
+            style="@style/AppText.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="24/05/2024 - 14:30"
+            android:textColor="@color/verde_claro_pixel"
+            android:alpha="1"
+            app:layout_constraintStart_toStartOf="@id/tvNotificationTitle"
+            app:layout_constraintTop_toBottomOf="@id/tvNotificationDescription" />
+
+        <TextView
+            android:id="@+id/tvViewDetail"
+            style="@style/AppText.Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ver detalle"
+            android:textColor="@color/verde_claro_pixel"
+            android:textSize="14sp"
+            android:paddingVertical="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvNotificationDateTime" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

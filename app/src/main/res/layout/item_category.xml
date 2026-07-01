@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_medium"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/imgCategoryIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/bg_timer_box"
+            android:padding="20dp"
+            android:src="@drawable/icon_action_categ"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/verde_claro_pixel"
+            android:contentDescription="Categoria" />
+
+        <TextView
+            android:id="@+id/txtCategoryName"
+            style="@style/AppText.Subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:text="Acción"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgCategoryIcon"
+            app:layout_constraintTop_toTopOf="@id/imgCategoryIcon" />
+
+        <TextView
+            android:id="@+id/txtCategoryDescription"
+            style="@style/AppText.Body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Muestra tu destreza en juegos de acción."
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/txtCategoryName"
+            app:layout_constraintTop_toBottomOf="@id/txtCategoryName" />
+
+        <LinearLayout
+            android:id="@+id/btnExploreCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@id/txtCategoryName"
+            app:layout_constraintTop_toBottomOf="@id/txtCategoryDescription">
+
+            <TextView
+                style="@style/AppText.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Explorar ahora"
+                android:textColor="@color/verde_claro_pixel"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="@color/verde_claro_pixel"
+                android:contentDescription="Ir" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

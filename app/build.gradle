@@ -1,0 +1,83 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.velvasoftware.pixelrootapp'
+    compileSdk {
+        version = release(36) {
+            minorApiLevel = 1
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.velvasoftware.pixelrootapp"
+        minSdk 23
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation libs.activity.ktx
+    implementation libs.appcompat
+    implementation libs.constraintlayout
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.ext.junit
+
+    // Lottie Animation View
+    implementation libs.lottie
+
+    // Navigation Component
+    implementation libs.androidx.navigation.fragment.ktx
+    implementation libs.navigation.ui.ktx
+
+    // Circle Image View
+    implementation libs.circleimageview
+
+    // Retrofit & GSON
+    implementation libs.retrofit
+    implementation libs.converter.gson
+    implementation libs.gson
+
+    // Firebase
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.messaging
+    implementation libs.firebase.database
+
+    // QR Code
+    implementation libs.zxing.core
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
+    // Google Maps
+    implementation libs.play.services.maps
+
+    // CameraX dependencies
+    implementation "androidx.camera:camera-camera2:1.4.1"
+    implementation "androidx.camera:camera-lifecycle:1.4.1"
+    implementation "androidx.camera:camera-view:1.4.1"
+
+    // ML Kit Barcode Scanning
+    implementation "com.google.mlkit:barcode-scanning:17.3.0"
+
+}

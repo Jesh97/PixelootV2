@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Marca y App -->
+    <string name="app_name">Pixel Root</string>
+    <string name="copyright">© 2026 Velva Software. Perú.</string>
+
+    <!-- Pantalla de Login (Inicio de Sesión) -->
+    <string name="login_welcome_back">¡Bienvenido de nuevo!</string>
+    <string name="login_gaming_universe">Accede a tu Universo Gaming</string>
+    <string name="login_email_or_username_label">CORREO O USUARIO</string>
+    <string name="login_email_or_username_hint">Ingresa tu correo</string>
+    <string name="login_password_label">CONTRASEÑA</string>
+    <string name="login_password_hint">Ingresa tu contraseña</string>
+    <string name="login_remember_me">Recordarme</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_sign_in_btn">INICIAR SESIÓN</string>
+    <string name="login_new_to_pixel_root">¿Eres nuevo en Pixel Root? Regístrate →</string>
+    <string name="login_create_account_link">Crear cuenta</string>
+
+    <!-- Pantalla de Registro -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_subtitle">Únete a tu Universo Gaming</string>
+    <string name="register_first_name_label">NOMBRES</string>
+    <string name="register_first_name_hint">Ingresa tus nombres</string>
+    <string name="register_last_name_label">APELLIDOS</string>
+    <string name="register_last_name_hint">Ingresa tus apellidos</string>
+    <string name="register_email_label">DIRECCIÓN DE CORREO</string>
+    <string name="register_email_hint">Ingresa tu dirección de correo</string>
+    <string name="register_phone_label">TELÉFONO</string>
+    <string name="register_phone_hint">Ingresa tu número celular</string>
+    <string name="register_password_label">CONTRASEÑA</string>
+    <string name="register_create_password_hint">Crea una contraseña segura</string>
+    <string name="register_confirm_password_label">CONFIRMAR CONTRASEÑA</string>
+    <string name="register_confirm_password_hint">Confirma tu contraseña</string>
+    <string name="register_agree_terms_link">Acepto los Términos y Condiciones.</string>
+    <string name="register_agree_privacy_link">Acepto la Política de Privacidad.</string>
+    <string name="register_create_account_btn">REGISTRARSE</string>
+    <string name="register_already_have_account">¿Ya tienes una cuenta?</string>
+    <string name="register_sign_in_link">¿Ya tienes una cuenta? Inicia sesión →</string>
+
+    <!-- Pantalla de Olvidé mi Contraseña -->
+    <string name="forgot_password_title">Recuperar Contraseña</string>
+    <string name="forgot_password_subtitle">Ingresa tu correo para recibir un código de verificación</string>
+    <string name="forgot_password_send_btn">ENVIAR CÓDIGO</string>
+    <string name="forgot_password_back_to_login">← Volver al Inicio de Sesión</string>
+
+    <!-- Pantalla de Nueva Contraseña (Reset) -->
+    <string name="reset_password_title">Nueva Contraseña</string>
+    <string name="reset_password_subtitle">Crea una nueva clave de acceso para tu cuenta</string>
+    <string name="reset_password_new_label">NUEVA CONTRASEÑA</string>
+    <string name="reset_password_new_hint">Ingresa tu nueva contraseña</string>
+    <string name="reset_password_confirm_label">CONFIRMAR CONTRASEÑA</string>
+    <string name="reset_password_confirm_hint">Repite tu nueva contraseña</string>
+    <string name="reset_password_update_btn">ACTUALIZAR CONTRASEÑA</string>
+
+    <!-- Pantalla de Verificación -->
+    <string name="verification_title">Verificar Cuenta</string>
+    <string name="verification_subtitle">Hemos enviado un código a tu correo</string>
+    <string name="verification_code_label">CÓDIGO DE VERIFICACIÓN</string>
+    <string name="verification_code_hint">000000</string>
+    <string name="verification_verify_btn">VERIFICAR AHORA</string>
+    <string name="verification_resend">¿No recibiste el código? Reenviar</string>
+
+    <!-- Home -->
+    <string name="home_title_popular">JUEGOS POPULARES</string>
+    <string name="home_title_recommended">RECOMENDADOS PARA TI</string>
+    <string name="home_title_offers">OFERTAS ESPECIALES</string>
+    <string name="home_browse">EXPLORAR</string>
+    <string name="home_search_hint">Buscar juegos...</string>
+    <string name="flash_sale">OFERTA RELÁMPAGO</string>
+    <string name="flash_sale_desc">Hasta 70% de descuento solo hoy</string>
+
+    <!-- Footer -->
+    <string name="footer_team_link">Equipo de Desarrollo</string>
+    <string name="footer_about_link">Sobre Pixel Root</string>
+    <string name="footer_contact_link">Contáctanos</string>
+    <string name="footer_help_link">Centro de Ayuda</string>
+
+    <!-- Pantalla de Carrito -->
+    <string name="cart_title">Mi Carrito</string>
+    <string name="cart_proceed_btn">PROCEDER AL PAGO</string>
+    <string name="cart_order_total">Total del Pedido</string>
+    <string name="cart_promo_label">CÓDIGO DE PROMOCIÓN</string>
+    <string name="cart_promo_hint">Ingresa código</string>
+    <string name="cart_promo_apply">APLICAR</string>
+
+    <!-- Pantalla de Catálogo y Búsqueda -->
+    <string name="catalog_title">Catálogo de Juegos</string>
+    <string name="catalog_search_hint">Resultados para...</string>
+    <string name="catalog_filter_action_rpg">Action RPG</string>
+    <string name="catalog_filter_clear">↺ Limpiar</string>
+    <string name="catalog_sort_label">Ordenar:</string>
+    <string name="catalog_sort_popular">POPULAR</string>
+    <string name="catalog_sort_recent">RECIENTE</string>
+    <string name="catalog_results_count">%1$d resultados encontrados</string>
+    <string name="search_input_hint">Buscar juegos o plataformas...</string>
+    <string name="search_empty_start">Escribe algún nombre para buscar</string>
+    <string name="search_no_results">No se encontraron coincidencias</string>
+
+    <!-- Pantalla de Checkout -->
+    <string name="checkout_title">Finalizar Compra</string>
+    <string name="checkout_order_summary">RESUMEN DEL PEDIDO</string>
+    <string name="checkout_subtotal">Subtotal</string>
+    <string name="checkout_descuento">Descuento</string>
+    <string name="checkout_pay_now">Pagar Ahora</string>
+    <string name="checkout_payment_method">MÉTODO DE PAGO</string>
+    <string name="checkout_ssl_label">SSL Encriptado</string>
+    <string name="checkout_credit_debit">TARJETA CRÉDITO / DÉBITO</string>
+
+    <!-- Pantalla de Confirmación -->
+    <string name="order_success_title">¡Pedido Realizado!</string>
+    <string name="order_success_desc">Tu compra ha sido confirmada. Revisa los detalles en tu correo</string>
+    <string name="order_back_home">VOLVER AL INICIO</string>
+    <string name="order_download_pdf">DESCARGAR RECIBO PDF</string>
+
+    <!-- Pantalla de Mis Pedidos -->
+    <string name="orders_title">Mis Pedidos</string>
+    <string name="order_detail_title">Detalle del Pedido</string>
+    <string name="order_completed">COMPLETADO</string>
+    <string name="order_number_label">Pedido #%s</string>
+    <string name="order_date_label">Realizado el %s</string>
+    <string name="order_view_detail">VER DETALLE</string>
+    <string name="order_download_receipt">DESCARGAR COMPROBANTE</string>
+
+    <!-- Producto -->
+    <string name="product_list_title">Nuestros Productos</string>
+    <string name="product_new_label">NUEVO</string>
+    <string name="product_rating_count">%s reseñas</string>
+    <string name="product_by_label">por %s</string>
+    <string name="product_edition_label">EDICIÓN</string>
+    <string name="product_edition_standard">Estándar</string>
+    <string name="product_edition_deluxe">Deluxe</string>
+    <string name="product_quantity_label">CANTIDAD</string>
+    <string name="product_category_videojuegos">Videojuegos</string>
+    <string name="product_search_hint">Buscar juegos...</string>
+
+    <!-- Soporte e Incidencias -->
+    <string name="tickets_title">Centro de Soporte</string>
+    <string name="tickets_list_active">TICKETS ACTIVOS</string>
+    <string name="tickets_btn_create">NUEVA INCIDENCIA</string>
+    <string name="create_ticket_title">Reportar Incidencia</string>
+    <string name="create_ticket_subtitle">Cuéntanos qué sucedió con tu pedido gaming</string>
+    <string name="create_ticket_submit">ENVIAR TICKET</string>
+    <string name="create_ticket_type_label">TIPO DE INCIDENCIA</string>
+    <string name="create_ticket_order_label">NÚMERO DE PEDIDO</string>
+    <string name="create_ticket_desc_label">DESCRIPCIÓN</string>
+    <string name="create_ticket_desc_hint">Describe el problema aquí...</string>
+    <string name="ticket_qr_scan_btn">LEER QR PRODUCTO</string>
+    <string name="incidence_tech_support">Soporte Técnico</string>
+    <string name="incidence_help_desc">Estamos aquí para ayudarte con tus pedidos</string>
+    <string name="incidence_how_to_report">¿Cómo reportar un problema?</string>
+    <string name="incidence_step1_desc">Escanea el QR de tu producto o ingresa el código de tu pedido</string>
+    <string name="incidence_step2_desc">Describe detalladamente lo sucedido y adjunta fotos si es necesario</string>
+    <string name="incidence_step3_desc">Recibe una respuesta de nuestro equipo en menos de 24 horas</string>
+    <string name="incidence_create_btn">CREAR NUEVA INCIDENCIA</string>
+    <string name="incidence_view_tickets_btn">VER MIS TICKETS</string>
+    <string name="ticket_detail_timeline">LÍNEA DE TIEMPO</string>
+    <string name="ticket_detail_chat">CHAT DE AYUDA</string>
+    <string name="ticket_reopen">REABRIR TICKET</string>
+    <string name="ticket_number_label">Ticket #%s</string>
+    <string name="ticket_status_open">ABIERTO</string>
+    <string name="ticket_details_label">DETALLES DE LA INCIDENCIA</string>
+    <string name="refund_resolved">¡Ticket Resuelto!</string>
+
+    <!-- Chat -->
+    <string name="chat_support_title">Chat de Soporte</string>
+    <string name="chat_status_online">Online</string>
+    <string name="chat_input_hint">Escribe tu mensaje...</string>
+
+    <!-- QR Scanner -->
+    <string name="qr_scanner_instructions">Enfoca el QR dentro del recuadro</string>
+    <string name="qr_scanner_back">REGRESAR</string>
+
+    <!-- Perfil -->
+    <string name="profile_edit_btn">EDITAR PERFIL</string>
+    <string name="profile_label_email">Correo Electrónico</string>
+    <string name="profile_label_phone">Teléfono</string>
+    <string name="profile_label_location">Ubicación</string>
+    <string name="menu_logout_btn">CERRAR SESIÓN</string>
+
+    <!-- Sucursales y Mapas -->
+    <string name="menu_branches">Sucursales</string>
+    <string name="maps_title">Mapa de Sucursales</string>
+    <string name="maps_open_status">● ABIERTO</string>
+    <string name="maps_directions_btn">CÓMO LLEGAR</string>
+    <string name="branch_search_hint">Buscar sucursal</string>
+    <string name="branch_list_tab">LISTA</string>
+    <string name="branch_map_tab">MAPA</string>
+
+    <!-- Configuración -->
+    <string name="settings_title">Configuración</string>
+    <string name="settings_my_account">MI CUENTA</string>
+
+    <!-- Menú Desplegable -->
+    <string name="menu_home">Inicio</string>
+    <string name="menu_catalog">Catálogo</string>
+    <string name="menu_orders">Mis Pedidos</string>
+    <string name="menu_tickets">Mis Tickets</string>
+    <string name="menu_profile">Mi Perfil</string>
+    <string name="menu_about">Acerca de</string>
+
+    <!-- Acerca de -->
+    <string name="about_us_velva">Sobre Velva</string>
+    <string name="timeline_title">Línea de Tiempo</string>
+
+    <!-- Generales -->
+    <string name="option_confirm">CONFIRMAR</string>
+    <string name="option_cancel">CANCELAR</string>
+    <string name="option_acept_btn">ACEPTAR</string>
+    <string name="option_cancel_btn">CANCELAR</string>
+    <string name="loading">Cargando...</string>
+    <string name="error_connection">Error de conexión</string>
+    <string name="notifications_title">Notificaciones</string>
+    <string name="payment_title">Datos de Pago</string>
+    <string name="payment_card_number">NÚMERO DE TARJETA</string>
+    <string name="payment_card_name">NOMBRE DEL TITULAR</string>
+    <string name="payment_expiry_date">FECHA DE EXPIRACIÓN</string>
+    <string name="payment_cvv">CVV / CVC</string>
+    <string name="payment_save_card">Guardar para futuras compras</string>
+    <string name="payment_billing_details">DETALLES DE FACTURACIÓN</string>
+    <string name="payment_email_label">DIRECCIÓN DE CORREO</string>
+    <string name="payment_confirm_btn">CONFIRMAR PAGO</string>
+    <string name="filter_title">Filtros</string>
+    <string name="filter_clear_all">↺ Limpiar todo</string>
+    <string name="filter_sort_by">ORDENAR POR</string>
+    <string name="filter_popularity">Popularidad</string>
+    <string name="ticket_attachments">ARCHIVOS ADJUNTOS</string>
+    <string name="logout_confirm_msg">¿Deseas cerrar tu sesión?</string>
+    <string name="product_reviews_label">RESEÑAS</string>
+    <string name="category_title">Categorías</string>
+</resources>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_medium"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_medium">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txtTicketId"
+                style="@style/AppText.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ticket #TK-9283"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtTicketStatus"
+                style="@style/AppText.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/bg_timer_box"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:text="ABIERTO"
+                android:textStyle="bold"
+                android:alpha="1" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtTicketSubject"
+            style="@style/AppText.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="Error en descarga de código digital"
+            android:textColor="@color/blanco_claro" />
+
+        <TextView
+            android:id="@+id/txtTicketDate"
+            style="@style/AppText.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Actualizado: Hace 2 horas"
+            android:textColor="@color/amarillo_claro_pixel"
+            android:alpha="1" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="@dimen/spacing_small"
+            android:background="@color/verde_oscuro_pixel" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/icon_orders"
+                    app:tint="@color/verde_claro_pixel"
+                    android:contentDescription="Pedido" />
+                <TextView
+                    android:id="@+id/txtRelatedOrder"
+                    style="@style/AppText.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Pedido #PR-85920"
+                    android:textStyle="bold"
+                    android:alpha="1" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/AppText.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="ALTA"
+                android:textColor="@color/verde_claro_pixel"
+                android:textStyle="bold"
+                android:alpha="1" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

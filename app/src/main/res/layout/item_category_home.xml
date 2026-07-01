@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="20dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/viewCategoryBg"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_card_gaming" />
+
+    <ImageView
+        android:id="@+id/imgCategoryIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="-48dp"
+        android:src="@drawable/icon_action_categ"
+        app:tint="@color/verde_claro_pixel" />
+
+    <TextView
+        android:id="@+id/txtCategoryName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Action"
+        android:textColor="@color/blanco_intermedio"
+        android:textSize="12sp" />
+
+</LinearLayout>

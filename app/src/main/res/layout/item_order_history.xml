@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_medium"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txtOrderId"
+                style="@style/AppText.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pedido #PR-85920"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txtOrderStatus"
+                style="@style/AppText.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_timer_box"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:text="COMPLETADO"
+                android:textStyle="bold"
+                android:alpha="1" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtOrderDate"
+            style="@style/AppText.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Fecha: 24 Enero, 2026" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small">
+
+            <TextView
+                android:id="@+id/txtItemCount"
+                style="@style/AppText.Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3 Videojuegos" />
+
+            <TextView
+                android:id="@+id/txtOrderTotal"
+                style="@style/AppText.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="$139.97"
+                android:textColor="@color/verde_claro_pixel" />
+        </RelativeLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewDetail"
+            style="@style/AppButton.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:text="@string/order_view_detail"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

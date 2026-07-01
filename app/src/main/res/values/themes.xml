@@ -1,0 +1,57 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.PixelRootApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Colores principales del tema -->
+        <item name="colorPrimary">@color/verde_claro_pixel</item>
+        <item name="colorOnPrimary">@color/negro_oscuro</item>
+        <item name="colorSecondary">@color/amarillo_claro_pixel</item>
+
+        <!-- Colores de fondo de ventanas y superficies -->
+        <item name="android:windowBackground">@color/negro_oscuro</item>
+        <item name="colorSurface">@color/negro_intermedio</item>
+        <item name="android:statusBarColor">@color/negro_oscuro</item>
+
+        <!-- Tipografía global -->
+        <item name="android:fontFamily">@font/montserrat</item>
+
+        <!-- Configuración global para TextInputLayout -->
+        <item name="textInputStyle">@style/Widget.PixelRootApp.TextInputLayout</item>
+    </style>
+
+    <!-- Estilo personalizado para TextInputLayout -->
+    <style name="Widget.PixelRootApp.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/input_box_stroke</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxBackgroundColor">@color/negro_intermedio</item>
+        <item name="hintTextColor">@color/input_hint_color</item>
+        <item name="android:textColorHint">@color/blanco_intermedio</item>
+        <item name="helperTextTextColor">@color/blanco_claro</item>
+        <item name="endIconTint">@color/blanco_claro</item>
+    </style>
+
+    <style name="Theme.PixelRootApp" parent="Base.Theme.PixelRootApp">
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/verde_claro_pixel</item>
+    </style>
+
+    <!-- Overlays -->
+    <style name="Theme.PixelRootApp.AppBarOverlay" parent="ThemeOverlay.Material3.Dark">
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="colorControlNormal">@color/verde_claro_pixel</item>
+    </style>
+    <style name="Theme.PixelRootApp.PopupOverlay" parent="ThemeOverlay.Material3.Light"/>
+
+    <style name="RatingBarGreen" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/negro_intermedio</item>
+        <item name="colorControlActivated">@color/verde_claro_pixel</item>
+    </style>
+
+</resources>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_medium"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <!-- Image Container with Badge -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/imgContainer"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            app:strokeWidth="0dp"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/imgProduct"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/flyer_pixel"
+                android:contentDescription="Producto" />
+
+            <TextView
+                android:id="@+id/txtDiscountBadge"
+                style="@style/AppText.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_margin="8dp"
+                android:background="@drawable/bg_timer_box"
+                android:backgroundTint="@color/amarillo_claro_pixel"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:text="-25%"
+                android:textColor="@color/negro_oscuro"
+                android:textStyle="bold"
+                android:alpha="1" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Product Details -->
+        <TextView
+            android:id="@+id/txtTitle"
+            style="@style/AppText.Subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_marginEnd="8dp"
+            android:text="GTA VII"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/btnRemove"
+            app:layout_constraintStart_toEndOf="@id/imgContainer"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnRemove"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_timer_box"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/blanco_claro"
+            android:contentDescription="Eliminar" />
+
+        <TextView
+            android:id="@+id/txtSubtitle"
+            style="@style/AppText.Body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="por RockStars Games"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/txtTitle"
+            app:layout_constraintStart_toStartOf="@id/txtTitle"
+            app:layout_constraintTop_toBottomOf="@id/txtTitle" />
+
+        <LinearLayout
+            android:id="@+id/infoContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/txtTitle"
+            app:layout_constraintStart_toStartOf="@id/txtTitle"
+            app:layout_constraintTop_toBottomOf="@id/txtSubtitle">
+
+            <TextView
+                style="@style/AppText.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_timer_box"
+                android:backgroundTint="#8905269D"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="PS5"
+                android:textColor="@color/blanco_claro"
+                android:textStyle="bold"
+                android:alpha="1" />
+
+            <TextView
+                style="@style/AppText.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Edición Estándar"
+                android:alpha="1" />
+        </LinearLayout>
+
+        <!-- Quantity and Price Footer -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/txtTitle"
+            app:layout_constraintTop_toBottomOf="@id/infoContainer">
+
+            <LinearLayout
+                android:id="@+id/quantityControl"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_timer_box"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/btnMinus"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@null"
+                    android:padding="4dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_minus_thin"
+                    app:tint="@color/verde_claro_pixel"
+                    android:contentDescription="Menos" />
+
+                <TextView
+                    android:id="@+id/txtQuantity"
+                    style="@style/AppText.Subtitle"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textAlignment="center"
+                    android:textSize="14sp" />
+
+                <ImageButton
+                    android:id="@+id/btnPlus"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@null"
+                    android:padding="4dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_plus_thin"
+                    app:tint="@color/verde_claro_pixel"
+                    android:contentDescription="Más" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtCurrentPrice"
+                style="@style/AppText.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$59.99"
+                android:textColor="@color/verde_claro_pixel"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

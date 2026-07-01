@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="320dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingTop="48dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:background="@color/negro_oscuro">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgProfile"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/icon_default_profile"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/verde_claro_pixel"/>
+
+    <TextView
+        android:id="@+id/txtUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Mr. Pixel"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/blanco_claro"/>
+
+    <TextView
+        android:id="@+id/txtUserEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="mister@pixel.com"
+        android:textSize="16sp"
+        android:textColor="@color/blanco_intermedio"/>
+
+    <include
+        layout="@layout/app_foot_menu"/>
+
+</LinearLayout>

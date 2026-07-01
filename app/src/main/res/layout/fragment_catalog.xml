@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/negro_oscuro">
+
+    <!-- Header / Search Section -->
+    <LinearLayout
+        android:id="@+id/searchHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_medium"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchCatalogLayout"
+                style="@style/Widget.PixelRootApp.TextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:hintEnabled="false"
+                app:startIconDrawable="@drawable/ic_search_pixel"
+                app:startIconTint="@color/verde_claro_pixel">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSearchCatalog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/catalog_search_hint"
+                    android:textColor="@color/blanco_claro"
+                    android:textColorHint="@color/blanco_intermedio"
+                    android:textSize="@dimen/text_size_body"
+                    android:padding="@dimen/spacing_medium"
+                    android:singleLine="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/btnOpenFiltersResults"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:background="@drawable/bg_filter_button"
+                android:src="@drawable/icon_filter"
+                app:tint="@color/negro_oscuro"
+                android:padding="@dimen/spacing_medium"
+                android:scaleType="fitCenter"
+                android:contentDescription="Filtros"/>
+        </LinearLayout>
+
+        <!-- Active Filter Chips -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:scrollbars="none">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/catalog_filter_action_rpg"
+                    app:chipStrokeColor="@color/verde_claro_pixel"
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/verde_claro_pixel"
+                    app:chipCornerRadius="8dp"
+                    app:chipBackgroundColor="@color/negro_intermedio"
+                    app:closeIconVisible="true"
+                    app:closeIconTint="@color/verde_claro_pixel"/>
+
+                <TextView
+                    android:id="@+id/btnClearAll"
+                    style="@style/AppText.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:text="@string/catalog_filter_clear"
+                    android:textColor="@color/amarillo_claro_pixel"
+                    android:textSize="@dimen/text_size_caption"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+    <!-- Category Tabs -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategoryTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/spacing_medium"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/searchHeader"
+        tools:listitem="@layout/item_category_tab" />
+
+    <!-- Sorting & Info Bar -->
+    <LinearLayout
+        android:id="@+id/sortBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:paddingHorizontal="@dimen/spacing_medium"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/rvCategoryTabs">
+
+        <TextView
+            style="@style/AppText.Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/catalog_sort_label"
+            android:textSize="@dimen/text_size_body"/>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:scrollbars="none">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_flash_sale"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:text="@string/catalog_sort_popular"
+                    android:textColor="@color/verde_claro_pixel"
+                    android:textSize="@dimen/text_size_caption"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_small"
+                    android:background="@drawable/bg_timer_box"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:text="@string/catalog_sort_recent"
+                    android:textColor="@color/blanco_intermedio"
+                    android:textSize="@dimen/text_size_caption"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+    <!-- Results Info -->
+    <TextView
+        android:id="@+id/txtResultCount"
+        style="@style/AppText.Subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:text="142 resultados encontrados"
+        android:textColor="@color/verde_claro_pixel"
+        android:textSize="@dimen/text_size_body"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sortBar"/>
+
+    <!-- Games Grid -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCatalog"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:paddingHorizontal="12dp"
+        android:clipToPadding="false"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtResultCount"
+        tools:listitem="@layout/item_game_card_vertical" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav_menu"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.velvasoftware.pixelrootapp.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.velvasoftware.pixelrootapp.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" />
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.velvasoftware.pixelrootapp.ProductFragment"
+        android:label="fragment_product"
+        tools:layout="@layout/fragment_product" />
+    <fragment
+        android:id="@+id/branchFragment"
+        android:name="com.velvasoftware.pixelrootapp.BranchFragment"
+        android:label="fragment_branch"
+        tools:layout="@layout/fragment_branch" />
+    <fragment
+        android:id="@+id/catalogFragment"
+        android:name="com.velvasoftware.pixelrootapp.CatalogFragment"
+        android:label="fragment_catalog"
+        tools:layout="@layout/fragment_catalog" />
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.velvasoftware.pixelrootapp.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" />
+    <fragment
+        android:id="@+id/incidenceFragment"
+        android:name="com.velvasoftware.pixelrootapp.IncidenceFragment"
+        android:label="fragment_incidence"
+        tools:layout="@layout/fragment_incidence" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.velvasoftware.pixelrootapp.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.velvasoftware.pixelrootapp.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/productListFragment"
+        android:name="com.velvasoftware.pixelrootapp.ProductListFragment"
+        android:label="fragment_product_list"
+        tools:layout="@layout/fragment_product_list" />
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.velvasoftware.pixelrootapp.ProductDetailFragment"
+        android:label="fragment_product_detail"
+        tools:layout="@layout/fragment_product_detail" />
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="com.velvasoftware.pixelrootapp.CheckoutFragment"
+        android:label="fragment_checkout"
+        tools:layout="@layout/fragment_checkout" />
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.velvasoftware.pixelrootapp.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" />
+    <fragment
+        android:id="@+id/ordersFragment"
+        android:name="com.velvasoftware.pixelrootapp.OrdersFragment"
+        android:label="fragment_orders"
+        tools:layout="@layout/fragment_orders" />
+    <fragment
+        android:id="@+id/orderDetailFragment"
+        android:name="com.velvasoftware.pixelrootapp.OrderDetailFragment"
+        android:label="fragment_order_detail"
+        tools:layout="@layout/fragment_order_detail" />
+    <fragment
+        android:id="@+id/ticketListFragment"
+        android:name="com.velvasoftware.pixelrootapp.TicketListFragment"
+        android:label="fragment_ticket_list"
+        tools:layout="@layout/fragment_ticket_list" />
+    <fragment
+        android:id="@+id/createTicketFragment"
+        android:name="com.velvasoftware.pixelrootapp.CreateTicketFragment"
+        android:label="fragment_create_ticket"
+        tools:layout="@layout/fragment_create_ticket" />
+    <fragment
+        android:id="@+id/ticketDetailFragment"
+        android:name="com.velvasoftware.pixelrootapp.TicketDetailFragment"
+        android:label="fragment_ticket_detail"
+        tools:layout="@layout/fragment_ticket_detail" />
+    <fragment
+        android:id="@+id/ticketTimelineFragment"
+        android:name="com.velvasoftware.pixelrootapp.TicketTimelineFragment"
+        android:label="fragment_ticket_timeline"
+        tools:layout="@layout/fragment_ticket_timeline" />
+    <fragment
+        android:id="@+id/ticketChatFragment"
+        android:name="com.velvasoftware.pixelrootapp.TicketChatFragment"
+        android:label="fragment_ticket_chat"
+        tools:layout="@layout/fragment_ticket_chat" />
+    <fragment
+        android:id="@+id/refundFragment"
+        android:name="com.velvasoftware.pixelrootapp.RefundFragment"
+        android:label="fragment_refund"
+        tools:layout="@layout/fragment_refund" />
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.velvasoftware.pixelrootapp.NotificationsFragment"
+        android:label="fragment_notifications"
+        tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.velvasoftware.pixelrootapp.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/aboutUsFragment"
+        android:name="com.velvasoftware.pixelrootapp.AboutUsFragment"
+        android:label="fragment_about_us"
+        tools:layout="@layout/fragment_about_us" />
+    <fragment
+        android:id="@+id/devTeamFragment"
+        android:name="com.velvasoftware.pixelrootapp.DevTeamFragment"
+        android:label="fragment_dev_team"
+        tools:layout="@layout/fragment_dev_team" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.velvasoftware.pixelrootapp.PaymentFragment"
+        android:label="fragment_payment"
+        tools:layout="@layout/fragment_payment" />
+    <fragment
+        android:id="@+id/orderConfirmationFragment"
+        android:name="com.velvasoftware.pixelrootapp.OrderConfirmationFragment"
+        android:label="fragment_order_confirmation"
+        tools:layout="@layout/fragment_order_confirmation" />
+    <fragment
+        android:id="@+id/ticketAttachmentsFragment"
+        android:name="com.velvasoftware.pixelrootapp.TicketAttachmentsFragment"
+        android:label="fragment_ticket_attachments"
+        tools:layout="@layout/fragment_ticket_attachments" />
+    <fragment
+        android:id="@+id/qrScannerFragment"
+        android:name="com.velvasoftware.pixelrootapp.QrScannerFragment"
+        android:label="fragment_qr_scanner"
+        tools:layout="@layout/fragment_qr_scanner" />
+</navigation>

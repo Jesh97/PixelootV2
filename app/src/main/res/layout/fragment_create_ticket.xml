@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/negro_oscuro">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:id="@+id/headerCreateTicket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_large"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            style="@style/AppText.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_ticket_title" />
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btnSubmitTicket"
+        app:layout_constraintTop_toBottomOf="@id/headerCreateTicket">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/spacing_medium">
+
+            <TextView
+                style="@style/AppText.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_ticket_subtitle" />
+
+            <!-- Form Card -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Type Selector -->
+                    <TextView
+                        style="@style/AppText.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_ticket_type_label"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/typeSelectorLayout"
+                        style="@style/Widget.PixelRootApp.TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        app:hintEnabled="false">
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/spacing_medium"
+                            android:inputType="none"
+                            android:hint="Seleccione tipo de incidencia"
+                            android:textColor="@color/blanco_claro"
+                            android:textColorHint="@color/blanco_intermedio"
+                            android:textSize="@dimen/text_size_body" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Related Order -->
+                    <TextView
+                        style="@style/AppText.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:text="@string/create_ticket_order_label"
+                        android:textStyle="bold"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/orderInputLayout"
+                        style="@style/Widget.PixelRootApp.TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        app:hintEnabled="false">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etRelatedOrder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/spacing_medium"
+                            android:hint="Pedido #00000"
+                            android:textColor="@color/blanco_claro"
+                            android:textColorHint="@color/blanco_intermedio"
+                            android:textSize="@dimen/text_size_body" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Description -->
+                    <TextView
+                        style="@style/AppText.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:text="@string/create_ticket_desc_label"
+                        android:textStyle="bold"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/descriptionInputLayout"
+                        style="@style/Widget.PixelRootApp.TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        app:hintEnabled="false">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:gravity="top"
+                            android:hint="@string/create_ticket_desc_hint"
+                            android:textColor="@color/blanco_claro"
+                            android:textColorHint="@color/blanco_intermedio"
+                            android:textSize="@dimen/text_size_body"
+                            android:padding="@dimen/spacing_medium" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- QR Area -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnScanQr"
+                        style="@style/AppButton.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:text="@string/ticket_qr_scan_btn"
+                        android:textColor="@color/verde_claro_pixel"
+                        app:icon="@drawable/icon_readqr"
+                        app:iconTint="@color/verde_claro_pixel"
+                        app:iconGravity="textStart"/>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Space android:layout_width="match_parent" android:layout_height="40dp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSubmitTicket"
+        style="@style/AppButton.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_margin="@dimen/spacing_large"
+        android:text="@string/create_ticket_submit"
+        android:enabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

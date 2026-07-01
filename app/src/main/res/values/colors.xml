@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores base de fondo -->
+    <color name="negro_oscuro">#0B0E0C</color>
+    <color name="negro_intermedio">#0E160F</color>
+
+    <!-- Colores de texto y elementos claros -->
+    <color name="blanco_claro">#ECF9F2</color>
+    <color name="blanco_intermedio">#D9F2E5</color>
+
+    <!-- Colores acento y detalles (Verde y Amarillo Pixel) -->
+    <color name="verde_claro_pixel">#11ED5A</color>
+    <color name="verde_oscuro_pixel">#015D33</color>
+    <color name="amarillo_claro_pixel">#A5E51A</color>
+    <color name="amarillo_oscuro_pixel">#6B970C</color>
+</resources>

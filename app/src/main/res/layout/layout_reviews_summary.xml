@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_gaming"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.9"
+                android:textColor="@color/blanco_claro"
+                android:textSize="48sp"
+                android:textStyle="bold"/>
+            <RatingBar
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:rating="4.9"
+                android:theme="@style/RatingBarGreen" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="2,400 reviews"
+                android:textColor="@color/blanco_intermedio"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:orientation="vertical">
+
+            <!-- Bars -->
+            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
+            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
+            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
+            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.PixelRootApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Colores principales del tema -->
+        <item name="colorPrimary">@color/verde_claro_pixel</item>
+        <item name="colorOnPrimary">@color/negro_oscuro</item>
+        <item name="colorSecondary">@color/amarillo_claro_pixel</item>
+
+        <!-- Colores de fondo de ventanas y superficies -->
+        <item name="android:windowBackground">@color/negro_oscuro</item>
+        <item name="colorSurface">@color/negro_intermedio</item>
+        <item name="android:statusBarColor">@color/negro_oscuro</item>
+
+        <!-- Tipografía global -->
+        <item name="android:fontFamily">@font/montserrat</item>
+
+        <!-- Configuración global para TextInputLayout -->
+        <item name="textInputStyle">@style/Widget.PixelRootApp.TextInputLayout</item>
+    </style>
+
+    <!-- Overlays -->
+    <style name="Theme.PixelRootApp.AppBarOverlay" parent="ThemeOverlay.Material3.Dark"/>
+    <style name="Theme.PixelRootApp.PopupOverlay" parent="ThemeOverlay.Material3.Light"/>
+
+</resources>

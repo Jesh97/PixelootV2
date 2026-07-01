@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/negro_oscuro">
+
+    <!-- Header Section -->
+    <LinearLayout
+        android:id="@+id/headerBranch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_medium"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/AppText.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/menu_branches" />
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_branch"
+                app:tint="@color/verde_claro_pixel"
+                android:contentDescription="Icono sucursales" />
+        </RelativeLayout>
+
+        <!-- Search Bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchBranchLayout"
+            style="@style/Widget.PixelRootApp.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            app:hintEnabled="false"
+            app:startIconDrawable="@drawable/ic_search_pixel"
+            app:startIconTint="@color/verde_claro_pixel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearchBranch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/branch_search_hint"
+                android:textColor="@color/blanco_claro"
+                android:textColorHint="@color/blanco_intermedio"
+                android:textSize="@dimen/text_size_body"
+                android:padding="@dimen/spacing_medium"
+                android:inputType="text"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Toggle List/Map -->
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            app:checkedButton="@id/btnListView"
+            app:singleSelection="true"
+            app:selectionRequired="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnListView"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/branch_list_tab"
+                android:textColor="@color/verde_claro_pixel"
+                app:backgroundTint="@color/negro_intermedio" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMapView"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/branch_map_tab"
+                android:textColor="@color/blanco_claro"
+                app:backgroundTint="@color/negro_intermedio" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvBranches"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingHorizontal="@dimen/spacing_medium"
+        android:clipToPadding="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerBranch"
+        tools:listitem="@layout/item_branch_card" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

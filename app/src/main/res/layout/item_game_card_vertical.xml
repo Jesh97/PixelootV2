@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Thumbnail Area -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+            <ImageView
+                android:id="@+id/imgGame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/flyer_pixel"
+                android:contentDescription="Juego" />
+
+            <TextView
+                android:id="@+id/txtNewBadge"
+                style="@style/AppText.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_timer_box"
+                android:backgroundTint="@color/amarillo_claro_pixel"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:text="NUEVO"
+                android:textColor="@color/negro_oscuro"
+                android:textStyle="bold"
+                android:alpha="1" />
+        </RelativeLayout>
+
+        <!-- Content Area -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <!-- Title and Platform -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtGameTitle"
+                    style="@style/AppText.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="GTA VII"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/txtPlatform"
+                    style="@style/AppText.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_timer_box"
+                    android:backgroundTint="#8905269D"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp"
+                    android:text="PS5"
+                    android:textStyle="bold"
+                    android:alpha="1" />
+            </LinearLayout>
+
+            <!-- Category and Rating -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtCategory"
+                    style="@style/AppText.Body"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Action / RPG"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/txtRating"
+                    style="@style/AppText.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="★ 4.9"
+                    android:textColor="@color/amarillo_claro_pixel"
+                    android:textStyle="bold"
+                    android:alpha="1" />
+            </LinearLayout>
+
+            <!-- Price and Action -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:id="@+id/txtPrice"
+                    style="@style/AppText.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="$59.99"
+                    android:textColor="@color/verde_claro_pixel"
+                    android:textSize="18sp" />
+
+                <ImageButton
+                    android:id="@+id/btnAddCart"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/bg_filter_button"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_plus_thin"
+                    app:tint="@color/negro_oscuro"
+                    android:contentDescription="Añadir al carrito" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

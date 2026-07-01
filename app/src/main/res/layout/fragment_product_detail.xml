@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/negro_oscuro">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/stickyActionButtons"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header Image & Overlays -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="360dp">
+
+                <ImageView
+                    android:id="@+id/imgMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/flyer_pixel"
+                    android:contentDescription="Imagen del producto" />
+
+                <!-- Back Button -->
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:background="@drawable/bg_filter_button"
+                    android:src="@drawable/ic_chevron_left"
+                    app:tint="@color/negro_oscuro"
+                    android:padding="12dp"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Volver" />
+
+                <!-- Top Badges -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_toEndOf="@id/btnBack"
+                    android:layout_alignTop="@id/btnBack"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <TextView
+                        style="@style/AppText.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge_yellow"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="@string/product_new_label"
+                        android:textColor="@color/negro_oscuro"
+                        android:textStyle="bold"
+                        android:alpha="1" />
+                    <TextView
+                        style="@style/AppText.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_small"
+                        android:background="@drawable/bg_badge_yellow"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="-25%"
+                        android:textColor="@color/negro_oscuro"
+                        android:textStyle="bold"
+                        android:alpha="1" />
+                </LinearLayout>
+
+                <!-- Rating Overlay -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:background="@drawable/bg_card_gaming"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp"
+                    android:gravity="center_vertical">
+                    <TextView
+                        style="@style/AppText.Subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="★ 4.9"
+                        android:textColor="@color/verde_claro_pixel"
+                        android:textSize="16sp" />
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="14dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@color/verde_claro_pixel"/>
+                    <TextView
+                        style="@style/AppText.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12.4K reseñas"
+                        android:textSize="@dimen/text_size_body"/>
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:background="@drawable/bg_filter_button"
+                    android:src="@android:drawable/btn_star_big_off"
+                    app:tint="@color/negro_oscuro"
+                    android:contentDescription="Favorito" />
+            </RelativeLayout>
+
+            <!-- Gallery -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvGallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:clipToPadding="false"
+                android:paddingHorizontal="@dimen/spacing_medium"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_gallery_thumbnail" />
+
+            <!-- Info Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_large"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtGameTitle"
+                    style="@style/AppText.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GTA VII" />
+
+                <TextView
+                    style="@style/AppText.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="por RockStars Games"
+                    android:textColor="@color/blanco_claro"
+                    android:textSize="14sp" />
+
+                <!-- Pricing Card -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:background="@drawable/bg_card_gaming"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/txtPriceLarge"
+                        style="@style/AppText.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$59.99"
+                        android:textSize="36sp" />
+
+                    <TextView
+                        android:id="@+id/txtOldPrice"
+                        style="@style/AppText.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/txtPriceLarge"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:layout_alignBaseline="@id/txtPriceLarge"
+                        android:text="$79.99" />
+
+                    <!-- Edition Selection -->
+                    <TextView
+                        android:id="@+id/lblEdition"
+                        style="@style/AppText.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/txtPriceLarge"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        android:text="@string/product_edition_label"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cgEditions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lblEdition"
+                        android:layout_marginTop="12dp"
+                        app:singleSelection="true">
+                        <com.google.android.material.chip.Chip
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/product_edition_standard"
+                            app:chipStrokeColor="@color/verde_claro_pixel"
+                            android:textColor="@color/blanco_claro"
+                            app:chipBackgroundColor="@color/negro_oscuro"/>
+                        <com.google.android.material.chip.Chip
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/product_edition_deluxe"
+                            app:chipStrokeColor="@color/verde_claro_pixel"
+                            android:textColor="@color/blanco_claro"/>
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <!-- Quantity -->
+                    <TextView
+                        android:id="@+id/lblQuantity"
+                        style="@style/AppText.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/cgEditions"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        android:text="@string/product_quantity_label"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/containerQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lblQuantity"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_timer_box"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp">
+                        <ImageButton
+                            android:id="@+id/btnMinus"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@null"
+                            android:src="@drawable/ic_minus_thin"
+                            app:tint="@color/blanco_claro"
+                            android:padding="6dp"
+                            android:scaleType="fitCenter"
+                            android:contentDescription="Reducir cantidad" />
+                        <TextView
+                            android:id="@+id/txtQuantity"
+                            style="@style/AppText.Subtitle"
+                            android:layout_width="36dp"
+                            android:layout_height="wrap_content"
+                            android:text="1"
+                            android:textAlignment="center" />
+                        <ImageButton
+                            android:id="@+id/btnPlus"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@null"
+                            android:src="@drawable/ic_plus_thin"
+                            app:tint="@color/blanco_claro"
+                            android:padding="6dp"
+                            android:scaleType="fitCenter"
+                            android:contentDescription="Aumentar cantidad" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txtTotalBottom"
+                        style="@style/AppText.Subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignBottom="@id/containerQuantity"
+                        android:text="$59.99"
+                        android:textColor="@color/verde_claro_pixel"
+                        android:textSize="24sp" />
+
+                </RelativeLayout>
+
+                <!-- Reviews Section Mockup -->
+                <TextView
+                    style="@style/AppText.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xlarge"
+                    android:text="RESEÑAS" />
+
+                <include layout="@layout/layout_reviews_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/stickyActionButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/negro_oscuro"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_medium"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddToCart"
+            style="@style/AppButton.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:text="AÑADIR AL CARRITO"
+            app:icon="@drawable/icon_add_cart"
+            app:iconTint="@color/negro_oscuro"
+            app:iconSize="24dp"
+            app:iconGravity="textStart"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

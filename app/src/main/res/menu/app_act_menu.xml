@@ -1,0 +1,46 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/navigation_group"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/homeFragment"
+            android:icon="@drawable/icon_home"
+            android:title="@string/menu_home" />
+
+        <item
+            android:id="@+id/catalogFragment"
+            android:icon="@drawable/icon_catalog"
+            android:title="@string/menu_catalog" />
+
+        <item
+            android:id="@+id/ordersFragment"
+            android:icon="@drawable/icon_orders"
+            android:title="@string/menu_orders" />
+
+        <item
+            android:id="@+id/ticketListFragment"
+            android:icon="@drawable/icon_ticket"
+            android:title="@string/menu_tickets" />
+
+        <item
+            android:id="@+id/branchFragment"
+            android:icon="@drawable/icon_branch"
+            android:title="@string/menu_branches" />
+
+        <item
+            android:id="@+id/profileFragment"
+            android:icon="@drawable/icon_profile"
+            android:title="@string/menu_profile" />
+
+        <item
+            android:id="@+id/aboutUsFragment"
+            android:icon="@drawable/icon_info"
+            android:title="@string/menu_about" />
+
+    </group>
+
+</menu>

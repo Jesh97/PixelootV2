@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_large">
+
+        <!-- LOGO -->
+        <ImageView
+            android:id="@+id/logoImage"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:src="@drawable/pixel_root_icono_claro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="Pixel Root Logo" />
+
+        <!-- TITULOS -->
+        <TextView
+            android:id="@+id/verifyTitle"
+            style="@style/AppText.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:text="@string/verification_title"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logoImage" />
+
+        <TextView
+            android:id="@+id/verifySubtitle"
+            style="@style/AppText.Body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="@string/verification_subtitle"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/verifyTitle" />
+
+        <!-- CAMPO: CÓDIGO -->
+        <TextView
+            android:id="@+id/codeLabel"
+            style="@style/AppText.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xxlarge"
+            android:text="@string/verification_code_label"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/verifySubtitle" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/codeInputLayout"
+            style="@style/Widget.PixelRootApp.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/codeLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/codeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/verification_code_hint"
+                android:textColor="@color/blanco_claro"
+                android:textColorHint="@color/blanco_intermedio"
+                android:inputType="number"
+                android:maxLength="6"
+                android:textAlignment="center"
+                android:letterSpacing="0.5"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:padding="@dimen/spacing_medium" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- BOTÓN VERIFICAR -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVerify"
+            style="@style/AppButton.Primary"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:text="@string/verification_verify_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/codeInputLayout" />
+
+        <!-- REENVIAR -->
+        <TextView
+            android:id="@+id/resendText"
+            style="@style/AppText.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:text="@string/verification_resend"
+            android:textColor="@color/verde_claro_pixel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnVerify" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

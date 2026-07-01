@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/negro_oscuro">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:id="@+id/headerCheckout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_large"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            style="@style/AppText.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkout_title" />
+
+        <TextView
+            style="@style/AppText.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="@string/checkout_ssl_label" />
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomPayBar"
+        app:layout_constraintTop_toBottomOf="@id/headerCheckout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/spacing_medium">
+
+            <!-- Order Summary Card -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        style="@style/AppText.Subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/checkout_order_summary"
+                        android:textSize="@dimen/text_size_body" />
+
+                    <!-- Items mini list -->
+                    <LinearLayout
+                        android:id="@+id/containerOrderItems"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical">
+                        <!-- Items dinámicos -->
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1AFFFFFF" android:layout_marginVertical="@dimen/spacing_medium"/>
+
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_small">
+                        <TextView style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/checkout_subtotal" />
+                        <TextView style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$159.97" android:textColor="@color/blanco_claro" />
+                    </RelativeLayout>
+
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_small">
+                        <TextView style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/checkout_descuento" />
+                        <TextView style="@style/AppText.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$20.00" android:textColor="@color/blanco_claro" />
+                    </RelativeLayout>
+
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/AppText.Subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TOTAL" />
+                        <TextView
+                            style="@style/AppText.Subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="$139.97"
+                            android:textColor="@color/verde_claro_pixel"
+                            android:textSize="22sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Payment Method -->
+            <TextView
+                style="@style/AppText.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@string/checkout_payment_method"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
+                android:id="@+id/btnPaymentMethod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/spacing_medium"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:buttonTint="@color/verde_claro_pixel"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:orientation="vertical">
+                        <TextView style="@style/AppText.Subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/checkout_credit_debit" android:textSize="@dimen/text_size_body" />
+                        <TextView style="@style/AppText.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Visa, Mastercard, Amex" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/icon_info"
+                        app:tint="@color/blanco_intermedio"
+                        android:contentDescription="Info"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Space android:layout_width="match_parent" android:layout_height="40dp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Pay Bar -->
+    <LinearLayout
+        android:id="@+id/bottomPayBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/negro_oscuro"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_large"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView style="@style/AppText.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/checkout_pay_now" />
+            <TextView style="@style/AppText.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="● Seguro" android:textColor="@color/verde_claro_pixel" android:textStyle="bold" android:alpha="1"/>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPay"
+            style="@style/AppButton.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:paddingHorizontal="@dimen/spacing_large"
+            android:text="$139.97" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

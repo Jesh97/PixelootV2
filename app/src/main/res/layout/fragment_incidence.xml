@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/negro_oscuro"
+    android:fillViewport="true"
+    tools:context=".IncidenceFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="40dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:id="@+id/headerIncidence"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_large"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/AppText.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/incidence_tech_support" />
+
+            <TextView
+                style="@style/AppText.Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/incidence_help_desc" />
+        </LinearLayout>
+
+        <!-- Tutorial / Steps Section -->
+        <TextView
+            android:id="@+id/txtStepsTitle"
+            style="@style/AppText.Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:text="@string/incidence_how_to_report"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headerIncidence" />
+
+        <LinearLayout
+            android:id="@+id/stepsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/spacing_large"
+            app:layout_constraintTop_toBottomOf="@id/txtStepsTitle">
+
+            <!-- Step 1 -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_small"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_medium"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_timer_box"
+                        android:backgroundTint="@color/verde_oscuro_pixel"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="@color/verde_claro_pixel"
+                        android:textStyle="bold" />
+                    <TextView
+                        style="@style/AppText.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:text="@string/incidence_step1_desc"
+                        android:textSize="@dimen/text_size_caption" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Step 2 -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_small"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_medium"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_timer_box"
+                        android:backgroundTint="@color/verde_oscuro_pixel"
+                        android:gravity="center"
+                        android:text="2"
+                        android:textColor="@color/verde_claro_pixel"
+                        android:textStyle="bold" />
+                    <TextView
+                        style="@style/AppText.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:text="@string/incidence_step2_desc"
+                        android:textSize="@dimen/text_size_caption" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Step 3 -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_small"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_medium"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_timer_box"
+                        android:backgroundTint="@color/verde_oscuro_pixel"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textColor="@color/verde_claro_pixel"
+                        android:textStyle="bold" />
+                    <TextView
+                        style="@style/AppText.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:text="@string/incidence_step3_desc"
+                        android:textSize="@dimen/text_size_caption" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- Actions Section -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNewTicket"
+            style="@style/AppButton.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginHorizontal="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:text="@string/incidence_create_btn"
+            app:layout_constraintTop_toBottomOf="@id/stepsContainer" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewTickets"
+            style="@style/AppButton.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginHorizontal="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:text="@string/incidence_view_tickets_btn"
+            android:textColor="@color/verde_claro_pixel"
+            app:icon="@drawable/icon_receipt"
+            app:iconGravity="textStart"
+            app:iconTint="@color/verde_claro_pixel"
+            app:layout_constraintTop_toBottomOf="@id/btnNewTicket" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

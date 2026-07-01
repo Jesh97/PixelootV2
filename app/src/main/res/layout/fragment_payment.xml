@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/negro_oscuro">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:id="@+id/headerPayment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_title"
+            android:textColor="@color/verde_claro_pixel"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_payment"
+            app:tint="@color/verde_claro_pixel" />
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomConfirmBar"
+        app:layout_constraintTop_toBottomOf="@id/headerPayment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
+
+            <!-- Card Form Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card_gaming"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment_card_number"
+                    android:textColor="@color/blanco_intermedio"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:hintEnabled="false">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCardNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="XXXX XXXX XXXX XXXX"
+                        android:textColorHint="@color/blanco_intermedio"
+                        android:inputType="number"
+                        android:digits="0123456789 "
+                        android:maxLength="19"
+                        android:textColor="@color/blanco_claro"
+                        android:textSize="15sp"
+                        android:padding="16dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/payment_card_name"
+                    android:textColor="@color/blanco_intermedio"
+                    android:textSize="11sp"
+                    android:textStyle="bold"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:hintEnabled="false">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCardName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/login_email_or_username_hint"
+                        android:textColorHint="@color/blanco_intermedio"
+                        android:inputType="textPersonName|textCapCharacters"
+                        android:textColor="@color/blanco_claro"
+                        android:textSize="15sp"
+                        android:padding="16dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/payment_expiry_date" android:textColor="@color/blanco_intermedio" android:textSize="11sp" android:textStyle="bold"/>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:hintEnabled="false">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etExpiryDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="MM/YY"
+                                android:textColorHint="@color/blanco_intermedio"
+                                android:inputType="number"
+                                android:digits="0123456789/"
+                                android:maxLength="5"
+                                android:textColor="@color/blanco_claro"
+                                android:textSize="15sp"
+                                android:padding="16dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="16dp" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/payment_cvv" android:textColor="@color/blanco_intermedio" android:textSize="11sp" android:textStyle="bold"/>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:hintEnabled="false">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etCVV"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="***"
+                                android:textColorHint="@color/blanco_intermedio"
+                                android:inputType="numberPassword"
+                                android:maxLength="4"
+                                android:textColor="@color/blanco_claro"
+                                android:textSize="15sp"
+                                android:padding="16dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbSaveCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/payment_save_card"
+                    android:textColor="@color/blanco_claro"
+                    android:textSize="14sp"
+                    app:buttonTint="@color/verde_claro_pixel" />
+            </LinearLayout>
+
+            <!-- Billing Details -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/icon_mail" app:tint="@color/verde_claro_pixel"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/payment_billing_details" android:textColor="@color/blanco_intermedio" android:textSize="12sp" android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- Small Billing Form Mockup -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_card_gaming"
+                android:padding="20dp"
+                android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/payment_email_label" android:textColor="@color/blanco_intermedio" android:textSize="11sp" android:textStyle="bold"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:hintEnabled="false">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/login_email_or_username_hint"
+                        android:textColorHint="@color/blanco_intermedio"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/blanco_claro"
+                        android:textSize="14sp"
+                        android:padding="16dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <Space android:layout_width="match_parent" android:layout_height="40dp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomConfirmBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/negro_oscuro"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmPayment"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/payment_confirm_btn"
+            android:textColor="@color/negro_oscuro"
+            android:textStyle="bold"
+            android:background="@drawable/btn_primary_color"
+            app:backgroundTint="@null"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
