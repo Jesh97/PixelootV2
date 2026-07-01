@@ -25,6 +25,8 @@ import androidx.navigation.Navigation;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.velvasoftware.pixelrootapp.databinding.ActivityMenuBinding;
+import com.velvasoftware.pixelrootapp.network.SessionManager;
+import android.widget.TextView;
 
 import androidx.navigation.NavDestination;
 import androidx.navigation.NavOptions;
@@ -102,6 +104,14 @@ public class MenuActivity extends AppCompatActivity {
         View headerView = navigationView.getHeaderView(0);
         MaterialButton btnLogout = headerView.findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(v -> showLogoutDialog());
+
+        // Datos reales del usuario logueado (guardados en LoginActivity tras POST /api/auth/login)
+        SessionManager session = SessionManager.getInstance(this);
+        TextView txtUserName = headerView.findViewById(R.id.txtUserName);
+        TextView txtUserEmail = headerView.findViewById(R.id.txtUserEmail);
+        String fullName = (session.getNombre() + " " + session.getApellido()).trim();
+        txtUserName.setText(fullName.isEmpty() ? "Usuario" : fullName);
+        txtUserEmail.setText(session.getCorreo());
     }
 
     @Override
@@ -142,10 +152,11 @@ public class MenuActivity extends AppCompatActivity {
 
         btnAccept.setOnClickListener(v -> {
             dialog.dismiss();
+            SessionManager.getInstance(MenuActivity.this).clear();
             Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            finish(); 
+            finish();
         });
 
         dialog.show();

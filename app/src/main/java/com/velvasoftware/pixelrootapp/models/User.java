@@ -26,6 +26,15 @@ public class User {
     @SerializedName("sucursal_id")
     private Integer sucursalId;
 
+    @SerializedName("telefono")
+    private String phone;
+
+    @SerializedName("direccion")
+    private String address;
+
+    @SerializedName("imagen_perfil")
+    private String profileImageUrl;
+
     @SerializedName("token")
     private String token;
 
@@ -48,6 +57,15 @@ public class User {
 
     public Integer getSucursalId() { return sucursalId; }
     public void setSucursalId(Integer sucursalId) { this.sucursalId = sucursalId; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public String getProfileImageUrl() { return profileImageUrl; }
+    public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
 
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
