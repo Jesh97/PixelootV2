@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "634937954623",
+    "project_id": "pixelroot-79c8d",
+    "storage_bucket": "pixelroot-79c8d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634937954623:android:3da98c815633687010038a",
+        "android_client_info": {
+          "package_name": "com.velvasoftware.pixelrootapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtnp9a7R1y4Q6cdWKgviAQnYGvcP4u8xA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
