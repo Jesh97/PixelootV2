@@ -18,24 +18,27 @@
             android:gravity="center"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/txtRatingBig"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4.9"
+                android:text="0.0"
                 android:textColor="@color/blanco_claro"
                 android:textSize="48sp"
                 android:textStyle="bold"/>
             <RatingBar
+                android:id="@+id/ratingBarBig"
                 style="@style/Widget.AppCompat.RatingBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:numStars="5"
-                android:rating="4.9"
+                android:rating="0"
                 android:theme="@style/RatingBarGreen" />
             <TextView
+                android:id="@+id/txtReviewCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="2,400 reviews"
+                android:text="Calificación promedio"
                 android:textColor="@color/blanco_intermedio"
                 android:textSize="12sp"/>
         </LinearLayout>
@@ -46,12 +49,13 @@
             android:layout_marginStart="24dp"
             android:orientation="vertical">
 
-            <!-- Bars -->
-            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content"/>
-            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
-            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
-            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
-            <include layout="@layout/layout_rating_bar_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
+            <!-- Barras: estimadas a partir de calificacion_promedio, no son conteos reales
+                 (el backend no tiene tabla de reseñas individuales todavía) -->
+            <include layout="@layout/layout_rating_bar_row" android:id="@+id/row5" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            <include layout="@layout/layout_rating_bar_row" android:id="@+id/row4" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
+            <include layout="@layout/layout_rating_bar_row" android:id="@+id/row3" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
+            <include layout="@layout/layout_rating_bar_row" android:id="@+id/row2" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
+            <include layout="@layout/layout_rating_bar_row" android:id="@+id/row1" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"/>
 
         </LinearLayout>
     </LinearLayout>

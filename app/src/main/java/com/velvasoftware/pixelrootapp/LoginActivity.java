@@ -81,7 +81,8 @@ public class LoginActivity extends AppCompatActivity {
                             user.getFirstName(),
                             user.getLastName(),
                             user.getEmail(),
-                            user.getRolId()
+                            user.getRolId(),
+                            binding.rememberCheckBox.isChecked()
                     );
 
                     startActivity(new Intent(LoginActivity.this, MenuActivity.class));

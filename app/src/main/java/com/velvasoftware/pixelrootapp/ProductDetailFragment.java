@@ -36,6 +36,8 @@ public class ProductDetailFragment extends Fragment {
 
     private FragmentProductDetailBinding binding;
     private int currentProductId = -1;
+    private double basePrice = 0;
+    private static final double DELUXE_SURCHARGE = 20.0;
 
     public ProductDetailFragment() {}
 
@@ -62,14 +64,38 @@ public class ProductDetailFragment extends Fragment {
         binding.btnPlus.setOnClickListener(v -> {
             int current = Integer.parseInt(binding.txtQuantity.getText().toString());
             binding.txtQuantity.setText(String.valueOf(current + 1));
+            updateDisplayedPrice();
         });
 
         binding.btnMinus.setOnClickListener(v -> {
             int current = Integer.parseInt(binding.txtQuantity.getText().toString());
             if (current > 1) {
                 binding.txtQuantity.setText(String.valueOf(current - 1));
+                updateDisplayedPrice();
             }
         });
+    }
+
+    private void setupEditionSelector() {
+        binding.cgEditions.setOnCheckedStateChangeListener((group, checkedIds) -> updateDisplayedPrice());
+    }
+
+    private boolean isDeluxeSelected() {
+        return binding.chipDeluxe.isChecked();
+    }
+
+    /** Precio unitario mostrado: precio real de la BD + $20 si el usuario eligió Deluxe (solo visual, ver nota en addToCart). */
+    private double currentUnitPrice() {
+        return basePrice + (isDeluxeSelected() ? DELUXE_SURCHARGE : 0);
+    }
+
+    private void updateDisplayedPrice() {
+        if (binding == null) return;
+        int quantity = Integer.parseInt(binding.txtQuantity.getText().toString());
+        double unitPrice = currentUnitPrice();
+
+        binding.txtPriceLarge.setText(String.format("$%.2f", unitPrice));
+        binding.txtTotalBottom.setText(String.format("$%.2f", unitPrice * quantity));
     }
 
     private void loadProductDetails() {
@@ -115,11 +141,14 @@ public class ProductDetailFragment extends Fragment {
     private void bindProduct(Product product) {
         binding.txtGameTitle.setText(product.getTitle());
 
-        binding.txtPriceLarge.setText(String.format("$%.2f", product.getPrice()));
-        binding.txtTotalBottom.setText(String.format("$%.2f", product.getPrice()));
+        basePrice = product.getPrice();
         binding.txtOldPrice.setVisibility(View.GONE); // no hay precio de descuento real en el backend
+        setupEditionSelector();
+        updateDisplayedPrice();
 
         binding.txtRatingValue.setText(product.getRating());
+
+        bindReviewsSummary(product.getRatingValue());
 
         String description = product.getDescription();
         binding.txtDescriptionDetail.setText(
@@ -131,6 +160,11 @@ public class ProductDetailFragment extends Fragment {
     private void addToCart() {
         if (currentProductId <= 0) return;
 
+        // NOTA: el backend no tiene el concepto de "edición" (no hay columna para eso en
+        // juegos ni en detalle_pedido), así que el recargo de $20 por Deluxe es SOLO visual
+        // en esta pantalla. Al agregar al carrito, el precio que se guarda es el precio real
+        // de la BD (juegos.precio) para ese juego, sin el recargo. Si quieres que el recargo
+        // se cobre de verdad, hay que agregar una columna/tabla de ediciones en el backend.
         int cantidad = Integer.parseInt(binding.txtQuantity.getText().toString());
         binding.btnAddToCart.setEnabled(false);
 
@@ -156,6 +190,49 @@ public class ProductDetailFragment extends Fragment {
                 Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    /**
+     * El backend NO tiene tabla de reseñas individuales, solo el promedio (calificacion_promedio)
+     * por juego. El número grande y las estrellas SÍ son 100% reales. Las 5 barras de abajo son
+     * una ESTIMACIÓN matemática a partir de ese único promedio (más alto el promedio, más
+     * concentrado el "peso" en 5★/4★), no conteos reales de reseñas por estrella —
+     * cuando exista una tabla real de reseñas, reemplazar esta función por un conteo real.
+     */
+    private void bindReviewsSummary(double average) {
+        binding.reviewsSummary.txtRatingBig.setText(String.format("%.1f", average));
+        binding.reviewsSummary.ratingBarBig.setRating((float) average);
+
+        int[] percents = estimateStarDistribution(average);
+
+        bindBarRow(binding.reviewsSummary.row5, "5", percents[0]);
+        bindBarRow(binding.reviewsSummary.row4, "4", percents[1]);
+        bindBarRow(binding.reviewsSummary.row3, "3", percents[2]);
+        bindBarRow(binding.reviewsSummary.row2, "2", percents[3]);
+        bindBarRow(binding.reviewsSummary.row1, "1", percents[4]);
+    }
+
+    private void bindBarRow(com.velvasoftware.pixelrootapp.databinding.LayoutRatingBarRowBinding row, String star, int percent) {
+        row.txtStarLabel.setText(star);
+        row.progressBar.setProgress(percent);
+        row.txtPercent.setText(percent + "%");
+    }
+
+    /** Distribución sintética: concentra el peso alrededor del promedio real, en % que suman ~100. */
+    private int[] estimateStarDistribution(double average) {
+        double[] weights = new double[5]; // índice 0 = 5★ ... índice 4 = 1★
+        for (int star = 5; star >= 1; star--) {
+            double distancia = Math.abs(average - star);
+            weights[5 - star] = Math.max(0.05, 1.0 - (distancia / 4.0));
+        }
+        double sum = 0;
+        for (double w : weights) sum += w;
+
+        int[] percents = new int[5];
+        for (int i = 0; i < 5; i++) {
+            percents[i] = (int) Math.round((weights[i] / sum) * 100);
+        }
+        return percents;
     }
 
     private void setupGallery() {
