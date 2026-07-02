@@ -25,6 +25,11 @@ public class CartItem {
     @SerializedName("subtotal")
     private double subtotal;
 
+    @SerializedName("es_digital")
+    private int digital;
+
+    public boolean isDigital() { return digital == 1; }
+
     public int getDetalleId() { return detalleId; }
     public int getJuegoId() { return juegoId; }
     public String getTitle() { return title; }

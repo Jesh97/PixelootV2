@@ -97,21 +97,28 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Sucursal de recojo -->
-            <TextView
-                style="@style/AppText.Caption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:text="SUCURSAL DE RECOJO"
-                android:textStyle="bold" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cgBranches"
+            <!-- Sucursal de recojo: solo se muestra si el carrito tiene al menos un juego físico -->
+            <LinearLayout
+                android:id="@+id/sectionBranch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
-                app:singleSelection="true" />
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/AppText.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="SUCURSAL DE RECOJO"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgBranches"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    app:singleSelection="true" />
+            </LinearLayout>
 
 
             <!-- Payment Method -->
@@ -128,7 +135,8 @@
                 android:id="@+id/btnPaymentMethod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium">
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -161,6 +169,14 @@
                         android:contentDescription="Info"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Tarjetas guardadas + opción de tarjeta nueva, se arma dinámicamente -->
+            <LinearLayout
+                android:id="@+id/containerPaymentMethods"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="vertical" />
 
             <Space android:layout_width="match_parent" android:layout_height="40dp"/>
         </LinearLayout>

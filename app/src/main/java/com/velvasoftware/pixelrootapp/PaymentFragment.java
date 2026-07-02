@@ -1,6 +1,8 @@
 package com.velvasoftware.pixelrootapp;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,9 @@ import com.velvasoftware.pixelrootapp.databinding.FragmentPaymentBinding;
 import com.velvasoftware.pixelrootapp.models.Order;
 import com.velvasoftware.pixelrootapp.network.api.OrderApi;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
+import com.velvasoftware.pixelrootapp.network.api.UserApi;
 import com.velvasoftware.pixelrootapp.network.request.ConfirmOrderRequest;
+import com.velvasoftware.pixelrootapp.network.request.SaveCardRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 
 import retrofit2.Call;
@@ -41,15 +45,76 @@ public class PaymentFragment extends Fragment {
 
         sucursalId = getArguments() != null ? getArguments().getInt("sucursalId", -1) : -1;
 
+        setupExpiryDateFormatting();
+
         binding.btnConfirmPayment.setOnClickListener(v -> confirmarPedido());
     }
 
-    private void confirmarPedido() {
-        if (sucursalId <= 0) {
-            Toast.makeText(getContext(), "Falta seleccionar la sucursal", Toast.LENGTH_SHORT).show();
-            return;
+    /**
+     * Formatea el campo como MM/YY mientras el usuario escribe, igual que las apps de pago reales:
+     * - Si el primer dígito es 2-9 (mes de un solo dígito, ej. "6"), lo completa a "06" y avanza.
+     * - Si el primer dígito es 0 o 1, espera el segundo dígito antes de decidir.
+     * - Nunca deja que el mes quede fuera de 01-12 (lo recorta a 12 si se pasa).
+     * - Inserta el "/" automáticamente entre mes y año.
+     */
+    private void setupExpiryDateFormatting() {
+        binding.etExpiryDate.addTextChangedListener(new TextWatcher() {
+            private boolean isFormatting = false;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (isFormatting) return;
+
+                String digits = editable.toString().replaceAll("[^0-9]", "");
+                if (digits.length() > 4) digits = digits.substring(0, 4);
+
+                String formatted = formatExpiry(digits);
+
+                isFormatting = true;
+                editable.replace(0, editable.length(), formatted);
+                binding.etExpiryDate.setSelection(formatted.length());
+                isFormatting = false;
+            }
+        });
+    }
+
+    private String formatExpiry(String digits) {
+        if (digits.isEmpty()) return "";
+
+        String month = digits.length() >= 2 ? digits.substring(0, 2) : digits;
+
+        if (month.length() == 1) {
+            // Un solo dígito ingresado: si ya no puede ser un mes válido de 2 dígitos (2-9),
+            // lo completamos con 0 adelante (6 -> 06) y pasamos directo al año.
+            if (!month.equals("0") && !month.equals("1")) {
+                month = "0" + month;
+            } else {
+                return month; // "0" o "1": esperamos el segundo dígito
+            }
+        } else {
+            int monthValue = Integer.parseInt(month);
+            if (monthValue == 0) {
+                month = "01";
+            } else if (monthValue > 12) {
+                month = "12";
+            }
         }
 
+        if (digits.length() <= 2) {
+            return month;
+        }
+
+        String year = digits.substring(2);
+        return month + "/" + year;
+    }
+
+    private void confirmarPedido() {
         String cardNumber = binding.etCardNumber.getText().toString().trim();
         String cardName = binding.etCardName.getText().toString().trim();
         String expiry = binding.etExpiryDate.getText().toString().trim();
@@ -60,13 +125,19 @@ public class PaymentFragment extends Fragment {
             return;
         }
 
+        if (!expiry.matches("(0[1-9]|1[0-2])/\\d{2}")) {
+            Toast.makeText(getContext(), "La fecha de expiración debe tener el formato MM/YY", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // NOTA: no hay una pasarela de pago real conectada (Stripe/Culqi/etc). Estos datos
         // de tarjeta solo se validan que no estén vacíos; NO se procesan ni se envían a
         // ningún lado. Lo único real es la creación del pedido en la base de datos.
         binding.btnConfirmPayment.setEnabled(false);
 
         OrderApi api = RetrofitClient.getOrderApi();
-        api.confirmarPedido(new ConfirmOrderRequest(sucursalId, "TARJETA")).enqueue(new Callback<ApiResponse<Order>>() {
+        Integer sucursalIdToSend = sucursalId > 0 ? sucursalId : null;
+        api.confirmarPedido(new ConfirmOrderRequest(sucursalIdToSend, "TARJETA")).enqueue(new Callback<ApiResponse<Order>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<Order>> call, @NonNull Response<ApiResponse<Order>> response) {
                 if (binding == null) return;
@@ -74,6 +145,12 @@ public class PaymentFragment extends Fragment {
 
                 ApiResponse<Order> body = response.body();
                 if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+
+                    if (binding.cbSaveCard.isChecked()) {
+                        String brand = binding.chipVisa.isChecked() ? "VISA" : "MASTERCARD";
+                        saveCardForFutureUse(cardNumber, cardName, expiry, brand);
+                    }
+
                     Order order = body.getData();
                     Bundle args = new Bundle();
                     args.putInt("orderId", order.getOrderId());
@@ -90,6 +167,29 @@ public class PaymentFragment extends Fragment {
                 if (binding == null) return;
                 binding.btnConfirmPayment.setEnabled(true);
                 Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    /**
+     * Guarda la tarjeta para futuras compras. El número completo viaja UNA vez al servidor
+     * (dentro de la misma llamada de confirmación de pago, por HTTPS) solo para que el backend
+     * extraiga los últimos 4 dígitos y detecte la marca — nunca se guarda el número completo
+     * ni el CVV en la base de datos (ver tarjeta_model.py). El CVV ni siquiera se envía aquí.
+     */
+    private void saveCardForFutureUse(String cardNumber, String cardName, String expiry, String brand) {
+        UserApi api = RetrofitClient.getUserApi();
+        api.saveCard(new SaveCardRequest(cardName, cardNumber, expiry, brand)).enqueue(new Callback<ApiResponse<java.util.List<com.velvasoftware.pixelrootapp.models.SavedCard>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<java.util.List<com.velvasoftware.pixelrootapp.models.SavedCard>>> call,
+                                   @NonNull Response<ApiResponse<java.util.List<com.velvasoftware.pixelrootapp.models.SavedCard>>> response) {
+                // No bloqueamos ni avisamos nada especial: si falla, el pedido ya se confirmó
+                // igual, solo no se guardó la tarjeta para la próxima vez.
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<java.util.List<com.velvasoftware.pixelrootapp.models.SavedCard>>> call, @NonNull Throwable t) {
+                // Igual, no interrumpe el flujo de compra.
             }
         });
     }

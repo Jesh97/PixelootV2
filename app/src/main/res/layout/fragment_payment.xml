@@ -153,6 +153,43 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="MARCA DE LA TARJETA"
+                    android:textColor="@color/blanco_intermedio"
+                    android:textSize="11sp"
+                    android:textStyle="bold"/>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgCardBrand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipVisa"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Visa"
+                        app:chipStrokeColor="@color/verde_claro_pixel"
+                        android:textColor="@color/blanco_claro"
+                        app:chipBackgroundColor="@color/negro_oscuro"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipMastercard"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mastercard"
+                        app:chipStrokeColor="@color/verde_claro_pixel"
+                        android:textColor="@color/blanco_claro"/>
+                </com.google.android.material.chip.ChipGroup>
+
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/cbSaveCard"
                     android:layout_width="match_parent"

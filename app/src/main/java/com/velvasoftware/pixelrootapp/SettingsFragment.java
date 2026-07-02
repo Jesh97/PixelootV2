@@ -33,9 +33,9 @@ public class SettingsFragment extends Fragment {
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
-        binding.btnEditProfile.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Editar Perfil - Próximamente", Toast.LENGTH_SHORT).show();
-        });
+        binding.btnEditProfile.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.editProfileFragment)
+        );
 
         binding.btnSavedAddresses.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Direcciones Guardadas - Próximamente", Toast.LENGTH_SHORT).show();
