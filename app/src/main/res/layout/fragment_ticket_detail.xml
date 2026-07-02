@@ -24,6 +24,7 @@
             android:textStyle="bold"/>
 
         <TextView
+            android:id="@+id/txtDetailStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -67,6 +68,7 @@
                     android:letterSpacing="0.05"/>
 
                 <TextView
+                    android:id="@+id/txtDetailTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -76,6 +78,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txtDetailDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -92,7 +95,7 @@
 
                 <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pedido asociado:" android:textColor="@color/blanco_intermedio" android:textSize="13sp"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="#PR-85920" android:textColor="@color/verde_claro_pixel" android:textSize="13sp" android:textStyle="bold"/>
+                    <TextView android:id="@+id/txtDetailOrder" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="#PR-85920" android:textColor="@color/verde_claro_pixel" android:textSize="13sp" android:textStyle="bold"/>
                 </RelativeLayout>
             </LinearLayout>
 

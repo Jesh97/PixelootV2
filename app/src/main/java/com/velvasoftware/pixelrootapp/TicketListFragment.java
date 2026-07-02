@@ -76,9 +76,11 @@ public class TicketListFragment extends Fragment {
             if (cerrado) {
                 itemBinding.txtTicketStatus.setAlpha(0.6f);
                 itemBinding.txtTicketStatus.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blanco_intermedio)));
+                itemBinding.txtTicketStatus.setTextColor(getResources().getColor(R.color.negro_oscuro));
             } else {
                 itemBinding.txtTicketStatus.setAlpha(1.0f);
                 itemBinding.txtTicketStatus.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.verde_claro_pixel)));
+                itemBinding.txtTicketStatus.setTextColor(getResources().getColor(R.color.negro_oscuro));
             }
 
             itemBinding.getRoot().setOnClickListener(v -> {
