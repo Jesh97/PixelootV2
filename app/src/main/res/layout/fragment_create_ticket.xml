@@ -153,6 +153,33 @@
                         app:iconTint="@color/verde_claro_pixel"
                         app:iconGravity="textStart"/>
 
+                    <!-- Sucursal de devolución (solo visible si el motivo es REEMBOLSO) -->
+                    <LinearLayout
+                        android:id="@+id/sectionSucursalDevolucion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <TextView
+                            style="@style/AppText.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sucursal de devolución"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/cgSucursalesDevolucion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_small"
+                            app:singleSelection="true"
+                            app:chipSpacingHorizontal="8dp" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

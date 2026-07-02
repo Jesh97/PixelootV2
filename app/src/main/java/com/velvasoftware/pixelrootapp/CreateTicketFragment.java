@@ -16,10 +16,12 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.velvasoftware.pixelrootapp.databinding.FragmentCreateTicketBinding;
+import com.velvasoftware.pixelrootapp.models.Branch;
 import com.velvasoftware.pixelrootapp.models.Order;
 import com.velvasoftware.pixelrootapp.models.Ticket;
 import com.velvasoftware.pixelrootapp.models.TicketPriority;
 import com.velvasoftware.pixelrootapp.models.TicketType;
+import com.velvasoftware.pixelrootapp.network.api.BranchApi;
 import com.velvasoftware.pixelrootapp.network.api.OrderApi;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
 import com.velvasoftware.pixelrootapp.network.api.TicketApi;
@@ -45,8 +47,12 @@ public class CreateTicketFragment extends Fragment {
     private final List<TicketType> ticketTypes = new ArrayList<>();
     private final List<TicketPriority> priorities = new ArrayList<>();
     private final List<Order> userOrders = new ArrayList<>();
+    private final List<Branch> branches = new ArrayList<>();
     private TicketType selectedType;
     private Order selectedOrder;
+    private Integer selectedBranchId = null;
+
+    private static final String TIPO_REEMBOLSO = "REEMBOLSO";
 
     public CreateTicketFragment() {}
 
@@ -162,8 +168,89 @@ public class CreateTicketFragment extends Fragment {
 
         binding.autoCompleteType.setOnItemClickListener((parent, v, position, id) -> {
             selectedType = ticketTypes.get(position);
+            onTicketTypeSelected();
             validateForm();
         });
+    }
+
+    /**
+     * El motivo "REEMBOLSO" es especial: además del pedido y la descripción, requiere que
+     * el usuario elija en qué sucursal hará la devolución física del producto.
+     */
+    private void onTicketTypeSelected() {
+        boolean esReembolso = selectedType != null
+                && TIPO_REEMBOLSO.equalsIgnoreCase(selectedType.getName());
+
+        binding.sectionSucursalDevolucion.setVisibility(esReembolso ? View.VISIBLE : View.GONE);
+
+        if (esReembolso && branches.isEmpty()) {
+            loadBranches();
+        }
+        if (!esReembolso) {
+            selectedBranchId = null;
+        }
+    }
+
+    private void loadBranches() {
+        BranchApi api = RetrofitClient.getBranchApi();
+        api.getBranches().enqueue(new Callback<ApiResponse<List<Branch>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<Branch>>> call, @NonNull Response<ApiResponse<List<Branch>>> response) {
+                if (binding == null) return;
+
+                ApiResponse<List<Branch>> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    branches.clear();
+                    branches.addAll(body.getData());
+                    bindSucursalChips();
+                } else {
+                    Log.e("TICKETS_API", "No se pudieron cargar sucursales: " + response.code());
+                    Toast.makeText(getContext(), "No se pudieron cargar las sucursales", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<Branch>>> call, @NonNull Throwable t) {
+                Log.e("TICKETS_API", "Fallo al cargar sucursales", t);
+                if (binding == null) return;
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void bindSucursalChips() {
+        binding.cgSucursalesDevolucion.removeAllViews();
+        selectedBranchId = null;
+
+        for (Branch branch : branches) {
+            com.google.android.material.chip.Chip chip =
+                    new com.google.android.material.chip.Chip(requireContext(), null, com.google.android.material.R.attr.chipStyle);
+            chip.setText(branch.getName());
+            chip.setCheckable(true);
+            chip.setClickable(true);
+            chip.setTag(branch.getId());
+            styleSucursalChip(chip);
+
+            chip.setOnClickListener(v -> {
+                for (int i = 0; i < binding.cgSucursalesDevolucion.getChildCount(); i++) {
+                    com.google.android.material.chip.Chip other =
+                            (com.google.android.material.chip.Chip) binding.cgSucursalesDevolucion.getChildAt(i);
+                    other.setChecked(other == chip);
+                    styleSucursalChip(other);
+                }
+                selectedBranchId = (int) chip.getTag();
+                validateForm();
+            });
+
+            binding.cgSucursalesDevolucion.addView(chip);
+        }
+    }
+
+    private void styleSucursalChip(com.google.android.material.chip.Chip chip) {
+        boolean checked = chip.isChecked();
+        chip.setChipBackgroundColorResource(checked ? R.color.verde_claro_pixel : R.color.negro_oscuro);
+        chip.setTextColor(getResources().getColor(checked ? R.color.negro_oscuro : R.color.blanco_intermedio));
+        chip.setChipStrokeColorResource(checked ? R.color.verde_claro_pixel : R.color.verde_oscuro_pixel);
     }
 
     /** "JUEGO_NO_DESCARGA" -> "Juego no descarga" (más legible para el usuario). */
@@ -195,6 +282,12 @@ public class CreateTicketFragment extends Fragment {
             return;
         }
 
+        boolean esReembolso = TIPO_REEMBOLSO.equalsIgnoreCase(selectedType.getName());
+        if (esReembolso && selectedBranchId == null) {
+            Toast.makeText(getContext(), "Selecciona la sucursal de devolución", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // El formulario no le pide prioridad al usuario; usamos "MEDIA" por defecto si existe
         // en las prioridades reales que trajo la API (si no, la primera disponible).
         int prioridadId = findPriorityIdByName("MEDIA");
@@ -207,7 +300,7 @@ public class CreateTicketFragment extends Fragment {
                 prioridadId,
                 formatTypeName(selectedType.getName()), // el formulario no tiene campo "título" propio, usamos el tipo elegido
                 description,
-                null // sucursal_id: no aplica para tickets creados desde la app del cliente
+                esReembolso ? selectedBranchId : null // sucursal_id: solo aplica para devoluciones/reembolsos
         );
 
         TicketApi api = RetrofitClient.getTicketApi();
@@ -312,7 +405,10 @@ public class CreateTicketFragment extends Fragment {
         boolean isOrderValid = (selectedOrder != null) || (binding.etRelatedOrder.getText() != null && binding.etRelatedOrder.getText().length() > 0);
         boolean isDescValid = binding.etDescription.getText() != null && binding.etDescription.getText().length() > 5;
 
-        binding.btnSubmitTicket.setEnabled(isOrderValid && isDescValid);
+        boolean esReembolso = selectedType != null && TIPO_REEMBOLSO.equalsIgnoreCase(selectedType.getName());
+        boolean isBranchValid = !esReembolso || selectedBranchId != null;
+
+        binding.btnSubmitTicket.setEnabled(isOrderValid && isDescValid && isBranchValid);
     }
 
     @Override
