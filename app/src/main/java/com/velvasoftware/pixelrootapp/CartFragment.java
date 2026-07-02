@@ -22,6 +22,7 @@ import com.velvasoftware.pixelrootapp.network.request.UpdateCartRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 import com.velvasoftware.pixelrootapp.network.response.CartResponse;
 import com.velvasoftware.pixelrootapp.ui.common.GenericAdapter;
+import com.velvasoftware.pixelrootapp.utils.CurrencyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +70,8 @@ public class CartFragment extends Fragment {
     private void setupRecyclerView() {
         adapter = new GenericAdapter<>(cartItems, ItemCartProductBinding::inflate, (itemBinding, data) -> {
             itemBinding.txtTitle.setText(data.getTitle());
-            itemBinding.txtSubtitle.setText(String.format("$%.2f c/u", data.getUnitPrice()));
-            itemBinding.txtCurrentPrice.setText(String.format("$%.2f", data.getSubtotal()));
+            itemBinding.txtSubtitle.setText(CurrencyUtils.format(data.getUnitPrice()) + " c/u");
+            itemBinding.txtCurrentPrice.setText(CurrencyUtils.format(data.getSubtotal()));
             itemBinding.txtQuantity.setText(String.valueOf(data.getQuantity()));
 
             // TODO: cuando se agregue una librería de imágenes, cargar data.getImageUrl() en imgProduct
@@ -126,7 +127,7 @@ public class CartFragment extends Fragment {
         adapter.notifyDataSetChanged();
 
         binding.txtBadge.setText(String.valueOf(cartItems.size()));
-        binding.txtOrderTotalValue.setText(String.format("$%.2f", cart.getSubtotal()));
+        binding.txtOrderTotalValue.setText(CurrencyUtils.format(cart.getSubtotal()));
     }
 
     private void updateQuantity(int juegoId, int nuevaCantidad) {

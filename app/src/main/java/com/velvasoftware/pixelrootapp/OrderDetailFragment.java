@@ -88,7 +88,7 @@ public class OrderDetailFragment extends Fragment {
     private void bindOrder(Order order) {
         binding.txtOrderIdDetail.setText("Pedido #" + order.getOrderId());
         binding.txtOrderDateDetail.setText("Realizado el " + order.getDate());
-        binding.txtOrderTotalDetail.setText(String.format("$%.2f", order.getTotal()));
+        binding.txtOrderTotalDetail.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(order.getTotal()));
         binding.txtStatusBadge.setText(order.getStatus());
 
         binding.containerOrderItems.removeAllViews();
@@ -96,7 +96,7 @@ public class OrderDetailFragment extends Fragment {
             for (CartItem item : order.getItems()) {
                 TextView row = new TextView(requireContext());
                 row.setTextColor(getResources().getColor(R.color.blanco_claro));
-                row.setText(String.format("%dx %s — $%.2f", item.getQuantity(), item.getTitle(), item.getSubtotal()));
+                row.setText(item.getQuantity() + "x " + item.getTitle() + " — " + com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(item.getSubtotal()));
                 row.setPadding(0, 8, 0, 8);
                 binding.containerOrderItems.addView(row);
             }

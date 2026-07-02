@@ -26,8 +26,9 @@
             android:layout_height="match_parent"
             android:background="@drawable/bg_banner_shadow" />
 
-        <!-- NEW Badge -->
+        <!-- DELUXE Badge -->
         <TextView
+            android:id="@+id/txtDeluxeBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -35,7 +36,7 @@
             android:backgroundTint="@color/amarillo_claro_pixel"
             android:paddingHorizontal="10dp"
             android:paddingVertical="5dp"
-            android:text="NEW"
+            android:text="DELUXE"
             android:textColor="@color/negro_oscuro"
             android:textSize="10sp"
             android:textStyle="bold" />
@@ -111,6 +112,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/txtOldPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"

@@ -83,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="$59.99"
+                        android:text="S/ 59.99"
                         android:textColor="@color/verde_claro_pixel"
                         android:textSize="32sp"
                         android:textStyle="bold" />

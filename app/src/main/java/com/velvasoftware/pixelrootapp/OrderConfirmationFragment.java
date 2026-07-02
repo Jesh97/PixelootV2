@@ -57,7 +57,7 @@ public class OrderConfirmationFragment extends Fragment {
         int orderId = getArguments() != null ? getArguments().getInt("orderId", -1) : -1;
         double total = getArguments() != null ? getArguments().getDouble("total", 0) : 0;
 
-        binding.txtOrderIdConfirmation.setText(String.format("Pedido #%d — $%.2f", orderId, total));
+        binding.txtOrderIdConfirmation.setText("Pedido #" + orderId + " — " + com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(total));
 
         setupListeners(orderId);
         loadOrderDetail(orderId);
@@ -133,13 +133,13 @@ public class OrderConfirmationFragment extends Fragment {
         }
 
         y += 10;
-        canvas.drawText(String.format("Subtotal: $%.2f", order.getSubtotal()), 20, y, paint);
+        canvas.drawText("Subtotal: " + com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(order.getSubtotal()), 20, y, paint);
         y += 20;
-        canvas.drawText(String.format("IGV: $%.2f", order.getTax()), 20, y, paint);
+        canvas.drawText("IGV: " + com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(order.getTax()), 20, y, paint);
         y += 20;
         paint.setColor(Color.parseColor("#39FF14"));
         paint.setFakeBoldText(true);
-        canvas.drawText(String.format("Total: $%.2f", order.getTotal()), 20, y, paint);
+        canvas.drawText("Total: " + com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(order.getTotal()), 20, y, paint);
         y += 30;
 
         paint.setColor(Color.WHITE);

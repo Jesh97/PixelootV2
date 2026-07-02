@@ -33,7 +33,7 @@ public class RefundFragment extends Fragment {
 
     private void setupData() {
         // En una app real, estos datos vendrían de los argumentos del fragmento
-        binding.txtRefundAmount.setText("$59.99");
+        binding.txtRefundAmount.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(59.99));
         binding.txtOrderTitle.setText("Neon Abyss II");
         binding.txtOrderId.setText("#ORD-99234");
         binding.txtRefundMethodTitle.setText("Créditos Pixel Root");
