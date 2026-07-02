@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
                     List<Product> games = response.body().getData();
                     if (games == null) games = new ArrayList<>();
-                    bindPopularGames(games);
+                    setPopularGamesAsMaster(games);
                 } else {
                     Log.e(TAG, "Error respuesta populares: " + response.code());
                     Toast.makeText(getContext(), "No se pudieron cargar los juegos populares", Toast.LENGTH_SHORT).show();
