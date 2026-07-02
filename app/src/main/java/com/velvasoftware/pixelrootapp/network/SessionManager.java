@@ -17,6 +17,7 @@ public class SessionManager {
     private static final String KEY_CORREO = "correo";
     private static final String KEY_ROL_ID = "rol_id";
     private static final String KEY_REMEMBER_ME = "remember_me";
+    private static final String KEY_FCM_TOKEN   = "fcm_token";
 
     private static SessionManager instance;
     private final SharedPreferences prefs;
@@ -77,6 +78,14 @@ public class SessionManager {
 
     public int getRolId() {
         return prefs.getInt(KEY_ROL_ID, -1);
+    }
+
+    public void saveFcmToken(String token) {
+        prefs.edit().putString(KEY_FCM_TOKEN, token).apply();
+    }
+
+    public String getFcmToken() {
+        return prefs.getString(KEY_FCM_TOKEN, null);
     }
 
     public void clear() {

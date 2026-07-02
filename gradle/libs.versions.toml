@@ -17,6 +17,7 @@ retrofit = "2.11.0"
 gson = "2.12.1"
 zxing = "3.5.3"
 firebase-bom = "33.1.2"
+google-services = "4.4.2"
 
 [libraries]
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
@@ -42,4 +43,5 @@ firebase-database = { group = "com.google.firebase", name = "firebase-database" 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+google-services     = { id = "com.google.gms.google-services", version.ref = "google-services" }
 

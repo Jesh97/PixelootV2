@@ -2,6 +2,7 @@ package com.velvasoftware.pixelrootapp.network.api;
 
 import com.velvasoftware.pixelrootapp.models.SavedCard;
 import com.velvasoftware.pixelrootapp.models.User;
+import com.velvasoftware.pixelrootapp.network.request.FcmTokenRequest;
 import com.velvasoftware.pixelrootapp.network.request.SaveCardRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 
@@ -35,4 +36,8 @@ public interface UserApi {
     // DELETE /api/usuarios/tarjetas/{id}
     @DELETE("usuarios/tarjetas/{id}")
     Call<ApiResponse<Void>> deleteCard(@Path("id") int cardId);
+
+    // PUT /api/usuarios/fcm-token — registra el token FCM del dispositivo actual
+    @PUT("usuarios/fcm-token")
+    Call<ApiResponse<Void>> registrarFcmToken(@Body FcmTokenRequest request);
 }

@@ -1,6 +1,7 @@
 package com.velvasoftware.pixelrootapp;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -10,11 +11,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.velvasoftware.pixelrootapp.databinding.ActivityLoginBinding;
 import com.velvasoftware.pixelrootapp.models.User;
 import com.velvasoftware.pixelrootapp.network.SessionManager;
 import com.velvasoftware.pixelrootapp.network.api.AuthApi;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
+import com.velvasoftware.pixelrootapp.network.api.UserApi;
+import com.velvasoftware.pixelrootapp.network.request.FcmTokenRequest;
 import com.velvasoftware.pixelrootapp.network.request.LoginRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 
@@ -53,6 +57,28 @@ public class LoginActivity extends AppCompatActivity {
         binding.signInButton.setOnClickListener(v -> attemptLogin());
     }
 
+    private void registrarTokenFCM() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful() || task.getResult() == null) return;
+            String token = task.getResult();
+            SessionManager.getInstance(this).saveFcmToken(token);
+            UserApi userApi = RetrofitClient.getUserApi();
+            userApi.registrarFcmToken(new FcmTokenRequest(token, "Android " + Build.MODEL))
+                    .enqueue(new Callback<ApiResponse<Void>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ApiResponse<Void>> call,
+                                               @NonNull Response<ApiResponse<Void>> response) {
+                            // Token registrado OK
+                        }
+                        @Override
+                        public void onFailure(@NonNull Call<ApiResponse<Void>> call,
+                                              @NonNull Throwable t) {
+                            // Silenciar — onNewToken lo reintentará si el token rota
+                        }
+                    });
+        });
+    }
+
     private void attemptLogin() {
         String correo = binding.emailEditText.getText().toString().trim();
         String contrasena = binding.passwordEditText.getText().toString().trim();
@@ -84,6 +110,8 @@ public class LoginActivity extends AppCompatActivity {
                             user.getRolId(),
                             binding.rememberCheckBox.isChecked()
                     );
+
+                    registrarTokenFCM();
 
                     startActivity(new Intent(LoginActivity.this, MenuActivity.class));
                     Toast.makeText(LoginActivity.this, "Sesión iniciada", Toast.LENGTH_SHORT).show();
