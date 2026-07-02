@@ -63,11 +63,6 @@ public class BranchFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.mapsFragment)
         );
 
-        binding.toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (isChecked && checkedId == R.id.btnMapView) {
-                Navigation.findNavController(view).navigate(R.id.mapsFragment);
-            }
-        });
     }
 
     private void setupRecyclerView() {

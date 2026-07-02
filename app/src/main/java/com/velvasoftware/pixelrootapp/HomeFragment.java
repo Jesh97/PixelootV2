@@ -1,6 +1,10 @@
 package com.velvasoftware.pixelrootapp;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +26,9 @@ import com.velvasoftware.pixelrootapp.models.Category;
 import com.velvasoftware.pixelrootapp.models.Product;
 import com.velvasoftware.pixelrootapp.network.api.CatalogApi;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
+import com.velvasoftware.pixelrootapp.network.request.AddToCartRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
+import com.velvasoftware.pixelrootapp.network.response.CartResponse;
 import com.velvasoftware.pixelrootapp.ui.common.GenericAdapter;
 import com.velvasoftware.pixelrootapp.utils.CurrencyUtils;
 
@@ -46,11 +52,16 @@ public class HomeFragment extends Fragment {
     private final List<Category> categories = new ArrayList<>();
     /** Todos los juegos populares tal como vienen de la API, sin filtrar. */
     private final List<Product> allPopularGames = new ArrayList<>();
-    /** Lo que realmente se muestra (filtrado por categoría si hay alguna elegida). */
+    /** Lo que realmente se muestra (filtrado por categoría y/o búsqueda). */
     private final List<Product> popularGames = new ArrayList<>();
 
     private int selectedCategoryId = 0; // 0 = ninguna categoría elegida (mostrar todos)
     private static final double DELUXE_SURCHARGE = 20.0; // debe coincidir con ProductDetailFragment
+
+    // ---- Buscador ----
+    private String searchQuery = "";
+    private final Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     public HomeFragment() {}
 
@@ -70,6 +81,7 @@ public class HomeFragment extends Fragment {
         setupPopularGames();
         setupOffersCarousel();
         setupFooter();
+        setupSearch();
     }
 
     // ================= CATEGORÍAS (Explorar) =================
@@ -119,6 +131,32 @@ public class HomeFragment extends Fragment {
         itemBinding.txtCategoryName.setTextColor(getResources().getColor(selected ? R.color.verde_claro_pixel : R.color.blanco_intermedio));
     }
 
+    // ================= BUSCADOR =================
+
+    // =========================================================================
+    // Buscador: filtra localmente sobre los juegos populares ya cargados
+    // =========================================================================
+    private void setupSearch() {
+        binding.etSearchHome.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> {
+                    searchQuery = s.toString().trim();
+                    applyPopularGamesFilter();
+                };
+                searchHandler.postDelayed(searchRunnable, 400);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
     // ================= JUEGOS POPULARES =================
 
     private void setupPopularGames() {
@@ -131,6 +169,9 @@ public class HomeFragment extends Fragment {
             // Roles operativos (Agente, Admin, SuperAdmin) no pueden comprar
             if (userRoleId >= 2) {
                 itemBinding.btnAddCartHome.setVisibility(View.GONE);
+            } else {
+                itemBinding.btnAddCartHome.setVisibility(View.VISIBLE);
+                itemBinding.btnAddCartHome.setOnClickListener(v -> agregarAlCarrito(data.getId()));
             }
 
             itemBinding.getRoot().setOnClickListener(v -> {
@@ -169,16 +210,52 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    /** Filtra allPopularGames por selectedCategoryId (0 = sin filtro) y refresca la grilla. */
+    /** Filtra allPopularGames por selectedCategoryId (0 = sin filtro) y por searchQuery, y refresca la grilla. */
     private void applyPopularGamesFilter() {
         popularGames.clear();
         for (Product p : allPopularGames) {
-            if (selectedCategoryId == 0 || p.getCategoriaId() == selectedCategoryId) {
+            boolean matchesCategory = selectedCategoryId == 0 || p.getCategoriaId() == selectedCategoryId;
+            boolean matchesSearch = searchQuery.isEmpty()
+                    || (p.getTitle() != null && p.getTitle().toLowerCase().contains(searchQuery.toLowerCase()));
+
+            if (matchesCategory && matchesSearch) {
                 popularGames.add(p);
             }
         }
         popularGamesAdapter.notifyDataSetChanged();
     }
+
+    // =========================================================================
+    // BACKEND: Agregar al carrito -> POST /api/carrito/productos (requiere login)
+    // =========================================================================
+    private void agregarAlCarrito(int juegoId) {
+        AddToCartRequest body = new AddToCartRequest(juegoId, 1);
+
+        RetrofitClient.getCartApi().addProduct(body).enqueue(new Callback<ApiResponse<CartResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Response<ApiResponse<CartResponse>> response) {
+                if (getContext() == null) return;
+
+                if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
+                    Toast.makeText(getContext(), "Añadido al carrito", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(getContext(), "Inicia sesión para agregar al carrito", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "No se pudo agregar al carrito", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Throwable t) {
+                Log.e("HOME_API", "Fallo conexión carrito", t);
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Sin conexión con el servidor", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    // ================= EDICIONES DELUXE (banner) =================
 
     private void setupOffersCarousel() {
         List<Product> deluxeGames = new ArrayList<>();
@@ -237,6 +314,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
         binding = null;
     }
 }
