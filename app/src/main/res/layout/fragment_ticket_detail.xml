@@ -14,10 +14,25 @@
         android:padding="20dp"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_filter_button"
+            android:src="@drawable/ic_chevron_left"
+            app:tint="@color/negro_oscuro"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:layout_centerVertical="true"
+            android:contentDescription="Volver" />
+
         <TextView
             android:id="@+id/txtDetailId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/btnBack"
+            android:layout_marginStart="16dp"
+            android:layout_centerVertical="true"
             android:text="Ticket #TK-9283"
             android:textColor="@color/verde_claro_pixel"
             android:textSize="28sp"
@@ -138,6 +153,83 @@
                 app:backgroundTint="@null"
                 app:icon="@drawable/icon_chat"
                 app:iconTint="@color/negro_oscuro"/>
+
+            <!-- Sección Calificación (solo visible si el ticket está cerrado) -->
+            <LinearLayout
+                android:id="@+id/sectionCalificacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_card_gaming"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/txtCalificacionTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Califica la atención recibida"
+                    android:textColor="@color/verde_claro_pixel"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <RatingBar
+                    android:id="@+id/ratingBarCalificacion"
+                    style="?android:attr/ratingBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:numStars="5"
+                    android:stepSize="1"
+                    android:rating="0"
+                    android:progressTint="@color/verde_claro_pixel"
+                    android:secondaryProgressTint="@color/verde_oscuro_pixel" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutComentarioCalificacion"
+                    style="@style/Widget.PixelRootApp.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:hintEnabled="true"
+                    android:hint="Comentario (opcional)">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etComentarioCalificacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:minLines="3"
+                        android:inputType="textMultiLine"
+                        android:textColor="@color/blanco_claro"
+                        android:textColorHint="@color/blanco_intermedio" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEnviarCalificacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Enviar calificación"
+                    android:textColor="@color/negro_oscuro"
+                    android:textStyle="bold"
+                    android:background="@drawable/btn_primary_color"
+                    app:backgroundTint="@null" />
+
+                <TextView
+                    android:id="@+id/txtCalificacionEnviada"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="¡Gracias por calificar nuestra atención!"
+                    android:textColor="@color/blanco_intermedio"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnReopenTicket"

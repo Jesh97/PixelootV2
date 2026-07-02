@@ -71,6 +71,22 @@ public class TicketListFragment extends Fragment {
             itemBinding.txtTicketSubject.setText(data.getTitle());
             itemBinding.txtTicketStatus.setText(data.getStatusName());
             itemBinding.txtRelatedOrder.setText("Pedido #" + data.getOrderId());
+            itemBinding.txtTicketPriority.setText(data.getPriorityName());
+
+            String prioridad = data.getPriorityName() != null ? data.getPriorityName() : "";
+            int colorPrioridad;
+            switch (prioridad.toUpperCase()) {
+                case "ALTA":
+                    colorPrioridad = R.color.rojo_error;
+                    break;
+                case "MEDIA":
+                    colorPrioridad = R.color.amarillo_claro_pixel;
+                    break;
+                default: // BAJA u otro
+                    colorPrioridad = R.color.verde_claro_pixel;
+                    break;
+            }
+            itemBinding.txtTicketPriority.setTextColor(getResources().getColor(colorPrioridad));
 
             boolean cerrado = ESTADOS_CERRADOS.contains(data.getStatusName());
             if (cerrado) {

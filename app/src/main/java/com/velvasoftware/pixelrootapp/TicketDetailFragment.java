@@ -15,8 +15,10 @@ import androidx.navigation.Navigation;
 
 import com.velvasoftware.pixelrootapp.databinding.FragmentTicketDetailBinding;
 import com.velvasoftware.pixelrootapp.models.Ticket;
+import com.velvasoftware.pixelrootapp.models.TicketCalificacion;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
 import com.velvasoftware.pixelrootapp.network.api.TicketApi;
+import com.velvasoftware.pixelrootapp.network.request.CalificacionRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 
 import java.util.Arrays;
@@ -33,6 +35,7 @@ public class TicketDetailFragment extends Fragment {
 
     private FragmentTicketDetailBinding binding;
     private int ticketId = -1;
+    private boolean ticketCerrado = false;
 
     public TicketDetailFragment() {}
 
@@ -58,6 +61,8 @@ public class TicketDetailFragment extends Fragment {
     }
 
     private void setupListeners() {
+        binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
+
         binding.btnViewChat.setOnClickListener(v -> {
             Bundle args = new Bundle();
             args.putInt("ticketId", ticketId);
@@ -79,6 +84,8 @@ public class TicketDetailFragment extends Fragment {
         binding.btnReopenTicket.setOnClickListener(v -> {
             // TODO: Lógica para reabrir ticket
         });
+
+        binding.btnEnviarCalificacion.setOnClickListener(v -> onEnviarCalificacionClicked());
     }
 
     // =========================================================================
@@ -116,16 +123,133 @@ public class TicketDetailFragment extends Fragment {
         binding.txtDetailOrder.setText("#" + ticket.getOrderId());
         binding.txtDetailStatus.setText(ticket.getStatusName());
 
-        boolean cerrado = ESTADOS_CERRADOS.contains(ticket.getStatusName());
-        binding.btnReopenTicket.setVisibility(cerrado ? View.VISIBLE : View.GONE);
+        ticketCerrado = ESTADOS_CERRADOS.contains(ticket.getStatusName());
+        binding.btnReopenTicket.setVisibility(ticketCerrado ? View.VISIBLE : View.GONE);
 
-        if (cerrado) {
+        if (ticketCerrado) {
             binding.txtDetailStatus.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blanco_intermedio)));
             binding.txtDetailStatus.setTextColor(getResources().getColor(R.color.negro_oscuro));
         } else {
             binding.txtDetailStatus.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.verde_claro_pixel)));
             binding.txtDetailStatus.setTextColor(getResources().getColor(R.color.negro_oscuro));
         }
+
+        // La calificación solo aplica una vez cerrado/resuelto/rechazado el caso.
+        if (ticketCerrado) {
+            binding.sectionCalificacion.setVisibility(View.VISIBLE);
+            loadCalificacion();
+        } else {
+            binding.sectionCalificacion.setVisibility(View.GONE);
+        }
+
+        // Con el caso cerrado ya no tiene sentido seguir conversando, ver el timeline
+        // en vivo ni subir más adjuntos, así que se deshabilitan esos accesos.
+        setNavButtonsEnabled(!ticketCerrado);
+    }
+
+    private void setNavButtonsEnabled(boolean enabled) {
+        float alpha = enabled ? 1f : 0.4f;
+
+        binding.btnViewTimeline.setEnabled(enabled);
+        binding.btnViewTimeline.setAlpha(alpha);
+
+        binding.btnViewAttachments.setEnabled(enabled);
+        binding.btnViewAttachments.setAlpha(alpha);
+
+        binding.btnViewChat.setEnabled(enabled);
+        binding.btnViewChat.setAlpha(alpha);
+    }
+
+    // =========================================================================
+    // BACKEND: GET /api/tickets/{id}/calificacion
+    // Revisa si el usuario ya calificó este ticket (ticket_id es UNIQUE en la tabla).
+    // =========================================================================
+    private void loadCalificacion() {
+        TicketApi api = RetrofitClient.getTicketApi();
+        api.getCalificacion(ticketId).enqueue(new Callback<ApiResponse<TicketCalificacion>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<TicketCalificacion>> call, @NonNull Response<ApiResponse<TicketCalificacion>> response) {
+                if (binding == null) return;
+
+                ApiResponse<TicketCalificacion> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    // Ya existe una calificación: se muestra en modo solo-lectura.
+                    mostrarCalificacionExistente(body.getData());
+                } else {
+                    // Aún no calificado: se deja el formulario activo.
+                    mostrarFormularioCalificacion();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<TicketCalificacion>> call, @NonNull Throwable t) {
+                Log.e(TAG, "No se pudo verificar la calificación", t);
+                if (binding == null) return;
+                mostrarFormularioCalificacion();
+            }
+        });
+    }
+
+    private void mostrarCalificacionExistente(TicketCalificacion calificacion) {
+        binding.ratingBarCalificacion.setRating(calificacion.getCalificacion());
+        binding.ratingBarCalificacion.setIsIndicator(true);
+
+        binding.etComentarioCalificacion.setText(calificacion.getComentario());
+        binding.etComentarioCalificacion.setEnabled(false);
+
+        binding.btnEnviarCalificacion.setVisibility(View.GONE);
+        binding.txtCalificacionEnviada.setVisibility(View.VISIBLE);
+        binding.txtCalificacionEnviada.setText("¡Gracias por calificar nuestra atención!");
+    }
+
+    private void mostrarFormularioCalificacion() {
+        binding.ratingBarCalificacion.setIsIndicator(false);
+        binding.etComentarioCalificacion.setEnabled(true);
+        binding.btnEnviarCalificacion.setVisibility(View.VISIBLE);
+        binding.txtCalificacionEnviada.setVisibility(View.GONE);
+    }
+
+    // =========================================================================
+    // BACKEND: POST /api/tickets/{id}/calificacion
+    // =========================================================================
+    private void onEnviarCalificacionClicked() {
+        int estrellas = (int) binding.ratingBarCalificacion.getRating();
+        if (estrellas < 1) {
+            Toast.makeText(getContext(), "Selecciona al menos 1 estrella", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String comentario = binding.etComentarioCalificacion.getText() != null
+                ? binding.etComentarioCalificacion.getText().toString().trim()
+                : "";
+
+        binding.btnEnviarCalificacion.setEnabled(false);
+
+        TicketApi api = RetrofitClient.getTicketApi();
+        api.enviarCalificacion(ticketId, new CalificacionRequest(estrellas, comentario))
+                .enqueue(new Callback<ApiResponse<TicketCalificacion>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<TicketCalificacion>> call, @NonNull Response<ApiResponse<TicketCalificacion>> response) {
+                        if (binding == null) return;
+                        binding.btnEnviarCalificacion.setEnabled(true);
+
+                        ApiResponse<TicketCalificacion> body = response.body();
+                        if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                            mostrarCalificacionExistente(body.getData());
+                            Toast.makeText(getContext(), "¡Gracias por tu calificación!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String message = body != null ? body.getMessage() : "No se pudo enviar la calificación";
+                            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<TicketCalificacion>> call, @NonNull Throwable t) {
+                        if (binding == null) return;
+                        binding.btnEnviarCalificacion.setEnabled(true);
+                        Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     @Override

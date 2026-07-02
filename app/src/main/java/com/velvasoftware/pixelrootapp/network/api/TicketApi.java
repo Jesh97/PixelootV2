@@ -2,11 +2,13 @@ package com.velvasoftware.pixelrootapp.network.api;
 
 import com.velvasoftware.pixelrootapp.models.ChatMessage;
 import com.velvasoftware.pixelrootapp.models.Ticket;
+import com.velvasoftware.pixelrootapp.models.TicketCalificacion;
 import com.velvasoftware.pixelrootapp.models.TicketImage;
 import com.velvasoftware.pixelrootapp.models.TicketPriority;
 import com.velvasoftware.pixelrootapp.models.TicketType;
 import com.velvasoftware.pixelrootapp.models.TimelineEvent;
 import com.velvasoftware.pixelrootapp.network.request.AttachmentUrlRequest;
+import com.velvasoftware.pixelrootapp.network.request.CalificacionRequest;
 import com.velvasoftware.pixelrootapp.network.request.ChatMessageRequest;
 import com.velvasoftware.pixelrootapp.network.request.CreateTicketRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
@@ -62,4 +64,15 @@ public interface TicketApi {
 
     @POST("tickets/{id}/imagenes")
     Call<ApiResponse<Object>> subirUrlImagen(@Path("id") int ticketId, @Body AttachmentUrlRequest body);
+
+    // GET /api/tickets/{id}/calificacion -> devuelve la calificación si el usuario ya calificó,
+    // o 404 / status:false si el ticket todavía no tiene calificación registrada.
+    @GET("tickets/{id}/calificacion")
+    Call<ApiResponse<TicketCalificacion>> getCalificacion(@Path("id") int ticketId);
+
+    // POST /api/tickets/{id}/calificacion -> crea la calificación (solo permitido si el ticket
+    // está en estado cerrado/resuelto/rechazado y aún no tiene una calificación registrada,
+    // por la restricción UNIQUE en ticket_id).
+    @POST("tickets/{id}/calificacion")
+    Call<ApiResponse<TicketCalificacion>> enviarCalificacion(@Path("id") int ticketId, @Body CalificacionRequest body);
 }

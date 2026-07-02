@@ -19,19 +19,19 @@ public class Ticket {
     @SerializedName("tipo_ticket_id")
     private int typeId;
 
-    @SerializedName("tipo_ticket")
+    @SerializedName("tipo_ticket_nombre")
     private String typeName;
 
     @SerializedName("prioridad_id")
     private int priorityId;
 
-    @SerializedName("prioridad")
+    @SerializedName("prioridad_nombre")
     private String priorityName;
 
     @SerializedName("estado_id")
     private int statusId;
 
-    @SerializedName("estado")
+    @SerializedName("estado_nombre")
     private String statusName;
 
     @SerializedName("creado_en")
