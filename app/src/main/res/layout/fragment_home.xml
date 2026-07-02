@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,201 +7,299 @@
     android:background="@color/negro_oscuro"
     tools:context=".HomeFragment">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/spacing_medium">
+        android:layout_height="match_parent"
+        tools:context=".HomeFragment">
 
-        <!-- Search Bar Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/searchHomeLayout"
-                style="@style/Widget.PixelRootApp.TextInputLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:hintEnabled="false"
-                app:startIconDrawable="@drawable/ic_search_pixel"
-                app:startIconTint="@color/verde_claro_pixel">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etSearchHome"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Buscar juegos..."
-                    android:textColor="@color/blanco_claro"
-                    android:textColorHint="@color/blanco_intermedio"
-                    android:textSize="@dimen/text_size_body"
-                    android:padding="@dimen/spacing_medium"
-                    android:singleLine="true"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <ImageButton
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_marginStart="@dimen/spacing_medium"
-                android:background="@drawable/bg_filter_button"
-                android:src="@drawable/icon_filter"
-                app:tint="@color/negro_oscuro"
-                android:padding="@dimen/spacing_medium"
-                android:scaleType="fitCenter"
-                android:contentDescription="Filtros" />
-        </LinearLayout>
-
-        <!-- Browse Header -->
-        <TextView
-            style="@style/AppText.Subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:text="@string/home_browse"
-            android:letterSpacing="0.1"/>
-
-        <View
-            android:layout_width="60dp"
-            android:layout_height="2dp"
-            android:background="@color/verde_claro_pixel"
-            android:layout_marginTop="4dp"/>
-
-        <!-- Categories List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_category_home" />
-
-        <!-- Popular Games Section -->
-        <TextView
-            style="@style/AppText.Subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:text="@string/home_title_popular"
-            android:letterSpacing="0.1"/>
-        <View android:layout_width="60dp" android:layout_height="2dp" android:background="@color/verde_claro_pixel" android:layout_marginTop="4dp"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPopularGames"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_game_card" />
-
-        <!-- Deluxe Editions Section -->
-        <TextView
-            style="@style/AppText.Subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:text="EDICIONES DELUXE"
-            android:letterSpacing="0.1"/>
-        <View android:layout_width="60dp" android:layout_height="2dp" android:background="@color/verde_claro_pixel" android:layout_marginTop="4dp"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvOffersCarousel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_banner_promo" />
-
-        <!-- Footer Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xxlarge"
-            android:background="@color/negro_intermedio"
             android:orientation="vertical"
-            android:padding="@dimen/spacing_xlarge"
-            android:gravity="center_horizontal">
+            android:padding="@dimen/spacing_medium">
 
-            <ImageView
-                android:layout_width="140dp"
-                android:layout_height="50dp"
-                android:src="@drawable/pixel_root_text_oscuro"
-                android:alpha="0.9"
-                android:contentDescription="Pixel Root" />
-
+            <!-- Search Bar Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xlarge"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/btnFooterTeam"
-                    style="@style/AppText.Subtitle"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/searchHomeLayout"
+                    style="@style/Widget.PixelRootApp.TextInputLayout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/footer_team_link"
-                    android:textColor="@color/verde_claro_pixel"
-                    android:textSize="15sp"
-                    android:padding="@dimen/spacing_small"/>
+                    android:layout_weight="1"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@drawable/ic_search_pixel"
+                    app:startIconTint="@color/verde_claro_pixel">
 
-                <TextView
-                    android:id="@+id/btnFooterAbout"
-                    style="@style/AppText.Body"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:text="@string/footer_about_link"
-                    android:textColor="@color/blanco_claro"
-                    android:padding="@dimen/spacing_small"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSearchHome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Buscar juegos..."
+                        android:textColor="@color/blanco_claro"
+                        android:textColorHint="@color/blanco_intermedio"
+                        android:textSize="@dimen/text_size_body"
+                        android:padding="@dimen/spacing_medium"
+                        android:singleLine="true"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
-                    style="@style/AppText.Body"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:text="@string/footer_contact_link"
-                    android:textColor="@color/blanco_claro"
-                    android:padding="@dimen/spacing_small"/>
-
-                <TextView
-                    style="@style/AppText.Body"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:text="@string/footer_help_link"
-                    android:textColor="@color/blanco_claro"
-                    android:padding="@dimen/spacing_small"/>
+                <ImageButton
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:background="@drawable/bg_filter_button"
+                    android:src="@drawable/icon_filter"
+                    app:tint="@color/negro_oscuro"
+                    android:padding="@dimen/spacing_medium"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Filtros" />
             </LinearLayout>
 
-            <View
-                android:layout_width="80dp"
-                android:layout_height="2dp"
-                android:background="@color/verde_claro_pixel"
-                android:layout_marginTop="@dimen/spacing_xlarge"
-                android:alpha="0.5"/>
-
-            <TextView
-                style="@style/AppText.Caption"
+            <!-- Flash Sale Section -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/copyright"
-                android:gravity="center_horizontal"
-                android:letterSpacing="0.05"/>
+                android:layout_marginTop="@dimen/spacing_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_medium"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_timer_box"
+                        android:padding="8dp"
+                        android:src="@drawable/icon_offer"
+                        app:tint="@color/blanco_claro"
+                        android:contentDescription="Oferta relámpago" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/AppText.Subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/flash_sale"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            style="@style/AppText.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/flash_sale_desc"
+                            android:textSize="@dimen/text_size_caption" />
+                    </LinearLayout>
+
+                    <!-- Dummy Timer -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_timer_box"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="08" android:textColor="@color/blanco_claro" android:textStyle="bold" android:textSize="14sp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HRS" android:textColor="@color/blanco_claro" android:textSize="8sp"/>
+                        </LinearLayout>
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=":" android:textColor="@color/verde_claro_pixel" android:layout_marginHorizontal="4dp"/>
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_timer_box"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="23" android:textColor="@color/blanco_claro" android:textStyle="bold" android:textSize="14sp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="MIN" android:textColor="@color/blanco_claro" android:textSize="8sp"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Browse Header -->
+            <TextView
+                style="@style/AppText.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@string/home_browse"
+                android:letterSpacing="0.1"/>
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="2dp"
+                android:background="@color/verde_claro_pixel"
+                android:layout_marginTop="4dp"/>
+
+            <!-- Categories List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_category_home" />
+
+            <!-- Popular Games Section -->
+            <TextView
+                style="@style/AppText.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@string/home_title_popular"
+                android:letterSpacing="0.1"/>
+            <View android:layout_width="60dp" android:layout_height="2dp" android:background="@color/verde_claro_pixel" android:layout_marginTop="4dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPopularGames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_game_card" />
+
+            <!-- Deluxe Editions Section -->
+            <TextView
+                style="@style/AppText.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="EDICIONES DELUXE"
+                android:letterSpacing="0.1"/>
+            <View android:layout_width="60dp" android:layout_height="2dp" android:background="@color/verde_claro_pixel" android:layout_marginTop="4dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvOffersCarousel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_banner_promo" />
+
+            <!-- Footer Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xxlarge"
+                android:background="@color/negro_intermedio"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xlarge"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/pixel_root_text_oscuro"
+                    android:alpha="0.9"
+                    android:contentDescription="Pixel Root" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xlarge"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/btnFooterTeam"
+                        style="@style/AppText.Subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/footer_team_link"
+                        android:textColor="@color/verde_claro_pixel"
+                        android:textSize="15sp"
+                        android:padding="@dimen/spacing_small"/>
+
+                    <TextView
+                        android:id="@+id/btnFooterAbout"
+                        style="@style/AppText.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:text="@string/footer_about_link"
+                        android:textColor="@color/blanco_claro"
+                        android:padding="@dimen/spacing_small"/>
+
+                    <TextView
+                        style="@style/AppText.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:text="@string/footer_contact_link"
+                        android:textColor="@color/blanco_claro"
+                        android:padding="@dimen/spacing_small"/>
+
+                    <TextView
+                        style="@style/AppText.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:text="@string/footer_help_link"
+                        android:textColor="@color/blanco_claro"
+                        android:padding="@dimen/spacing_small"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:background="@color/verde_claro_pixel"
+                    android:layout_marginTop="@dimen/spacing_xlarge"
+                    android:alpha="0.5"/>
+
+                <TextView
+                    style="@style/AppText.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/copyright"
+                    android:gravity="center_horizontal"
+                    android:letterSpacing="0.05"/>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp"/>
 
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+    </androidx.core.widget.NestedScrollView>
 
-    </LinearLayout>
+    <!-- Botón flotante de alerta rápida: lleva directo a registrar una incidencia -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabQuickTicket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/spacing_large"
+        android:src="@drawable/icon_ticket"
+        app:tint="@color/negro_oscuro"
+        app:backgroundTint="@color/verde_claro_pixel"
+        app:elevation="6dp"
+        android:contentDescription="Reportar incidencia" />
 
-</androidx.core.widget.NestedScrollView>
+</FrameLayout>

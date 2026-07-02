@@ -314,6 +314,8 @@ public class HomeFragment extends Fragment {
     private void setupFooter() {
         binding.btnFooterTeam.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.devTeamFragment));
         binding.btnFooterAbout.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.aboutUsFragment));
+
+        binding.fabQuickTicket.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.createTicketFragment));
     }
 
     @Override

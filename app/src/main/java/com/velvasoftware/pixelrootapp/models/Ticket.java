@@ -19,19 +19,22 @@ public class Ticket {
     @SerializedName("tipo_ticket_id")
     private int typeId;
 
-    @SerializedName("tipo_ticket_nombre")
+    // GET /api/tickets/ (cliente) devuelve "tipo_ticket"; otros endpoints de
+    // agente/admin devuelven "tipo_ticket_nombre". Con "alternate" el mismo
+    // modelo sirve para ambos sin importar cuál los llene.
+    @SerializedName(value = "tipo_ticket_nombre", alternate = {"tipo_ticket"})
     private String typeName;
 
     @SerializedName("prioridad_id")
     private int priorityId;
 
-    @SerializedName("prioridad_nombre")
+    @SerializedName(value = "prioridad_nombre", alternate = {"prioridad"})
     private String priorityName;
 
     @SerializedName("estado_id")
     private int statusId;
 
-    @SerializedName("estado_nombre")
+    @SerializedName(value = "estado_nombre", alternate = {"estado"})
     private String statusName;
 
     @SerializedName("creado_en")
