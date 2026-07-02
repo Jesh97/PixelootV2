@@ -39,8 +39,6 @@ public class ProductDetailFragment extends Fragment {
     private FragmentProductDetailBinding binding;
     private int currentProductId = -1;
     private double basePrice = 0;
-    private static final double DELUXE_SURCHARGE = 20.0;
-    private boolean preselectDeluxe = false;
     private int userRoleId = 1;
 
     public ProductDetailFragment() {}
@@ -58,9 +56,6 @@ public class ProductDetailFragment extends Fragment {
         userRoleId = SessionManager.getInstance(requireContext()).getRolId();
         if (userRoleId >= 2) {
             binding.stickyActionButtons.setVisibility(View.GONE);
-            // También ocultamos el selector de edición y cantidad para roles operativos
-            binding.cgEditions.setVisibility(View.GONE);
-            binding.lblEdition.setVisibility(View.GONE);
             binding.lblQuantity.setVisibility(View.GONE);
             binding.containerQuantity.setVisibility(View.GONE);
         }
@@ -90,51 +85,17 @@ public class ProductDetailFragment extends Fragment {
         });
     }
 
-    private void setupEditionSelector() {
-        if (preselectDeluxe) {
-            binding.chipDeluxe.setChecked(true);
-            binding.chipStandard.setChecked(false);
-            styleEditionChip(binding.chipStandard);
-            styleEditionChip(binding.chipDeluxe);
-        }
-
-        binding.cgEditions.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            styleEditionChip(binding.chipStandard);
-            styleEditionChip(binding.chipDeluxe);
-            updateDisplayedPrice();
-        });
-    }
-
-    private void styleEditionChip(com.google.android.material.chip.Chip chip) {
-        boolean checked = chip.isChecked();
-        chip.setChipBackgroundColorResource(checked ? R.color.verde_claro_pixel : R.color.negro_oscuro);
-        chip.setTextColor(getResources().getColor(checked ? R.color.negro_oscuro : R.color.blanco_claro));
-        chip.setChipStrokeColorResource(checked ? R.color.verde_claro_pixel : R.color.verde_oscuro_pixel);
-    }
-
-    private boolean isDeluxeSelected() {
-        return binding.chipDeluxe.isChecked();
-    }
-
-    /** Precio unitario mostrado: precio real de la BD + $20 si el usuario eligió Deluxe (solo visual, ver nota en addToCart). */
-    private double currentUnitPrice() {
-        return basePrice + (isDeluxeSelected() ? DELUXE_SURCHARGE : 0);
-    }
-
     private void updateDisplayedPrice() {
         if (binding == null) return;
         int quantity = Integer.parseInt(binding.txtQuantity.getText().toString());
-        double unitPrice = currentUnitPrice();
 
-        binding.txtPriceLarge.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(unitPrice));
-        binding.txtTotalBottom.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(unitPrice * quantity));
+        binding.txtPriceLarge.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(basePrice));
+        binding.txtTotalBottom.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(basePrice * quantity));
     }
 
     private void loadProductDetails() {
         int productId = getArguments() != null ? getArguments().getInt("productId") : -1;
         currentProductId = productId;
-        preselectDeluxe = "DELUXE".equals(getArguments() != null ? getArguments().getString("edition") : null);
-
         if (productId <= 0) {
             binding.txtDescriptionDetail.setText("No se encontró el juego.");
             return;
@@ -176,7 +137,6 @@ public class ProductDetailFragment extends Fragment {
 
         basePrice = product.getPrice();
         binding.txtOldPrice.setVisibility(View.GONE); // no hay precio de descuento real en el backend
-        setupEditionSelector();
         updateDisplayedPrice();
 
         binding.txtRatingValue.setText(product.getRating());
@@ -193,11 +153,6 @@ public class ProductDetailFragment extends Fragment {
     private void addToCart() {
         if (currentProductId <= 0) return;
 
-        // NOTA: el backend no tiene el concepto de "edición" (no hay columna para eso en
-        // juegos ni en detalle_pedido), así que el recargo de $20 por Deluxe es SOLO visual
-        // en esta pantalla. Al agregar al carrito, el precio que se guarda es el precio real
-        // de la BD (juegos.precio) para ese juego, sin el recargo. Si quieres que el recargo
-        // se cobre de verdad, hay que agregar una columna/tabla de ediciones en el backend.
         int cantidad = Integer.parseInt(binding.txtQuantity.getText().toString());
         binding.btnAddToCart.setEnabled(false);
 

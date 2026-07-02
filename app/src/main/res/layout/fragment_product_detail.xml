@@ -202,46 +202,6 @@
                         android:layout_alignBaseline="@id/txtPriceLarge"
                         android:text="S/ 79.99" />
 
-                    <!-- Edition Selection -->
-                    <TextView
-                        android:id="@+id/lblEdition"
-                        style="@style/AppText.Caption"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/txtPriceLarge"
-                        android:layout_marginTop="@dimen/spacing_large"
-                        android:text="@string/product_edition_label"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/cgEditions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/lblEdition"
-                        android:layout_marginTop="12dp"
-                        app:singleSelection="true">
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipStandard"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="@string/product_edition_standard"
-                            app:checkedIconVisible="false"
-                            app:chipStrokeColor="@color/verde_claro_pixel"
-                            android:textColor="@color/negro_oscuro"
-                            app:chipBackgroundColor="@color/verde_claro_pixel"/>
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipDeluxe"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/product_edition_deluxe"
-                            app:checkedIconVisible="false"
-                            app:chipStrokeColor="@color/verde_oscuro_pixel"
-                            android:textColor="@color/blanco_claro"
-                            app:chipBackgroundColor="@color/negro_oscuro"/>
-                    </com.google.android.material.chip.ChipGroup>
 
                     <!-- Quantity -->
                     <TextView
@@ -249,7 +209,7 @@
                         style="@style/AppText.Caption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/cgEditions"
+                        android:layout_below="@id/txtPriceLarge"
                         android:layout_marginTop="@dimen/spacing_large"
                         android:text="@string/product_quantity_label"
                         android:textStyle="bold" />

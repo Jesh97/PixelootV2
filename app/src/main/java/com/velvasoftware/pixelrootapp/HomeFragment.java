@@ -18,19 +18,19 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.velvasoftware.pixelrootapp.databinding.FragmentHomeBinding;
-import com.velvasoftware.pixelrootapp.databinding.ItemBannerPromoBinding;
 import com.velvasoftware.pixelrootapp.databinding.ItemCategoryHomeBinding;
 import com.velvasoftware.pixelrootapp.databinding.ItemGameCardBinding;
 import com.velvasoftware.pixelrootapp.models.Category;
 import com.velvasoftware.pixelrootapp.models.Product;
+import com.velvasoftware.pixelrootapp.network.SessionManager;
 import com.velvasoftware.pixelrootapp.network.api.CatalogApi;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
 import com.velvasoftware.pixelrootapp.network.request.AddToCartRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 import com.velvasoftware.pixelrootapp.network.response.CartResponse;
 import com.velvasoftware.pixelrootapp.ui.common.GenericAdapter;
-import com.velvasoftware.pixelrootapp.utils.CurrencyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +39,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import com.velvasoftware.pixelrootapp.network.SessionManager;
-
 public class HomeFragment extends Fragment {
 
+    private static final String TAG = "HomeFragment";
     private FragmentHomeBinding binding;
     private int userRoleId = 1;
 
@@ -56,7 +55,6 @@ public class HomeFragment extends Fragment {
     private final List<Product> popularGames = new ArrayList<>();
 
     private int selectedCategoryId = 0; // 0 = ninguna categoría elegida (mostrar todos)
-    private static final double DELUXE_SURCHARGE = 20.0; // debe coincidir con ProductDetailFragment
 
     // ---- Buscador ----
     private String searchQuery = "";
@@ -79,9 +77,13 @@ public class HomeFragment extends Fragment {
 
         setupCategories();
         setupPopularGames();
-        setupOffersCarousel();
+        setupPhysicalAndDigitalSections();
         setupFooter();
         setupSearch();
+
+        binding.fabQuickTicket.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.createTicketFragment)
+        );
     }
 
     // ================= CATEGORÍAS (Explorar) =================
@@ -92,7 +94,6 @@ public class HomeFragment extends Fragment {
             styleCategoryItem(itemBinding, data.getId() == selectedCategoryId);
 
             itemBinding.getRoot().setOnClickListener(v -> {
-                // Tocar la misma categoría otra vez la deselecciona (vuelve a mostrar todos).
                 selectedCategoryId = (data.getId() == selectedCategoryId) ? 0 : data.getId();
                 categoriesAdapter.notifyDataSetChanged();
                 applyPopularGamesFilter();
@@ -114,13 +115,13 @@ public class HomeFragment extends Fragment {
                     categories.addAll(body.getData());
                     categoriesAdapter.notifyDataSetChanged();
                 } else {
-                    Log.e("HOME_API", "No se pudieron cargar categorías: " + response.code());
+                    Log.e(TAG, "No se pudieron cargar categorías: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Category>>> call, @NonNull Throwable t) {
-                Log.e("HOME_API", "Fallo al cargar categorías", t);
+                Log.e(TAG, "Fallo al cargar categorías", t);
             }
         });
     }
@@ -133,9 +134,6 @@ public class HomeFragment extends Fragment {
 
     // ================= BUSCADOR =================
 
-    // =========================================================================
-    // Buscador: filtra localmente sobre los juegos populares ya cargados
-    // =========================================================================
     private void setupSearch() {
         binding.etSearchHome.addTextChangedListener(new TextWatcher() {
             @Override
@@ -163,12 +161,16 @@ public class HomeFragment extends Fragment {
         popularGamesAdapter = new GenericAdapter<>(popularGames, ItemGameCardBinding::inflate, (itemBinding, data) -> {
             itemBinding.txtGameTitle.setText(data.getTitle());
             itemBinding.txtCategory.setText(data.getCategory() != null ? data.getCategory() : "");
-            itemBinding.txtPrice.setText(CurrencyUtils.format(data.getPrice()));
+            itemBinding.txtPrice.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(data.getPrice()));
             itemBinding.txtRating.setText(data.getRating());
 
-            com.velvasoftware.pixelrootapp.utils.ImageLoader.loadGameCover(itemBinding.imgGame, data.getImageUrl());
+            Glide.with(itemBinding.imgGame.getContext())
+                    .load(com.velvasoftware.pixelrootapp.utils.ImageUrlUtils.toDirectImageUrl(data.getImageUrl()))
+                    .placeholder(R.drawable.flyer_pixel)
+                    .error(R.drawable.flyer_pixel)
+                    .centerCrop()
+                    .into(itemBinding.imgGame);
 
-            // Roles operativos (Agente, Admin, SuperAdmin) no pueden comprar
             if (userRoleId >= 2) {
                 itemBinding.btnAddCartHome.setVisibility(View.GONE);
             } else {
@@ -198,13 +200,13 @@ public class HomeFragment extends Fragment {
                     allPopularGames.addAll(body.getData());
                     applyPopularGamesFilter();
                 } else {
-                    Log.e("HOME_API", "No se pudieron cargar juegos populares: " + response.code());
+                    Log.e(TAG, "No se pudieron cargar juegos populares: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {
-                Log.e("HOME_API", "Fallo al cargar juegos populares", t);
+                Log.e(TAG, "Fallo al cargar juegos populares", t);
                 if (binding != null) {
                     Toast.makeText(getContext(), "No se pudieron cargar los juegos populares", Toast.LENGTH_SHORT).show();
                 }
@@ -249,7 +251,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Throwable t) {
-                Log.e("HOME_API", "Fallo conexión carrito", t);
+                Log.e(TAG, "Fallo conexión carrito", t);
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Sin conexión con el servidor", Toast.LENGTH_SHORT).show();
                 }
@@ -257,36 +259,11 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    // ================= EDICIONES DELUXE (banner) =================
+    // ================= EDICIÓN FÍSICA / DIGITAL =================
 
-    private void setupOffersCarousel() {
-        List<Product> deluxeGames = new ArrayList<>();
-
-        GenericAdapter<ItemBannerPromoBinding, Product> adapter = new GenericAdapter<>(deluxeGames, ItemBannerPromoBinding::inflate, (itemBinding, data) -> {
-            itemBinding.txtGameTitle.setText(data.getTitle());
-            itemBinding.txtOldPrice.setText(CurrencyUtils.format(data.getPrice()));
-            itemBinding.txtPrice.setText(CurrencyUtils.format(data.getPrice() + DELUXE_SURCHARGE));
-
-            com.velvasoftware.pixelrootapp.utils.ImageLoader.loadGameCover(itemBinding.imgPromo,
-                    data.getBannerUrl() != null ? data.getBannerUrl() : data.getImageUrl());
-
-            if (userRoleId == 2) {
-                itemBinding.btnAddToCartBanner.setVisibility(View.GONE);
-            }
-
-            View.OnClickListener openDeluxeDetail = v -> {
-                Bundle args = new Bundle();
-                args.putInt("productId", data.getId());
-                args.putString("edition", "DELUXE");
-                Navigation.findNavController(v).navigate(R.id.productDetailFragment, args);
-            };
-
-            itemBinding.getRoot().setOnClickListener(openDeluxeDetail);
-            itemBinding.btnAddToCartBanner.setOnClickListener(openDeluxeDetail); // el recargo Deluxe se confirma en el detalle, no se agrega a ciegas desde aquí
-        });
-
-        binding.rvOffersCarousel.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-        binding.rvOffersCarousel.setAdapter(adapter);
+    private void setupPhysicalAndDigitalSections() {
+        binding.rvPhysicalGames.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        binding.rvDigitalGames.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
         CatalogApi api = RetrofitClient.getCatalogApi();
         api.getFeaturedProducts().enqueue(new Callback<ApiResponse<List<Product>>>() {
@@ -296,26 +273,63 @@ public class HomeFragment extends Fragment {
 
                 ApiResponse<List<Product>> body = response.body();
                 if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
-                    deluxeGames.clear();
-                    deluxeGames.addAll(body.getData());
-                    adapter.notifyDataSetChanged();
+                    List<Product> physical = new ArrayList<>();
+                    List<Product> digital = new ArrayList<>();
+
+                    for (Product p : body.getData()) {
+                        if (p.isDigital()) {
+                            digital.add(p);
+                        } else {
+                            physical.add(p);
+                        }
+                    }
+
+                    bindGamesList(binding.rvPhysicalGames, physical);
+                    bindGamesList(binding.rvDigitalGames, digital);
                 } else {
-                    Log.e("HOME_API", "No se pudieron cargar ediciones deluxe: " + response.code());
+                    Log.e(TAG, "No se pudieron cargar juegos destacados: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {
-                Log.e("HOME_API", "Fallo al cargar ediciones deluxe", t);
+                Log.e(TAG, "Fallo al cargar juegos destacados", t);
             }
         });
+    }
+
+    private void bindGamesList(RecyclerView recyclerView, List<Product> games) {
+        recyclerView.setAdapter(new GenericAdapter<ItemGameCardBinding, Product>(games, ItemGameCardBinding::inflate, (itemBinding, data) -> {
+            itemBinding.txtGameTitle.setText(data.getTitle());
+            itemBinding.txtCategory.setText(data.getCategory() != null ? data.getCategory() : "");
+            itemBinding.txtPrice.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(data.getPrice()));
+            itemBinding.txtRating.setText(data.getRating());
+
+            Glide.with(itemBinding.imgGame.getContext())
+                    .load(com.velvasoftware.pixelrootapp.utils.ImageUrlUtils.toDirectImageUrl(data.getImageUrl()))
+                    .placeholder(R.drawable.flyer_pixel)
+                    .error(R.drawable.flyer_pixel)
+                    .centerCrop()
+                    .into(itemBinding.imgGame);
+
+            if (userRoleId >= 2) {
+                itemBinding.btnAddCartHome.setVisibility(View.GONE);
+            } else {
+                itemBinding.btnAddCartHome.setVisibility(View.VISIBLE);
+                itemBinding.btnAddCartHome.setOnClickListener(v -> agregarAlCarrito(data.getId()));
+            }
+
+            itemBinding.getRoot().setOnClickListener(v -> {
+                Bundle args = new Bundle();
+                args.putInt("productId", data.getId());
+                Navigation.findNavController(v).navigate(R.id.productDetailFragment, args);
+            });
+        }));
     }
 
     private void setupFooter() {
         binding.btnFooterTeam.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.devTeamFragment));
         binding.btnFooterAbout.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.aboutUsFragment));
-
-        binding.fabQuickTicket.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.createTicketFragment));
     }
 
     @Override

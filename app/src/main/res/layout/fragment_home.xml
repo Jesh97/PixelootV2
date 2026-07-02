@@ -91,24 +91,43 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_game_card" />
 
-            <!-- Deluxe Editions Section -->
+            <!-- Edición Física Section -->
             <TextView
                 style="@style/AppText.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_large"
-                android:text="EDICIONES DELUXE"
+                android:text="EDICIÓN FÍSICA"
                 android:letterSpacing="0.1"/>
             <View android:layout_width="60dp" android:layout_height="2dp" android:background="@color/verde_claro_pixel" android:layout_marginTop="4dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvOffersCarousel"
+                android:id="@+id/rvPhysicalGames"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_banner_promo" />
+                tools:listitem="@layout/item_game_card" />
+
+            <!-- Edición Digital Section -->
+            <TextView
+                style="@style/AppText.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="EDICIÓN DIGITAL"
+                android:letterSpacing="0.1"/>
+            <View android:layout_width="60dp" android:layout_height="2dp" android:background="@color/verde_claro_pixel" android:layout_marginTop="4dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDigitalGames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_game_card" />
 
             <!-- Footer Section -->
             <LinearLayout
