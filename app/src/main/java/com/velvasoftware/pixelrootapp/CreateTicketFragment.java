@@ -16,18 +16,17 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.velvasoftware.pixelrootapp.databinding.FragmentCreateTicketBinding;
-import com.velvasoftware.pixelrootapp.models.Branch;
+import com.velvasoftware.pixelrootapp.models.CartItem;
 import com.velvasoftware.pixelrootapp.models.Order;
 import com.velvasoftware.pixelrootapp.models.Ticket;
 import com.velvasoftware.pixelrootapp.models.TicketPriority;
 import com.velvasoftware.pixelrootapp.models.TicketType;
-import com.velvasoftware.pixelrootapp.network.api.BranchApi;
+import com.velvasoftware.pixelrootapp.network.SessionManager;
 import com.velvasoftware.pixelrootapp.network.api.OrderApi;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
 import com.velvasoftware.pixelrootapp.network.api.TicketApi;
 import com.velvasoftware.pixelrootapp.network.request.CreateTicketRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
-import com.velvasoftware.pixelrootapp.utils.CurrencyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +35,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import com.velvasoftware.pixelrootapp.network.SessionManager;
-
 public class CreateTicketFragment extends Fragment {
 
     private FragmentCreateTicketBinding binding;
@@ -47,10 +42,8 @@ public class CreateTicketFragment extends Fragment {
     private final List<TicketType> ticketTypes = new ArrayList<>();
     private final List<TicketPriority> priorities = new ArrayList<>();
     private final List<Order> userOrders = new ArrayList<>();
-    private final List<Branch> branches = new ArrayList<>();
     private TicketType selectedType;
     private Order selectedOrder;
-    private Integer selectedBranchId = null;
 
     private static final String TIPO_REEMBOLSO = "REEMBOLSO";
 
@@ -168,89 +161,11 @@ public class CreateTicketFragment extends Fragment {
 
         binding.autoCompleteType.setOnItemClickListener((parent, v, position, id) -> {
             selectedType = ticketTypes.get(position);
-            onTicketTypeSelected();
+            // Si ya había un pedido escaneado, lo revalidamos contra el nuevo motivo elegido
+            // (por ejemplo: había un pedido físico y el usuario recién elige "Reembolso").
+            revalidarPedidoSeleccionado();
             validateForm();
         });
-    }
-
-    /**
-     * El motivo "REEMBOLSO" es especial: además del pedido y la descripción, requiere que
-     * el usuario elija en qué sucursal hará la devolución física del producto.
-     */
-    private void onTicketTypeSelected() {
-        boolean esReembolso = selectedType != null
-                && TIPO_REEMBOLSO.equalsIgnoreCase(selectedType.getName());
-
-        binding.sectionSucursalDevolucion.setVisibility(esReembolso ? View.VISIBLE : View.GONE);
-
-        if (esReembolso && branches.isEmpty()) {
-            loadBranches();
-        }
-        if (!esReembolso) {
-            selectedBranchId = null;
-        }
-    }
-
-    private void loadBranches() {
-        BranchApi api = RetrofitClient.getBranchApi();
-        api.getBranches().enqueue(new Callback<ApiResponse<List<Branch>>>() {
-            @Override
-            public void onResponse(@NonNull Call<ApiResponse<List<Branch>>> call, @NonNull Response<ApiResponse<List<Branch>>> response) {
-                if (binding == null) return;
-
-                ApiResponse<List<Branch>> body = response.body();
-                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
-                    branches.clear();
-                    branches.addAll(body.getData());
-                    bindSucursalChips();
-                } else {
-                    Log.e("TICKETS_API", "No se pudieron cargar sucursales: " + response.code());
-                    Toast.makeText(getContext(), "No se pudieron cargar las sucursales", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<Branch>>> call, @NonNull Throwable t) {
-                Log.e("TICKETS_API", "Fallo al cargar sucursales", t);
-                if (binding == null) return;
-                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private void bindSucursalChips() {
-        binding.cgSucursalesDevolucion.removeAllViews();
-        selectedBranchId = null;
-
-        for (Branch branch : branches) {
-            com.google.android.material.chip.Chip chip =
-                    new com.google.android.material.chip.Chip(requireContext(), null, com.google.android.material.R.attr.chipStyle);
-            chip.setText(branch.getName());
-            chip.setCheckable(true);
-            chip.setClickable(true);
-            chip.setTag(branch.getId());
-            styleSucursalChip(chip);
-
-            chip.setOnClickListener(v -> {
-                for (int i = 0; i < binding.cgSucursalesDevolucion.getChildCount(); i++) {
-                    com.google.android.material.chip.Chip other =
-                            (com.google.android.material.chip.Chip) binding.cgSucursalesDevolucion.getChildAt(i);
-                    other.setChecked(other == chip);
-                    styleSucursalChip(other);
-                }
-                selectedBranchId = (int) chip.getTag();
-                validateForm();
-            });
-
-            binding.cgSucursalesDevolucion.addView(chip);
-        }
-    }
-
-    private void styleSucursalChip(com.google.android.material.chip.Chip chip) {
-        boolean checked = chip.isChecked();
-        chip.setChipBackgroundColorResource(checked ? R.color.verde_claro_pixel : R.color.negro_oscuro);
-        chip.setTextColor(getResources().getColor(checked ? R.color.negro_oscuro : R.color.blanco_intermedio));
-        chip.setChipStrokeColorResource(checked ? R.color.verde_claro_pixel : R.color.verde_oscuro_pixel);
     }
 
     /** "JUEGO_NO_DESCARGA" -> "Juego no descarga" (más legible para el usuario). */
@@ -274,17 +189,19 @@ public class CreateTicketFragment extends Fragment {
             Toast.makeText(getContext(), "Selecciona el pedido relacionado", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // El reembolso solo aplica a pedidos 100% digitales; los pedidos con al menos
+        // un producto físico no se pueden reembolsar por esta vía.
+        if (esTipoReembolso(selectedType) && !esPedidoSoloDigital(selectedOrder)) {
+            Toast.makeText(getContext(), "Solo se pueden reembolsar pedidos 100% digitales", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         int pedidoId = selectedOrder.getOrderId();
 
         String description = binding.etDescription.getText() != null ? binding.etDescription.getText().toString().trim() : "";
         if (description.length() <= 5) {
             Toast.makeText(getContext(), "Describe el problema con más detalle", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        boolean esReembolso = TIPO_REEMBOLSO.equalsIgnoreCase(selectedType.getName());
-        if (esReembolso && selectedBranchId == null) {
-            Toast.makeText(getContext(), "Selecciona la sucursal de devolución", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -300,7 +217,7 @@ public class CreateTicketFragment extends Fragment {
                 prioridadId,
                 formatTypeName(selectedType.getName()), // el formulario no tiene campo "título" propio, usamos el tipo elegido
                 description,
-                esReembolso ? selectedBranchId : null // sucursal_id: solo aplica para devoluciones/reembolsos
+                null // sucursal_id: el reembolso es solo digital, no requiere sucursal
         );
 
         TicketApi api = RetrofitClient.getTicketApi();
@@ -327,6 +244,35 @@ public class CreateTicketFragment extends Fragment {
                 Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private boolean esTipoReembolso(TicketType type) {
+        return type != null && TIPO_REEMBOLSO.equalsIgnoreCase(type.getName());
+    }
+
+    /** true si TODOS los items del pedido son digitales (ninguno físico). */
+    private boolean esPedidoSoloDigital(Order order) {
+        if (order == null || order.getItems() == null || order.getItems().isEmpty()) {
+            // Si el pedido no trae items (p. ej. el endpoint de lista no los incluye),
+            // no bloqueamos aquí: la validación definitiva la hace igual el backend.
+            return true;
+        }
+        for (CartItem item : order.getItems()) {
+            if (!item.isDigital()) return false;
+        }
+        return true;
+    }
+
+    /** Si cambia el motivo elegido y el pedido ya escaneado ya no es válido para ese motivo, se limpia. */
+    private void revalidarPedidoSeleccionado() {
+        if (selectedOrder == null) return;
+
+        if (esTipoReembolso(selectedType) && !esPedidoSoloDigital(selectedOrder)) {
+            selectedOrder = null;
+            binding.etRelatedOrder.setText("");
+            binding.etRelatedOrder.setHint("Escanea el QR del pedido");
+            Toast.makeText(getContext(), "Ese pedido tiene productos físicos, no es reembolsable", Toast.LENGTH_LONG).show();
+        }
     }
 
     private int findPriorityIdByName(String name) {
@@ -369,6 +315,12 @@ public class CreateTicketFragment extends Fragment {
             }
 
             if (match != null) {
+                // Si el motivo elegido es "Reembolso", el pedido escaneado tiene que ser 100% digital.
+                if (esTipoReembolso(selectedType) && !esPedidoSoloDigital(match)) {
+                    Toast.makeText(getContext(), "Ese pedido tiene productos físicos, no es reembolsable", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 selectedOrder = match;
                 binding.etRelatedOrder.setText("Pedido #" + match.getOrderId() + " (" + match.getDate() + ")");
                 validateForm();
@@ -405,10 +357,7 @@ public class CreateTicketFragment extends Fragment {
         boolean isOrderValid = (selectedOrder != null) || (binding.etRelatedOrder.getText() != null && binding.etRelatedOrder.getText().length() > 0);
         boolean isDescValid = binding.etDescription.getText() != null && binding.etDescription.getText().length() > 5;
 
-        boolean esReembolso = selectedType != null && TIPO_REEMBOLSO.equalsIgnoreCase(selectedType.getName());
-        boolean isBranchValid = !esReembolso || selectedBranchId != null;
-
-        binding.btnSubmitTicket.setEnabled(isOrderValid && isDescValid && isBranchValid);
+        binding.btnSubmitTicket.setEnabled(isOrderValid && isDescValid);
     }
 
     @Override
