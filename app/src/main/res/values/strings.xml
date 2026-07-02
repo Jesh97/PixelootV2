@@ -93,6 +93,8 @@
     <string name="catalog_sort_popular">POPULAR</string>
     <string name="catalog_sort_recent">RECIENTE</string>
     <string name="catalog_results_count">%1$d resultados encontrados</string>
+    <string name="catalog_all_categories">Todos</string>
+    <string name="product_new_badge">NUEVO</string>
     <string name="search_input_hint">Buscar juegos o plataformas...</string>
     <string name="search_empty_start">Escribe algún nombre para buscar</string>
     <string name="search_no_results">No se encontraron coincidencias</string>
@@ -190,6 +192,16 @@
     <!-- Configuración -->
     <string name="settings_title">Configuración</string>
     <string name="settings_my_account">MI CUENTA</string>
+    <string name="settings_edit_profile">Editar Perfil</string>
+    <string name="settings_saved_addresses">Direcciones Guardadas</string>
+    <string name="settings_payment_methods">Medios de Pago</string>
+    <string name="settings_wallet">BILLETERA</string>
+    <string name="settings_pixel_credits">Créditos Pixel Root</string>
+    <string name="settings_preferences">PREFERENCIAS</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="settings_location">Ubicación</string>
+    <string name="settings_language_es">Idioma: Español</string>
+    <string name="settings_language_en">Language: English</string>
 
     <!-- Menú Desplegable -->
     <string name="menu_home">Inicio</string>
@@ -202,6 +214,12 @@
     <!-- Acerca de -->
     <string name="about_us_velva">Sobre Velva</string>
     <string name="timeline_title">Línea de Tiempo</string>
+    <string name="about_velva_desc">Somos Velva, un apasionado equipo de desarrollo universitario dedicado a crear experiencias digitales innovadoras. Pixel Root es el resultado de nuestro compromiso por llevar el gaming al siguiente nivel en el Perú.</string>
+    <string name="about_pixelroot_title">Pixel Root</string>
+    <string name="about_pixelroot_desc">Pixel Root es la tienda virtual líder de videojuegos en Perú. Nuestra misión es conectar a los gamers con los mejores títulos, hardware y accesorios, ofreciendo un servicio rápido, seguro y con la mejor tecnología.</string>
+    <string name="about_our_branches">NUESTRAS SUCURSALES</string>
+    <string name="about_our_products">NUESTROS PRODUCTOS</string>
+    <string name="about_dev_team">Equipo de Desarrollo</string>
 
     <!-- Generales -->
     <string name="option_confirm">CONFIRMAR</string>
@@ -227,7 +245,9 @@
     <string name="ticket_attachments">ARCHIVOS ADJUNTOS</string>
     <string name="logout_confirm_msg">¿Deseas cerrar tu sesión?</string>
     <string name="product_reviews_label">RESEÑAS</string>
+    <string name="product_description_label">DESCRIPCIÓN</string>
+    <string name="product_loading_description">Cargando descripción...</string>
+    <string name="product_avg_rating">Calificación promedio</string>
+    <string name="product_add_to_cart_btn">AÑADIR AL CARRITO</string>
     <string name="category_title">Categorías</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

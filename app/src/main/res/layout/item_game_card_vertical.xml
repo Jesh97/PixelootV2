@@ -36,7 +36,7 @@
                 android:backgroundTint="@color/amarillo_claro_pixel"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
-                android:text="NUEVO"
+                android:text="@string/product_new_badge"
                 android:textColor="@color/negro_oscuro"
                 android:textStyle="bold"
                 android:alpha="1" />
@@ -49,32 +49,36 @@
             android:orientation="vertical"
             android:padding="14dp">
 
-            <!-- Title -->
-            <TextView
-                android:id="@+id/txtGameTitle"
-                style="@style/AppText.Subtitle"
+            <!-- Title and Platform -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="GTA VII"
-                android:textSize="16sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <!-- Platform -->
-            <TextView
-                android:id="@+id/txtPlatform"
-                style="@style/AppText.Caption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_timer_box"
-                android:backgroundTint="#8905269D"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="2dp"
-                android:text="PS5"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:alpha="1" />
+                <TextView
+                    android:id="@+id/txtGameTitle"
+                    style="@style/AppText.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="GTA VII"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/txtPlatform"
+                    style="@style/AppText.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_timer_box"
+                    android:backgroundTint="#8905269D"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp"
+                    android:text="PS5"
+                    android:textStyle="bold"
+                    android:alpha="1" />
+            </LinearLayout>
 
             <!-- Category and Rating -->
             <LinearLayout

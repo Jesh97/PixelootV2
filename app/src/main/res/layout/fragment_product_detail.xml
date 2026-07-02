@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_large"
-                    android:text="DESCRIPCIÓN" />
+                    android:text="@string/product_description_label" />
 
                 <TextView
                     android:id="@+id/txtDescriptionDetail"
@@ -174,7 +174,7 @@
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="4dp"
                     android:textColor="@color/blanco_claro"
-                    android:text="Cargando descripción..." />
+                    android:text="@string/product_loading_description" />
 
                 <!-- Pricing Card -->
                 <RelativeLayout
@@ -312,7 +312,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_xlarge"
-                    android:text="RESEÑAS" />
+                    android:text="@string/product_reviews_label" />
 
                 <include layout="@layout/layout_reviews_summary"
                     android:id="@+id/reviewsSummary"
@@ -339,7 +339,7 @@
             style="@style/AppButton.Primary"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:text="AÑADIR AL CARRITO"
+            android:text="@string/product_add_to_cart_btn"
             app:icon="@drawable/icon_add_cart"
             app:iconTint="@color/negro_oscuro"
             app:iconSize="24dp"

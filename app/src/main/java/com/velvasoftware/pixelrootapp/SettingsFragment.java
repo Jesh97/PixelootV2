@@ -60,9 +60,17 @@ public class SettingsFragment extends Fragment {
             Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
         });
 
-        binding.switchSounds.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            String msg = isChecked ? "Sonidos activados" : "Sonidos desactivados";
-            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        boolean isEnglish = androidx.core.os.LocaleListCompat.getDefault().get(0) != null
+                && "en".equals(androidx.core.os.LocaleListCompat.getDefault().get(0).getLanguage());
+        binding.switchLanguage.setChecked(isEnglish);
+        binding.txtLanguageLabel.setText(isEnglish ? R.string.settings_language_en : R.string.settings_language_es);
+
+        binding.switchLanguage.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String tag = isChecked ? "en" : "es";
+            binding.txtLanguageLabel.setText(isChecked ? R.string.settings_language_en : R.string.settings_language_es);
+            androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
+                    androidx.core.os.LocaleListCompat.forLanguageTags(tag)
+            );
         });
     }
 

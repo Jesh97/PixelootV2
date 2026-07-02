@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Calificación promedio"
+                android:text="@string/product_avg_rating"
                 android:textColor="@color/blanco_intermedio"
                 android:textSize="12sp"/>
         </LinearLayout>

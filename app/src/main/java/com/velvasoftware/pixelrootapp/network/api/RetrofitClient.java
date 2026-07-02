@@ -41,14 +41,21 @@ public class RetrofitClient {
                     Request original = chain.request();
                     String token = session.getToken();
 
-                    if (token == null) {
-                        return chain.proceed(original);
+                    // Le decimos al backend en qué idioma tiene la app configurada ahora
+                    // mismo, para que traduzca (si corresponde) el contenido que viene de la BD.
+                    androidx.core.os.LocaleListCompat locales =
+                            androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
+                    String idioma = (!locales.isEmpty() && locales.get(0) != null)
+                            ? locales.get(0).getLanguage() : "es";
+
+                    Request.Builder builder = original.newBuilder()
+                            .header("Accept-Language", idioma);
+
+                    if (token != null) {
+                        builder.header("Authorization", "Bearer " + token);
                     }
 
-                    Request authenticated = original.newBuilder()
-                            .header("Authorization", "Bearer " + token)
-                            .build();
-                    return chain.proceed(authenticated);
+                    return chain.proceed(builder.build());
                 })
                 .addInterceptor(logging)
                 .build();

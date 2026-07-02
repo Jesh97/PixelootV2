@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Editar Perfil"
+                        android:text="@string/settings_edit_profile"
                         android:textColor="@color/blanco_claro"
                         android:textSize="16sp" />
                     <ImageView
@@ -118,7 +118,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Direcciones Guardadas"
+                        android:text="@string/settings_saved_addresses"
                         android:textColor="@color/blanco_claro"
                         android:textSize="16sp" />
                     <ImageView
@@ -147,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Medios de Pago"
+                        android:text="@string/settings_payment_methods"
                         android:textColor="@color/blanco_claro"
                         android:textSize="16sp" />
                     <ImageView
@@ -166,7 +166,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:text="BILLETERA"
+            android:text="@string/settings_wallet"
             android:textColor="@color/blanco_intermedio"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -202,7 +202,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Créditos Pixel Root"
+                    android:text="@string/settings_pixel_credits"
                     android:textColor="@color/blanco_claro"
                     android:textSize="16sp" />
                 <TextView
@@ -227,7 +227,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:text="PREFERENCIAS"
+            android:text="@string/settings_preferences"
             android:textColor="@color/blanco_intermedio"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -267,7 +267,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Notificaciones"
+                        android:text="@string/settings_notifications"
                         android:textColor="@color/blanco_claro"
                         android:textSize="16sp" />
                     <com.google.android.material.materialswitch.MaterialSwitch
@@ -297,7 +297,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Ubicación"
+                        android:text="@string/settings_location"
                         android:textColor="@color/blanco_claro"
                         android:textSize="16sp" />
                     <com.google.android.material.materialswitch.MaterialSwitch
@@ -311,7 +311,7 @@
 
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/verde_oscuro_pixel" android:layout_marginHorizontal="20dp"/>
 
-                <!-- Sounds -->
+                <!-- Idioma -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
@@ -323,15 +323,16 @@
                         android:src="@drawable/icon_sound_app"
                         app:tint="@color/verde_claro_pixel" />
                     <TextView
+                        android:id="@+id/txtLanguageLabel"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Sonidos en la App"
+                        android:text="@string/settings_language_es"
                         android:textColor="@color/blanco_claro"
                         android:textSize="16sp" />
                     <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switchSounds"
+                        android:id="@+id/switchLanguage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="false"
