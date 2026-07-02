@@ -24,6 +24,8 @@
     <string name="register_first_name_hint">Enter your first name</string>
     <string name="register_last_name_label">LAST NAME</string>
     <string name="register_last_name_hint">Enter your last name</string>
+    <string name="register_dni_label">ID NUMBER</string>
+    <string name="register_dni_hint">Enter your ID number</string>
     <string name="register_email_label">EMAIL ADDRESS</string>
     <string name="register_email_hint">Enter your email address</string>
     <string name="register_phone_label">PHONE</string>

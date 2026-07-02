@@ -24,6 +24,8 @@
     <string name="register_first_name_hint">Ingresa tus nombres</string>
     <string name="register_last_name_label">APELLIDOS</string>
     <string name="register_last_name_hint">Ingresa tus apellidos</string>
+    <string name="register_dni_label">DNI</string>
+    <string name="register_dni_hint">Ingresa tu DNI</string>
     <string name="register_email_label">DIRECCIÓN DE CORREO</string>
     <string name="register_email_hint">Ingresa tu dirección de correo</string>
     <string name="register_phone_label">TELÉFONO</string>
