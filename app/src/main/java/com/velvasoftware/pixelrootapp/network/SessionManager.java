@@ -16,6 +16,7 @@ public class SessionManager {
     private static final String KEY_APELLIDO = "apellido";
     private static final String KEY_CORREO = "correo";
     private static final String KEY_ROL_ID = "rol_id";
+    private static final String KEY_REMEMBER_ME = "remember_me";
 
     private static SessionManager instance;
     private final SharedPreferences prefs;
@@ -33,7 +34,7 @@ public class SessionManager {
     }
 
     public void saveSession(String token, int usuarioId, String nombre, String apellido,
-                            String correo, int rolId) {
+                            String correo, int rolId, boolean rememberMe) {
         prefs.edit()
                 .putString(KEY_TOKEN, token)
                 .putInt(KEY_USER_ID, usuarioId)
@@ -41,7 +42,13 @@ public class SessionManager {
                 .putString(KEY_APELLIDO, apellido)
                 .putString(KEY_CORREO, correo)
                 .putInt(KEY_ROL_ID, rolId)
+                .putBoolean(KEY_REMEMBER_ME, rememberMe)
                 .apply();
+    }
+
+    /** true si el usuario marcó "Recordarme" en el login: permite saltar el login la próxima vez que se abra la app. */
+    public boolean isRememberMe() {
+        return prefs.getBoolean(KEY_REMEMBER_ME, false);
     }
 
     public String getToken() {

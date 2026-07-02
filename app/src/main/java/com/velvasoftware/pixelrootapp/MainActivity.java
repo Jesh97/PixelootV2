@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.velvasoftware.pixelrootapp.databinding.ActivityMainBinding;
+import com.velvasoftware.pixelrootapp.network.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,7 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void navigateToLogin() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            SessionManager session = SessionManager.getInstance(this);
+            boolean skipLogin = session.isLoggedIn() && session.isRememberMe();
+
+            Intent intent = new Intent(MainActivity.this, skipLogin ? MenuActivity.class : LoginActivity.class);
             startActivity(intent);
             finish();
         }, 3000);
