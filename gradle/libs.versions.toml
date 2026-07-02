@@ -12,6 +12,7 @@ constraintlayout = "2.2.1"
 navigationFragmentKtx = "2.9.8"
 navigationUiKtx = "2.9.8"
 playServicesMaps = "19.1.0"
+playServicesLocation = "21.3.0"
 retrofit = "2.11.0"
 gson = "2.12.1"
 zxing = "3.5.3"
@@ -19,6 +20,7 @@ firebase-bom = "33.1.2"
 
 [libraries]
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

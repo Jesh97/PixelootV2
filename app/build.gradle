@@ -72,8 +72,9 @@ dependencies {
     implementation libs.zxing.core
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 
-    // Google Maps
+    // Google Maps & Location
     implementation libs.play.services.maps
+    implementation libs.play.services.location
 
     // CameraX dependencies
     implementation "androidx.camera:camera-camera2:1.4.1"
