@@ -112,6 +112,18 @@ public class MenuActivity extends AppCompatActivity {
         String fullName = (session.getNombre() + " " + session.getApellido()).trim();
         txtUserName.setText(fullName.isEmpty() ? "Usuario" : fullName);
         txtUserEmail.setText(session.getCorreo());
+
+        // Control de visibilidad del menú por Rol
+        setupRoleBasedMenu(navigationView.getMenu(), session.getRolId());
+    }
+
+    private void setupRoleBasedMenu(Menu menu, int rolId) {
+        if (rolId == 2) {
+            // Rol 2: Agente de Ventas / Soporte
+            menu.findItem(R.id.qrScannerFragment).setVisible(true);
+            // El agente puede ver catálogo y sucursales, pero no comprar directamente
+            // (La lógica de no comprar se maneja dentro de los fragments)
+        }
     }
 
     @Override

@@ -30,6 +30,9 @@ public class Order {
     @SerializedName("fecha_pedido")
     private String date;
 
+    @SerializedName("codigo_pedido")
+    private String orderCode;
+
     @SerializedName("items")
     private List<CartItem> items;
 
@@ -43,5 +46,6 @@ public class Order {
     public String getPaymentMethod() { return paymentMethod; }
     public Integer getBranchId() { return branchId; }
     public String getDate() { return date; }
+    public String getOrderCode() { return orderCode; }
     public List<CartItem> getItems() { return items; }
 }

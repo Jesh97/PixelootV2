@@ -32,6 +32,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.velvasoftware.pixelrootapp.network.SessionManager;
+
 public class ProductDetailFragment extends Fragment {
 
     private FragmentProductDetailBinding binding;
@@ -39,6 +41,7 @@ public class ProductDetailFragment extends Fragment {
     private double basePrice = 0;
     private static final double DELUXE_SURCHARGE = 20.0;
     private boolean preselectDeluxe = false;
+    private int userRoleId = 1;
 
     public ProductDetailFragment() {}
 
@@ -51,6 +54,16 @@ public class ProductDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        userRoleId = SessionManager.getInstance(requireContext()).getRolId();
+        if (userRoleId == 2) {
+            binding.stickyActionButtons.setVisibility(View.GONE);
+            // También ocultamos el selector de edición y cantidad para agentes
+            binding.cgEditions.setVisibility(View.GONE);
+            binding.lblEdition.setVisibility(View.GONE);
+            binding.lblQuantity.setVisibility(View.GONE);
+            binding.containerQuantity.setVisibility(View.GONE);
+        }
 
         setupListeners();
         setupGallery();

@@ -33,9 +33,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.velvasoftware.pixelrootapp.network.SessionManager;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
+    private int userRoleId = 1;
 
     private GenericAdapter<ItemCategoryHomeBinding, Category> categoriesAdapter;
     private GenericAdapter<ItemGameCardBinding, Product> popularGamesAdapter;
@@ -60,6 +63,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        userRoleId = SessionManager.getInstance(requireContext()).getRolId();
 
         setupCategories();
         setupPopularGames();
@@ -123,6 +128,11 @@ public class HomeFragment extends Fragment {
             itemBinding.txtPrice.setText(CurrencyUtils.format(data.getPrice()));
             itemBinding.txtRating.setText(data.getRating());
 
+            // Agentes no pueden comprar
+            if (userRoleId == 2) {
+                itemBinding.btnAddCartHome.setVisibility(View.GONE);
+            }
+
             itemBinding.getRoot().setOnClickListener(v -> {
                 Bundle args = new Bundle();
                 args.putInt("productId", data.getId());
@@ -177,6 +187,10 @@ public class HomeFragment extends Fragment {
             itemBinding.txtGameTitle.setText(data.getTitle());
             itemBinding.txtOldPrice.setText(CurrencyUtils.format(data.getPrice()));
             itemBinding.txtPrice.setText(CurrencyUtils.format(data.getPrice() + DELUXE_SURCHARGE));
+
+            if (userRoleId == 2) {
+                itemBinding.btnAddToCartBanner.setVisibility(View.GONE);
+            }
 
             View.OnClickListener openDeluxeDetail = v -> {
                 Bundle args = new Bundle();

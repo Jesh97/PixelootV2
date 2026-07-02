@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.velvasoftware.pixelrootapp.databinding.FragmentCreateTicketBinding;
+import com.velvasoftware.pixelrootapp.network.SessionManager;
 
 public class CreateTicketFragment extends Fragment {
 
@@ -53,15 +54,24 @@ public class CreateTicketFragment extends Fragment {
     }
 
     private void setupTypeSelector() {
-        String[] types = new String[]{"Problema con pedido", "Error en pago", "Consulta técnica", "Otro"};
+        int roleId = SessionManager.getInstance(requireContext()).getRolId();
+        String[] types;
+        if (roleId == 2) {
+            types = new String[]{"Reporte de precio", "Reporte de producto", "Otro"};
+            binding.etRelatedOrder.setHint("Código de Pedido o Producto");
+        } else {
+            types = new String[]{"Problema con pedido", "Error en pago", "Consulta técnica", "Otro"};
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, types);
         binding.autoCompleteType.setAdapter(adapter);
     }
 
     private void setupQrScanner() {
-        binding.btnScanQr.setOnClickListener(v -> 
-            Navigation.findNavController(v).navigate(R.id.qrScannerFragment)
-        );
+        binding.btnScanQr.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putBoolean("mode_return_result", true);
+            Navigation.findNavController(v).navigate(R.id.qrScannerFragment, args);
+        });
 
         // Escuchar el resultado del escáner QR
         getParentFragmentManager().setFragmentResultListener("qr_scan_request", getViewLifecycleOwner(), (requestKey, result) -> {

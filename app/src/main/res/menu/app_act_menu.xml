@@ -22,6 +22,12 @@
             android:title="@string/menu_orders" />
 
         <item
+            android:id="@+id/qrScannerFragment"
+            android:icon="@drawable/icon_readqr"
+            android:title="Escanear Pedido"
+            android:visible="false" />
+
+        <item
             android:id="@+id/ticketListFragment"
             android:icon="@drawable/icon_ticket"
             android:title="@string/menu_tickets" />
