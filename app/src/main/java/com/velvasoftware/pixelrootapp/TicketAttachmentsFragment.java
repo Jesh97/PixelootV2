@@ -74,8 +74,16 @@ public class TicketAttachmentsFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new GenericAdapter<>(images, ItemGalleryThumbnailBinding::inflate, (itemBinding, data) -> {
-            // TODO: cuando tengan Glide agregado, cargar data.getUrl() en itemBinding.imgThumb
-            itemBinding.imgThumb.setImageResource(R.drawable.app_gradient);
+            com.bumptech.glide.Glide.with(itemBinding.imgThumb.getContext())
+                    .load(data.getUrl())
+                    .placeholder(R.drawable.app_gradient)
+                    .error(R.drawable.app_gradient)
+                    .centerCrop()
+                    .into(itemBinding.imgThumb);
+
+            itemBinding.getRoot().setOnClickListener(v -> {
+                // TODO: abrir visor de imagen a pantalla completa si lo necesitas más adelante
+            });
         });
 
         binding.rvAttachments.setLayoutManager(new GridLayoutManager(getContext(), 2));
