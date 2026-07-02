@@ -166,6 +166,8 @@ public class HomeFragment extends Fragment {
             itemBinding.txtPrice.setText(CurrencyUtils.format(data.getPrice()));
             itemBinding.txtRating.setText(data.getRating());
 
+            com.velvasoftware.pixelrootapp.utils.ImageLoader.loadGameCover(itemBinding.imgGame, data.getImageUrl());
+
             // Roles operativos (Agente, Admin, SuperAdmin) no pueden comprar
             if (userRoleId >= 2) {
                 itemBinding.btnAddCartHome.setVisibility(View.GONE);
@@ -264,6 +266,9 @@ public class HomeFragment extends Fragment {
             itemBinding.txtGameTitle.setText(data.getTitle());
             itemBinding.txtOldPrice.setText(CurrencyUtils.format(data.getPrice()));
             itemBinding.txtPrice.setText(CurrencyUtils.format(data.getPrice() + DELUXE_SURCHARGE));
+
+            com.velvasoftware.pixelrootapp.utils.ImageLoader.loadGameCover(itemBinding.imgPromo,
+                    data.getBannerUrl() != null ? data.getBannerUrl() : data.getImageUrl());
 
             if (userRoleId == 2) {
                 itemBinding.btnAddToCartBanner.setVisibility(View.GONE);

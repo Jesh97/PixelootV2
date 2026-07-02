@@ -71,7 +71,8 @@ public class ProfileFragment extends Fragment {
                             user.getPhone() != null && !user.getPhone().isEmpty() ? user.getPhone() : "Sin teléfono registrado");
                     binding.txtProfileLocation.setText(
                             user.getAddress() != null && !user.getAddress().isEmpty() ? user.getAddress() : "Sin dirección registrada");
-                    // TODO: cuando se agregue una librería de imágenes, cargar user.getProfileImageUrl() en imgProfile
+
+                    com.velvasoftware.pixelrootapp.utils.ImageLoader.loadProfilePhoto(binding.imgProfile, user.getProfileImageUrl());
                 } else {
                     Log.e("PROFILE_API", "Respuesta no exitosa: " + response.code());
                     Toast.makeText(getContext(), "No se pudo cargar el perfil", Toast.LENGTH_SHORT).show();

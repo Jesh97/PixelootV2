@@ -74,7 +74,7 @@ public class CartFragment extends Fragment {
             itemBinding.txtCurrentPrice.setText(CurrencyUtils.format(data.getSubtotal()));
             itemBinding.txtQuantity.setText(String.valueOf(data.getQuantity()));
 
-            // TODO: cuando se agregue una librería de imágenes, cargar data.getImageUrl() en imgProduct
+            com.velvasoftware.pixelrootapp.utils.ImageLoader.loadThumbnail(itemBinding.imgProduct, data.getImageUrl());
 
             itemBinding.btnPlus.setOnClickListener(v -> updateQuantity(data.getJuegoId(), data.getQuantity() + 1));
 

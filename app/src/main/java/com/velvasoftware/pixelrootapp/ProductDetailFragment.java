@@ -187,7 +187,7 @@ public class ProductDetailFragment extends Fragment {
         binding.txtDescriptionDetail.setText(
                 description != null && !description.isEmpty() ? description : "Este juego todavía no tiene descripción.");
 
-        // TODO: cuando se agregue una librería de imágenes, cargar product.getImageUrl() en imgMain
+        com.velvasoftware.pixelrootapp.utils.ImageLoader.loadMainBanner(binding.imgMain, product.getImageUrl());
     }
 
     private void addToCart() {
