@@ -9,6 +9,9 @@ public class Order {
     @SerializedName("pedido_id")
     private int orderId;
 
+    @SerializedName("codigo_pedido")
+    private String orderCode;
+
     @SerializedName("estado")
     private String status;
 
@@ -39,6 +42,7 @@ public class Order {
     public Order() {}
 
     public int getOrderId() { return orderId; }
+    public String getOrderCode() { return orderCode; }
     public String getStatus() { return status; }
     public double getSubtotal() { return subtotal; }
     public double getTax() { return tax; }

@@ -62,17 +62,19 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/typeSelectorLayout"
-                        style="@style/Widget.PixelRootApp.TextInputLayout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_small"
                         app:hintEnabled="false">
                         <AutoCompleteTextView
                             android:id="@+id/autoCompleteType"
+                            style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/spacing_medium"
                             android:inputType="none"
+                            android:popupBackground="@drawable/bg_dropdown_popup"
                             android:hint="Seleccione tipo de incidencia"
                             android:textColor="@color/blanco_claro"
                             android:textColorHint="@color/blanco_intermedio"
@@ -100,7 +102,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/spacing_medium"
-                            android:hint="Pedido #00000"
+                            android:focusable="false"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:longClickable="false"
+                            android:hint="Escanea el QR del pedido"
                             android:textColor="@color/blanco_claro"
                             android:textColorHint="@color/blanco_intermedio"
                             android:textSize="@dimen/text_size_body" />

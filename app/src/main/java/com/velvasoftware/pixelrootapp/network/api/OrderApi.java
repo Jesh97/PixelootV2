@@ -1,6 +1,7 @@
 package com.velvasoftware.pixelrootapp.network.api;
 
 import com.velvasoftware.pixelrootapp.models.Order;
+import com.velvasoftware.pixelrootapp.network.request.AgentConfirmRequest;
 import com.velvasoftware.pixelrootapp.network.request.ConfirmOrderRequest;
 import com.velvasoftware.pixelrootapp.network.request.AgentConfirmRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
@@ -14,6 +15,11 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface OrderApi {
+
+    // POST /api/pedidos/confirmar_agente -> un agente/admin confirma el pedido de un cliente
+    // (PENDIENTE -> COMPLETADO) y el backend descuenta el stock real de cada juego.
+    @POST("pedidos/confirmar_agente")
+    Call<ApiResponse<Void>> confirmarPedidoAgente(@Body AgentConfirmRequest request);
 
     // POST /api/pedidos/confirmar -> convierte el carrito (estado='CARRITO') en un pedido real
     @POST("pedidos/confirmar")
