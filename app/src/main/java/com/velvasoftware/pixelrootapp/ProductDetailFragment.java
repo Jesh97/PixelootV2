@@ -56,9 +56,9 @@ public class ProductDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         userRoleId = SessionManager.getInstance(requireContext()).getRolId();
-        if (userRoleId == 2) {
+        if (userRoleId >= 2) {
             binding.stickyActionButtons.setVisibility(View.GONE);
-            // También ocultamos el selector de edición y cantidad para agentes
+            // También ocultamos el selector de edición y cantidad para roles operativos
             binding.cgEditions.setVisibility(View.GONE);
             binding.lblEdition.setVisibility(View.GONE);
             binding.lblQuantity.setVisibility(View.GONE);

@@ -118,11 +118,10 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void setupRoleBasedMenu(Menu menu, int rolId) {
-        if (rolId == 2) {
-            // Rol 2: Agente de Ventas / Soporte
+        // Roles 2 (Agente), 3 (Admin), 4 (SuperAdmin)
+        if (rolId >= 2 && rolId <= 4) {
             menu.findItem(R.id.qrScannerFragment).setVisible(true);
-            // El agente puede ver catálogo y sucursales, pero no comprar directamente
-            // (La lógica de no comprar se maneja dentro de los fragments)
+            // Estos roles tienen una vista operativa/monitoreo
         }
     }
 

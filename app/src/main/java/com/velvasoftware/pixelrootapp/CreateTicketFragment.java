@@ -34,6 +34,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import com.velvasoftware.pixelrootapp.network.SessionManager;
+
 public class CreateTicketFragment extends Fragment {
 
     private FragmentCreateTicketBinding binding;
@@ -240,30 +244,50 @@ public class CreateTicketFragment extends Fragment {
     }
 
     private void setupQrScanner() {
-        binding.btnScanQr.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.qrScannerFragment)
-        );
+        binding.btnScanQr.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putBoolean("mode_return_result", true);
+            Navigation.findNavController(v).navigate(R.id.qrScannerFragment, args);
+        });
 
         // Escuchar el resultado del escáner QR
         getParentFragmentManager().setFragmentResultListener("qr_scan_request", getViewLifecycleOwner(), (requestKey, result) -> {
             String scannedValue = result.getString("scanned_order_id");
             if (scannedValue == null) return;
 
-            String digits = scannedValue.replaceAll("[^0-9]", "");
+            // Primero intentamos buscar coincidencia por el nuevo codigo_pedido (hexadecimal)
             Order match = null;
             for (Order order : userOrders) {
-                if (String.valueOf(order.getOrderId()).equals(digits)) {
+                if (scannedValue.equals(order.getOrderCode())) {
                     match = order;
                     break;
                 }
             }
 
+            // Si no hay coincidencia, intentamos por ID numérico (compatibilidad)
+            if (match == null) {
+                String digits = scannedValue.replaceAll("[^0-9]", "");
+                for (Order order : userOrders) {
+                    if (String.valueOf(order.getOrderId()).equals(digits)) {
+                        match = order;
+                        break;
+                    }
+                }
+            }
+
             if (match != null) {
                 selectedOrder = match;
-                binding.etRelatedOrder.setText("Pedido #" + match.getOrderId() + " — " + CurrencyUtils.format(match.getTotal()) + " (" + match.getDate() + ")");
+                binding.etRelatedOrder.setText("Pedido #" + match.getOrderId() + " (" + match.getDate() + ")");
                 validateForm();
             } else {
-                Toast.makeText(getContext(), "Ese código no corresponde a ninguno de tus pedidos", Toast.LENGTH_LONG).show();
+                // Si el usuario es operativo (Agente, Admin, Superadmin), permitimos cualquier código
+                int roleId = SessionManager.getInstance(requireContext()).getRolId();
+                if (roleId >= 2) {
+                    binding.etRelatedOrder.setText(scannedValue);
+                    validateForm();
+                } else {
+                    Toast.makeText(getContext(), "Ese código no corresponde a ninguno de tus pedidos", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -285,7 +309,7 @@ public class CreateTicketFragment extends Fragment {
     }
 
     private void validateForm() {
-        boolean isOrderValid = selectedOrder != null;
+        boolean isOrderValid = (selectedOrder != null) || (binding.etRelatedOrder.getText() != null && binding.etRelatedOrder.getText().length() > 0);
         boolean isDescValid = binding.etDescription.getText() != null && binding.etDescription.getText().length() > 5;
 
         binding.btnSubmitTicket.setEnabled(isOrderValid && isDescValid);

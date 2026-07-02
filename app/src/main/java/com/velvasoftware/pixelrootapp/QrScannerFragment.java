@@ -1,13 +1,18 @@
 package com.velvasoftware.pixelrootapp;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -30,6 +35,16 @@ public class QrScannerFragment extends Fragment {
     private FragmentQrScannerBinding binding;
     private boolean isConfirming = false;
     private boolean modeReturnResult = false;
+
+    private final ActivityResultLauncher<String> cameraPermissionRequest =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    binding.barcodeScanner.resume();
+                } else {
+                    Toast.makeText(getContext(), "Permiso de cámara necesario para escanear QR", Toast.LENGTH_LONG).show();
+                    Navigation.findNavController(requireView()).navigateUp();
+                }
+            });
 
     public QrScannerFragment() {}
 
@@ -56,6 +71,16 @@ public class QrScannerFragment extends Fragment {
         binding.btnCancelScan.setOnClickListener(v -> 
             Navigation.findNavController(v).navigateUp()
         );
+
+        checkCameraPermission();
+    }
+
+    private void checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            binding.barcodeScanner.resume();
+        } else {
+            cameraPermissionRequest.launch(Manifest.permission.CAMERA);
+        }
     }
 
     private void setupScanner() {
@@ -72,7 +97,7 @@ public class QrScannerFragment extends Fragment {
                         getParentFragmentManager().setFragmentResult("qr_scan_request", bundle);
                         Navigation.findNavController(binding.getRoot()).navigateUp();
                     } else {
-                        // Modo acción: Confirmar pedido directamente (Rol Agente)
+                        // Modo acción: Confirmar pedido directamente (Roles operativos)
                         isConfirming = true;
                         binding.barcodeScanner.pause();
                         confirmarPedido(scannedCode);
@@ -95,7 +120,7 @@ public class QrScannerFragment extends Fragment {
                         if (binding == null) return;
                         
                         if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
-                            Toast.makeText(getContext(), "¡PEDIDO CONFIRMADO CON ÉXITO!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "¡PEDIDO COMPLETADO CON ÉXITO!", Toast.LENGTH_LONG).show();
                             Navigation.findNavController(binding.getRoot()).navigateUp();
                         } else {
                             String errorMsg;
@@ -104,10 +129,10 @@ public class QrScannerFragment extends Fragment {
                                     errorMsg = "Código de pedido no encontrado";
                                     break;
                                 case 403:
-                                    errorMsg = "No tienes permisos de agente";
+                                    errorMsg = "No tienes permisos operativos";
                                     break;
                                 default:
-                                    errorMsg = "Error al confirmar: " + response.code();
+                                    errorMsg = "Error al completar: " + response.code();
                                     break;
                             }
                             
@@ -130,7 +155,9 @@ public class QrScannerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        binding.barcodeScanner.resume();
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            binding.barcodeScanner.resume();
+        }
     }
 
     @Override

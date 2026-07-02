@@ -128,8 +128,8 @@ public class HomeFragment extends Fragment {
             itemBinding.txtPrice.setText(CurrencyUtils.format(data.getPrice()));
             itemBinding.txtRating.setText(data.getRating());
 
-            // Agentes no pueden comprar
-            if (userRoleId == 2) {
+            // Roles operativos (Agente, Admin, SuperAdmin) no pueden comprar
+            if (userRoleId >= 2) {
                 itemBinding.btnAddCartHome.setVisibility(View.GONE);
             }
 

@@ -12,14 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:zxing_viewfinder_laser="@color/verde_claro_pixel"
-        app:zxing_viewfinder_mask="#CC000000" />
+        app:zxing_viewfinder_mask="#AA000000" />
 
-    <!-- Overlay Square to guide the user -->
-    <View
+    <!-- Overlay Square with border -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/viewFinder"
         android:layout_width="260dp"
         android:layout_height="260dp"
-        android:background="@drawable/bg_card_gaming"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/verde_claro_pixel"
+        app:strokeWidth="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
