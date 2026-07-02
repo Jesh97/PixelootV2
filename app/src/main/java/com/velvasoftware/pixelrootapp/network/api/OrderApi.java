@@ -3,7 +3,6 @@ package com.velvasoftware.pixelrootapp.network.api;
 import com.velvasoftware.pixelrootapp.models.Order;
 import com.velvasoftware.pixelrootapp.network.request.AgentConfirmRequest;
 import com.velvasoftware.pixelrootapp.network.request.ConfirmOrderRequest;
-import com.velvasoftware.pixelrootapp.network.request.AgentConfirmRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 
 import java.util.List;
@@ -36,8 +35,4 @@ public interface OrderApi {
     // GET /api/pedidos/{id}/seguimiento
     @GET("pedidos/{id}/seguimiento")
     Call<ApiResponse<Order>> getOrderTracking(@Path("id") int orderId);
-
-    // NUEVO: El agente confirma el pedido leyendo el QR (codigo_pedido)
-    @POST("pedidos/confirmar_agente")
-    Call<ApiResponse<Void>> confirmarPedidoAgente(@Body AgentConfirmRequest request);
 }
