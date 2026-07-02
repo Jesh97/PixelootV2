@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand & App -->
+    <string name="app_name">Pixel Root</string>
+    <string name="copyright">© 2026 Velva Software. Peru.</string>
+
+    <!-- Login Screen -->
+    <string name="login_welcome_back">Welcome back!</string>
+    <string name="login_gaming_universe">Access your Gaming Universe</string>
+    <string name="login_email_or_username_label">EMAIL OR USERNAME</string>
+    <string name="login_email_or_username_hint">Enter your email</string>
+    <string name="login_password_label">PASSWORD</string>
+    <string name="login_password_hint">Enter your password</string>
+    <string name="login_remember_me">Remember me</string>
+    <string name="login_forgot_password">Forgot your password?</string>
+    <string name="login_sign_in_btn">SIGN IN</string>
+    <string name="login_new_to_pixel_root">New to Pixel Root? Sign up →</string>
+    <string name="login_create_account_link">Create account</string>
+
+    <!-- Register Screen -->
+    <string name="register_title">Create Account</string>
+    <string name="register_subtitle">Join your Gaming Universe</string>
+    <string name="register_first_name_label">FIRST NAME</string>
+    <string name="register_first_name_hint">Enter your first name</string>
+    <string name="register_last_name_label">LAST NAME</string>
+    <string name="register_last_name_hint">Enter your last name</string>
+    <string name="register_email_label">EMAIL ADDRESS</string>
+    <string name="register_email_hint">Enter your email address</string>
+    <string name="register_phone_label">PHONE</string>
+    <string name="register_phone_hint">Enter your phone number</string>
+    <string name="register_password_label">PASSWORD</string>
+    <string name="register_create_password_hint">Create a secure password</string>
+    <string name="register_confirm_password_label">CONFIRM PASSWORD</string>
+    <string name="register_confirm_password_hint">Confirm your password</string>
+    <string name="register_agree_terms_link">I agree to the Terms and Conditions.</string>
+    <string name="register_agree_privacy_link">I agree to the Privacy Policy.</string>
+    <string name="register_create_account_btn">SIGN UP</string>
+    <string name="register_already_have_account">Already have an account?</string>
+    <string name="register_sign_in_link">Already have an account? Sign in →</string>
+
+    <!-- Forgot Password Screen -->
+    <string name="forgot_password_title">Recover Password</string>
+    <string name="forgot_password_subtitle">Enter your email to receive a verification code</string>
+    <string name="forgot_password_send_btn">SEND CODE</string>
+    <string name="forgot_password_back_to_login">← Back to Sign In</string>
+
+    <!-- Reset Password Screen -->
+    <string name="reset_password_title">New Password</string>
+    <string name="reset_password_subtitle">Create a new access password for your account</string>
+    <string name="reset_password_new_label">NEW PASSWORD</string>
+    <string name="reset_password_new_hint">Enter your new password</string>
+    <string name="reset_password_confirm_label">CONFIRM PASSWORD</string>
+    <string name="reset_password_confirm_hint">Repeat your new password</string>
+    <string name="reset_password_update_btn">UPDATE PASSWORD</string>
+
+    <!-- Verification Screen -->
+    <string name="verification_title">Verify Account</string>
+    <string name="verification_subtitle">We sent a code to your email</string>
+    <string name="verification_code_label">VERIFICATION CODE</string>
+    <string name="verification_code_hint">000000</string>
+    <string name="verification_verify_btn">VERIFY NOW</string>
+    <string name="verification_resend">Didn\'t receive the code? Resend</string>
+
+    <!-- Home -->
+    <string name="home_title_popular">POPULAR GAMES</string>
+    <string name="home_title_recommended">RECOMMENDED FOR YOU</string>
+    <string name="home_title_offers">SPECIAL OFFERS</string>
+    <string name="home_browse">EXPLORE</string>
+    <string name="home_search_hint">Search games...</string>
+    <string name="flash_sale">FLASH SALE</string>
+    <string name="flash_sale_desc">Up to 70% off today only</string>
+
+    <!-- Footer -->
+    <string name="footer_team_link">Development Team</string>
+    <string name="footer_about_link">About Pixel Root</string>
+    <string name="footer_contact_link">Contact Us</string>
+    <string name="footer_help_link">Help Center</string>
+
+    <!-- Cart Screen -->
+    <string name="cart_title">My Cart</string>
+    <string name="cart_proceed_btn">PROCEED TO CHECKOUT</string>
+    <string name="cart_order_total">Order Total</string>
+    <string name="cart_promo_label">PROMO CODE</string>
+    <string name="cart_promo_hint">Enter code</string>
+    <string name="cart_promo_apply">APPLY</string>
+
+    <!-- Catalog & Search Screen -->
+    <string name="catalog_title">Game Catalog</string>
+    <string name="catalog_search_hint">Results for...</string>
+    <string name="catalog_filter_action_rpg">Action RPG</string>
+    <string name="catalog_filter_clear">↺ Clear</string>
+    <string name="catalog_sort_label">Sort:</string>
+    <string name="catalog_sort_popular">POPULAR</string>
+    <string name="catalog_sort_recent">RECENT</string>
+    <string name="catalog_results_count">%1$d results found</string>
+    <string name="catalog_all_categories">All</string>
+    <string name="product_new_badge">NEW</string>
+    <string name="search_input_hint">Search games or platforms...</string>
+    <string name="search_empty_start">Type a name to search</string>
+    <string name="search_no_results">No matches found</string>
+
+    <!-- Checkout Screen -->
+    <string name="checkout_title">Checkout</string>
+    <string name="checkout_order_summary">ORDER SUMMARY</string>
+    <string name="checkout_subtotal">Subtotal</string>
+    <string name="checkout_descuento">Discount</string>
+    <string name="checkout_pay_now">Pay Now</string>
+    <string name="checkout_payment_method">PAYMENT METHOD</string>
+    <string name="checkout_ssl_label">SSL Encrypted</string>
+    <string name="checkout_credit_debit">CREDIT / DEBIT CARD</string>
+
+    <!-- Confirmation Screen -->
+    <string name="order_success_title">Order Placed!</string>
+    <string name="order_success_desc">Your purchase has been confirmed. Check the details in your email</string>
+    <string name="order_back_home">BACK TO HOME</string>
+    <string name="order_download_pdf">DOWNLOAD PDF RECEIPT</string>
+
+    <!-- My Orders Screen -->
+    <string name="orders_title">My Orders</string>
+    <string name="order_detail_title">Order Detail</string>
+    <string name="order_completed">COMPLETED</string>
+    <string name="order_number_label">Order #%s</string>
+    <string name="order_date_label">Placed on %s</string>
+    <string name="order_view_detail">VIEW DETAIL</string>
+    <string name="order_download_receipt">DOWNLOAD RECEIPT</string>
+
+    <!-- Product -->
+    <string name="product_list_title">Our Products</string>
+    <string name="product_new_label">NEW</string>
+    <string name="product_rating_count">%s reviews</string>
+    <string name="product_by_label">by %s</string>
+    <string name="product_edition_label">EDITION</string>
+    <string name="product_edition_standard">Standard</string>
+    <string name="product_edition_deluxe">Deluxe</string>
+    <string name="product_quantity_label">QUANTITY</string>
+    <string name="product_category_videojuegos">Video Games</string>
+    <string name="product_search_hint">Search games...</string>
+
+    <!-- Support & Incidents -->
+    <string name="tickets_title">Support Center</string>
+    <string name="tickets_list_active">ACTIVE TICKETS</string>
+    <string name="tickets_btn_create">NEW ISSUE</string>
+    <string name="create_ticket_title">Report Issue</string>
+    <string name="create_ticket_subtitle">Tell us what happened with your gaming order</string>
+    <string name="create_ticket_submit">SEND TICKET</string>
+    <string name="create_ticket_type_label">ISSUE TYPE</string>
+    <string name="create_ticket_order_label">ORDER NUMBER</string>
+    <string name="create_ticket_desc_label">DESCRIPTION</string>
+    <string name="create_ticket_desc_hint">Describe the problem here...</string>
+    <string name="ticket_qr_scan_btn">SCAN PRODUCT QR</string>
+    <string name="incidence_tech_support">Technical Support</string>
+    <string name="incidence_help_desc">We\'re here to help you with your orders</string>
+    <string name="incidence_how_to_report">How to report a problem?</string>
+    <string name="incidence_step1_desc">Scan your product\'s QR code or enter your order code</string>
+    <string name="incidence_step2_desc">Describe what happened in detail and attach photos if needed</string>
+    <string name="incidence_step3_desc">Get a response from our team in less than 24 hours</string>
+    <string name="incidence_create_btn">CREATE NEW ISSUE</string>
+    <string name="incidence_view_tickets_btn">VIEW MY TICKETS</string>
+    <string name="ticket_detail_timeline">TIMELINE</string>
+    <string name="ticket_detail_chat">SUPPORT CHAT</string>
+    <string name="ticket_reopen">REOPEN TICKET</string>
+    <string name="ticket_number_label">Ticket #%s</string>
+    <string name="ticket_status_open">OPEN</string>
+    <string name="ticket_details_label">ISSUE DETAILS</string>
+    <string name="refund_resolved">Ticket Resolved!</string>
+
+    <!-- Chat -->
+    <string name="chat_support_title">Support Chat</string>
+    <string name="chat_status_online">Online</string>
+    <string name="chat_input_hint">Type your message...</string>
+
+    <!-- QR Scanner -->
+    <string name="qr_scanner_instructions">Focus the QR code inside the frame</string>
+    <string name="qr_scanner_back">BACK</string>
+
+    <!-- Profile -->
+    <string name="profile_edit_btn">EDIT PROFILE</string>
+    <string name="profile_label_email">Email</string>
+    <string name="profile_label_phone">Phone</string>
+    <string name="profile_label_location">Location</string>
+    <string name="menu_logout_btn">LOG OUT</string>
+
+    <!-- Branches & Maps -->
+    <string name="menu_branches">Branches</string>
+    <string name="maps_title">Branch Map</string>
+    <string name="maps_open_status">● OPEN</string>
+    <string name="maps_directions_btn">GET DIRECTIONS</string>
+    <string name="branch_search_hint">Search branch</string>
+    <string name="branch_list_tab">LIST</string>
+    <string name="branch_map_tab">MAP</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_my_account">MY ACCOUNT</string>
+    <string name="settings_edit_profile">Edit Profile</string>
+    <string name="settings_saved_addresses">Saved Addresses</string>
+    <string name="settings_payment_methods">Payment Methods</string>
+    <string name="settings_wallet">WALLET</string>
+    <string name="settings_pixel_credits">Pixel Root Credits</string>
+    <string name="settings_preferences">PREFERENCES</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_location">Location</string>
+    <string name="settings_language_es">Idioma: Español</string>
+    <string name="settings_language_en">Language: English</string>
+
+    <!-- Drawer Menu -->
+    <string name="menu_home">Home</string>
+    <string name="menu_catalog">Catalog</string>
+    <string name="menu_orders">My Orders</string>
+    <string name="menu_tickets">My Tickets</string>
+    <string name="menu_profile">My Profile</string>
+    <string name="menu_about">About</string>
+
+    <!-- About Us -->
+    <string name="about_us_velva">About Velva</string>
+    <string name="timeline_title">Timeline</string>
+    <string name="about_velva_desc">We are Velva, a passionate university development team dedicated to creating innovative digital experiences. Pixel Root is the result of our commitment to taking gaming to the next level in Peru.</string>
+    <string name="about_pixelroot_title">Pixel Root</string>
+    <string name="about_pixelroot_desc">Pixel Root is Peru\'s leading video game online store. Our mission is to connect gamers with the best titles, hardware, and accessories, offering fast, secure service with the best technology.</string>
+    <string name="about_our_branches">OUR BRANCHES</string>
+    <string name="about_our_products">OUR PRODUCTS</string>
+    <string name="about_dev_team">Development Team</string>
+
+    <!-- General -->
+    <string name="option_confirm">CONFIRM</string>
+    <string name="option_cancel">CANCEL</string>
+    <string name="option_acept_btn">ACCEPT</string>
+    <string name="option_cancel_btn">CANCEL</string>
+    <string name="loading">Loading...</string>
+    <string name="error_connection">Connection error</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="payment_title">Payment Details</string>
+    <string name="payment_card_number">CARD NUMBER</string>
+    <string name="payment_card_name">CARDHOLDER NAME</string>
+    <string name="payment_expiry_date">EXPIRATION DATE</string>
+    <string name="payment_cvv">CVV / CVC</string>
+    <string name="payment_save_card">Save for future purchases</string>
+    <string name="payment_billing_details">BILLING DETAILS</string>
+    <string name="payment_email_label">EMAIL ADDRESS</string>
+    <string name="payment_confirm_btn">CONFIRM PAYMENT</string>
+    <string name="filter_title">Filters</string>
+    <string name="filter_clear_all">↺ Clear all</string>
+    <string name="filter_sort_by">SORT BY</string>
+    <string name="filter_popularity">Popularity</string>
+    <string name="ticket_attachments">ATTACHMENTS</string>
+    <string name="logout_confirm_msg">Do you want to log out?</string>
+    <string name="product_reviews_label">REVIEWS</string>
+    <string name="product_description_label">DESCRIPTION</string>
+    <string name="product_loading_description">Loading description...</string>
+    <string name="product_avg_rating">Average rating</string>
+    <string name="product_add_to_cart_btn">ADD TO CART</string>
+    <string name="category_title">Categories</string>
+</resources>
