@@ -10,8 +10,4 @@ public class AgentConfirmRequest {
     public AgentConfirmRequest(String codigoPedido) {
         this.codigoPedido = codigoPedido;
     }
-
-    public String getCodigoPedido() {
-        return codigoPedido;
-    }
 }

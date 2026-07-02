@@ -3,7 +3,6 @@ package com.velvasoftware.pixelrootapp.network.api;
 import com.velvasoftware.pixelrootapp.models.Order;
 import com.velvasoftware.pixelrootapp.network.request.AgentConfirmRequest;
 import com.velvasoftware.pixelrootapp.network.request.ConfirmOrderRequest;
-import com.velvasoftware.pixelrootapp.network.request.AgentConfirmRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 
 import java.util.List;
