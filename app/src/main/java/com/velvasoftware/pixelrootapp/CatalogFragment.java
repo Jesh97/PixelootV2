@@ -48,6 +48,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.velvasoftware.pixelrootapp.network.request.AddToCartRequest;
+import com.velvasoftware.pixelrootapp.network.response.CartResponse;
+
 public class CatalogFragment extends Fragment {
 
     private FragmentCatalogBinding binding;
@@ -422,10 +425,43 @@ public class CatalogFragment extends Fragment {
                 args.putInt("productId", data.getId());
                 Navigation.findNavController(v).navigate(R.id.productDetailFragment, args);
             });
+
+            // NUEVO: el botón "+" agrega al carrito directo, sin navegar al detalle
+            itemBinding.btnAddCart.setOnClickListener(v -> agregarAlCarrito(data.getId()));
         });
 
         binding.rvCatalog.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.rvCatalog.setAdapter(gamesAdapter);
+    }
+
+    // =========================================================================
+// BACKEND: Agregar al carrito -> POST /api/carrito/productos (requiere login)
+// =========================================================================
+    private void agregarAlCarrito(int juegoId) {
+        AddToCartRequest body = new AddToCartRequest(juegoId, 1);
+
+        RetrofitClient.getCartApi().addProduct(body).enqueue(new Callback<ApiResponse<CartResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Response<ApiResponse<CartResponse>> response) {
+                if (getContext() == null) return;
+
+                if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
+                    Toast.makeText(getContext(), "Añadido al carrito", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(getContext(), "Inicia sesión para agregar al carrito", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "No se pudo agregar al carrito", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Throwable t) {
+                Log.e("CATALOG_API", "Fallo conexión carrito", t);
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Sin conexión con el servidor", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void loadGames() {
