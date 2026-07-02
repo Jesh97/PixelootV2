@@ -27,6 +27,7 @@ import retrofit2.Response;
 public class OrderDetailFragment extends Fragment {
 
     private FragmentOrderDetailBinding binding;
+    private Order currentOrder;
 
     public OrderDetailFragment() {}
 
@@ -47,10 +48,9 @@ public class OrderDetailFragment extends Fragment {
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
-        binding.btnDownloadInvoice.setOnClickListener(v -> {
-            // TODO: reutilizar la generación de PDF de OrderConfirmationFragment con estos mismos datos
-            Toast.makeText(getContext(), "Descarga de factura próximamente", Toast.LENGTH_SHORT).show();
-        });
+        binding.btnDownloadInvoice.setOnClickListener(v ->
+                com.velvasoftware.pixelrootapp.utils.OrderReceiptGenerator.generateAndOpen(this, currentOrder)
+        );
     }
 
     private void loadOrderDetail() {
@@ -69,6 +69,7 @@ public class OrderDetailFragment extends Fragment {
 
                 ApiResponse<Order> body = response.body();
                 if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    currentOrder = body.getData();
                     bindOrder(body.getData());
                 } else {
                     Log.e("ORDER_DETAIL_API", "Respuesta no exitosa: " + response.code());
