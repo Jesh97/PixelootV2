@@ -104,6 +104,7 @@
                     android:textSize="14sp" />
 
                 <ImageView
+                    android:id="@+id/btnAddCartHome"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:background="@drawable/bg_filter_button"
