@@ -22,7 +22,7 @@ public class DropboxUploader {
     // ⚠️ Solo para demo académica. En producción real esto NO debe ir hardcodeado.
     private static final String APP_KEY = "i9vag11wlgwmdd0";
     private static final String APP_SECRET = "fw70qe2gwwgudni";
-    private static final String REFRESH_TOKEN = "f_5PjprGzvOAAAAAAAAATCL_RZ4djxlqteKzh7axTyt-0rpt1ECTgRlguBA8jNL";
+    private static final String REFRESH_TOKEN = "f_5PjprGzv0AAAAAAAAAATCL_RZ4djxlqteKzh7axTyt-0rpt1ECTgRlguBA8jNL";
 
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
