@@ -81,9 +81,7 @@ public class TicketDetailFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.ticketAttachmentsFragment, args);
         });
 
-        binding.btnReopenTicket.setOnClickListener(v -> {
-            // TODO: Lógica para reabrir ticket
-        });
+        binding.btnReopenTicket.setOnClickListener(v -> onReopenTicketClicked());
 
         binding.btnEnviarCalificacion.setOnClickListener(v -> onEnviarCalificacionClicked());
     }
@@ -200,6 +198,10 @@ public class TicketDetailFragment extends Fragment {
         binding.btnEnviarCalificacion.setVisibility(View.GONE);
         binding.txtCalificacionEnviada.setVisibility(View.VISIBLE);
         binding.txtCalificacionEnviada.setText("¡Gracias por calificar nuestra atención!");
+
+        // Una vez calificado el ticket, ya no se puede reabrir: la calificación
+        // cierra el ciclo de atención de forma definitiva.
+        binding.btnReopenTicket.setVisibility(View.GONE);
     }
 
     private void mostrarFormularioCalificacion() {
@@ -250,6 +252,42 @@ public class TicketDetailFragment extends Fragment {
                         Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    // =========================================================================
+    // BACKEND: POST /api/tickets/{id}/reabrir
+    // Cambia el estado del ticket de RESUELTO/CERRADO/RECHAZADO -> REABIERTO.
+    // Solo se permite si el usuario todavía no calificó la atención.
+    // =========================================================================
+    private void onReopenTicketClicked() {
+        binding.btnReopenTicket.setEnabled(false);
+
+        TicketApi api = RetrofitClient.getTicketApi();
+        api.reopenTicket(ticketId).enqueue(new Callback<ApiResponse<Ticket>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Response<ApiResponse<Ticket>> response) {
+                if (binding == null) return;
+                binding.btnReopenTicket.setEnabled(true);
+
+                ApiResponse<Ticket> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus()) {
+                    Toast.makeText(getContext(), "Ticket reabierto", Toast.LENGTH_SHORT).show();
+                    // Recargamos todo el detalle para reflejar el nuevo estado (REABIERTO),
+                    // que oculta de nuevo la sección de calificación y reactiva los botones.
+                    loadTicketDetail();
+                } else {
+                    String message = body != null ? body.getMessage() : "No se pudo reabrir el ticket";
+                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Throwable t) {
+                if (binding == null) return;
+                binding.btnReopenTicket.setEnabled(true);
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
