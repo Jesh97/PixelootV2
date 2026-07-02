@@ -50,14 +50,18 @@ public class DropboxUploader {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
+            String responseText = response.body() != null ? response.body().string() : "(sin cuerpo)";
+
+            android.util.Log.e("DropboxUploader", "Respuesta refresh (" + response.code() + "): " + responseText);
+
             if (!response.isSuccessful()) {
-                throw new IOException("No se pudo renovar el token: " + response.code());
+                throw new IOException("No se pudo renovar el token: " + response.code() + " - " + responseText);
             }
-            String json = response.body().string();
+
             try {
-                return new JSONObject(json).getString("access_token");
+                return new JSONObject(responseText).getString("access_token");
             } catch (Exception e) {
-                throw new IOException("Respuesta inesperada al renovar token");
+                throw new IOException("Respuesta inesperada al renovar token: " + responseText);
             }
         }
     }
