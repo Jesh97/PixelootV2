@@ -67,11 +67,11 @@ public class OrdersFragment extends Fragment {
                     data.getItems() != null ? data.getItems().size() + " producto(s)" : "");
 
             if ("PENDIENTE".equals(data.getStatus())) {
-                itemBinding.txtOrderStatus.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.amarillo_oscuro_pixel)));
-                itemBinding.txtOrderStatus.setTextColor(getResources().getColor(R.color.amarillo_claro_pixel));
+                itemBinding.txtOrderStatus.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.verde_claro_pixel)));
+                itemBinding.txtOrderStatus.setTextColor(getResources().getColor(R.color.negro_oscuro));
             } else {
-                itemBinding.txtOrderStatus.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.verde_oscuro_pixel)));
-                itemBinding.txtOrderStatus.setTextColor(getResources().getColor(R.color.verde_claro_pixel));
+                itemBinding.txtOrderStatus.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blanco_intermedio)));
+                itemBinding.txtOrderStatus.setTextColor(getResources().getColor(R.color.negro_oscuro));
             }
 
             View.OnClickListener navigateAction = v -> {
