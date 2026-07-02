@@ -151,7 +151,10 @@ public class OrderConfirmationFragment extends Fragment {
         canvas.drawText("Estado: " + order.getStatus(), 20, y, paint);
 
         try {
-            Bitmap qrBitmap = generateQrCode("PEDIDO-" + order.getOrderId());
+            String contenidoQr = (order.getOrderCode() != null && !order.getOrderCode().isEmpty())
+                    ? order.getOrderCode()
+                    : "PEDIDO-" + order.getOrderId(); // respaldo por si el pedido es viejo y no tiene código
+            Bitmap qrBitmap = generateQrCode(contenidoQr);
             if (qrBitmap != null) {
                 canvas.drawBitmap(qrBitmap, 50, 300, paint);
             }
