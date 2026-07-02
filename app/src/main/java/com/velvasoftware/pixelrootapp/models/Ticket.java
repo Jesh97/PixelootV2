@@ -1,33 +1,61 @@
 package com.velvasoftware.pixelrootapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Ticket {
-    private String id;
-    private String subject;
-    private String status;
-    private String relatedOrderId;
+
+    @SerializedName("ticket_id")
+    private int id;
+
+    @SerializedName("titulo")
+    private String title;
+
+    @SerializedName("descripcion")
+    private String description;
+
+    @SerializedName("pedido_id")
+    private int orderId;
+
+    @SerializedName("tipo_ticket_id")
+    private int typeId;
+
+    @SerializedName("tipo_ticket")
+    private String typeName;
+
+    @SerializedName("prioridad_id")
+    private int priorityId;
+
+    @SerializedName("prioridad")
+    private String priorityName;
+
+    @SerializedName("estado_id")
+    private int statusId;
+
+    @SerializedName("estado")
+    private String statusName;
+
+    @SerializedName("creado_en")
     private String createdAt;
+
+    @SerializedName("actualizado_en")
+    private String updatedAt;
+
+    @SerializedName("cerrado_en")
+    private String closedAt;
 
     public Ticket() {}
 
-    public Ticket(String id, String subject, String status, String relatedOrderId) {
-        this.id = id;
-        this.subject = subject;
-        this.status = status;
-        this.relatedOrderId = relatedOrderId;
-    }
-
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-
-    public String getSubject() { return subject; }
-    public void setSubject(String subject) { this.subject = subject; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public String getRelatedOrderId() { return relatedOrderId; }
-    public void setRelatedOrderId(String relatedOrderId) { this.relatedOrderId = relatedOrderId; }
-
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public int getOrderId() { return orderId; }
+    public int getTypeId() { return typeId; }
+    public String getTypeName() { return typeName; }
+    public int getPriorityId() { return priorityId; }
+    public String getPriorityName() { return priorityName; }
+    public int getStatusId() { return statusId; }
+    public String getStatusName() { return statusName; }
     public String getCreatedAt() { return createdAt; }
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public String getUpdatedAt() { return updatedAt; }
+    public String getClosedAt() { return closedAt; }
 }

@@ -10,8 +10,12 @@ public class ConfirmOrderRequest {
     @SerializedName("metodo_pago")
     private final String metodoPago;
 
-    public ConfirmOrderRequest(Integer sucursalId, String metodoPago) {
+    @SerializedName("codigo_pedido")
+    private final String codigoPedido;
+
+    public ConfirmOrderRequest(Integer sucursalId, String metodoPago, String codigoPedido) {
         this.sucursalId = sucursalId;
         this.metodoPago = metodoPago;
+        this.codigoPedido = codigoPedido;
     }
 }

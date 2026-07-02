@@ -152,7 +152,8 @@ public class PaymentFragment extends Fragment {
 
         OrderApi api = RetrofitClient.getOrderApi();
         Integer sucursalIdToSend = sucursalId > 0 ? sucursalId : null;
-        api.confirmarPedido(new ConfirmOrderRequest(sucursalIdToSend, "TARJETA")).enqueue(new Callback<ApiResponse<Order>>() {
+        String codigoPedido = com.velvasoftware.pixelrootapp.utils.OrderCodeGenerator.generate();
+        api.confirmarPedido(new ConfirmOrderRequest(sucursalIdToSend, "TARJETA", codigoPedido)).enqueue(new Callback<ApiResponse<Order>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<Order>> call, @NonNull Response<ApiResponse<Order>> response) {
                 if (binding == null) return;

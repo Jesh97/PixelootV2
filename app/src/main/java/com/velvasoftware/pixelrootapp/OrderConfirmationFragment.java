@@ -1,25 +1,19 @@
 package com.velvasoftware.pixelrootapp;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -35,9 +29,9 @@ import com.velvasoftware.pixelrootapp.network.api.OrderApi;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,43 +42,7 @@ public class OrderConfirmationFragment extends Fragment {
     private FragmentOrderConfirmationBinding binding;
     private Order currentOrder;
 
-    // Guardamos el PDF ya generado en memoria hasta que el usuario elija dónde guardarlo
-    private byte[] pendingPdfBytes;
-    private String pendingFileName;
-
-    // Selector de ubicación (Android 10+, no requiere permiso de almacenamiento)
-    private ActivityResultLauncher<String> createDocumentLauncher;
-
-    // Permiso clásico, solo necesario en Android 9 o menor (API < 29)
-    private ActivityResultLauncher<String> requestPermissionLauncher;
-
     public OrderConfirmationFragment() {}
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Debe registrarse en onCreate (antes de que la vista exista), no en onViewCreated.
-        createDocumentLauncher = registerForActivityResult(
-                new ActivityResultContracts.CreateDocument("application/pdf"),
-                uri -> {
-                    if (uri != null && pendingPdfBytes != null) {
-                        writePdfToUri(uri);
-                    }
-                }
-        );
-
-        requestPermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                granted -> {
-                    if (granted) {
-                        launchDocumentPicker();
-                    } else {
-                        Toast.makeText(getContext(), "Se necesita el permiso para guardar el recibo", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,7 +66,7 @@ public class OrderConfirmationFragment extends Fragment {
     private void setupListeners(int orderId) {
         binding.btnDownloadReceipt.setOnClickListener(v -> {
             if (currentOrder != null) {
-                onDownloadRequested(currentOrder);
+                generateOrderPdf(currentOrder);
             } else {
                 Toast.makeText(getContext(), "Espera un momento, cargando el pedido...", Toast.LENGTH_SHORT).show();
             }
@@ -140,61 +98,7 @@ public class OrderConfirmationFragment extends Fragment {
         });
     }
 
-    // =========================================================================
-    // PASO 1: generar el PDF en memoria, luego decidir si pedir permiso o abrir el selector directo
-    // =========================================================================
-    private void onDownloadRequested(Order order) {
-        pendingFileName = "Recibo_" + order.getOrderId() + ".pdf";
-        pendingPdfBytes = buildOrderPdfBytes(order);
-
-        if (pendingPdfBytes == null) {
-            Toast.makeText(getContext(), "No se pudo generar el recibo", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Android 10+: el selector de archivos no necesita permiso de almacenamiento.
-            launchDocumentPicker();
-        } else {
-            // Android 9 o menor: sí se necesita el permiso clásico antes de escribir en disco.
-            boolean granted = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED;
-            if (granted) {
-                launchDocumentPicker();
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }
-        }
-    }
-
-    // =========================================================================
-    // PASO 2: abrir el selector nativo de "Guardar como..." para que el usuario elija ubicación
-    // =========================================================================
-    private void launchDocumentPicker() {
-        createDocumentLauncher.launch(pendingFileName);
-    }
-
-    // =========================================================================
-    // PASO 3: el usuario ya eligió dónde guardar (uri), escribimos el PDF ahí
-    // =========================================================================
-    private void writePdfToUri(Uri uri) {
-        try (OutputStream out = requireContext().getContentResolver().openOutputStream(uri)) {
-            if (out != null) {
-                out.write(pendingPdfBytes);
-                Toast.makeText(getContext(), "Recibo guardado correctamente", Toast.LENGTH_LONG).show();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Error al guardar el archivo", Toast.LENGTH_SHORT).show();
-        } finally {
-            pendingPdfBytes = null;
-        }
-    }
-
-    // =========================================================================
-    // Generación del PDF (misma lógica de antes, pero devuelve bytes en vez de escribir a disco)
-    // =========================================================================
-    private byte[] buildOrderPdfBytes(Order order) {
+    private void generateOrderPdf(Order order) {
         PdfDocument document = new PdfDocument();
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(300, 600, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
@@ -219,6 +123,10 @@ public class OrderConfirmationFragment extends Fragment {
         int y = 120;
         canvas.drawText("ID de Pedido: #" + order.getOrderId(), 20, y, paint);
         y += 25;
+        if (order.getOrderCode() != null && !order.getOrderCode().isEmpty()) {
+            canvas.drawText("Código: " + order.getOrderCode(), 20, y, paint);
+            y += 25;
+        }
 
         if (order.getItems() != null) {
             for (CartItem item : order.getItems()) {
@@ -257,16 +165,16 @@ public class OrderConfirmationFragment extends Fragment {
 
         document.finishPage(page);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        File filePath = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
+                "Recibo_" + order.getOrderId() + ".pdf");
         try {
-            document.writeTo(baos);
+            document.writeTo(new FileOutputStream(filePath));
+            Toast.makeText(getContext(), "Recibo guardado en: " + filePath.getAbsolutePath(), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
-            document.close();
-            return null;
+            Toast.makeText(getContext(), "Error al guardar el archivo", Toast.LENGTH_SHORT).show();
         }
         document.close();
-        return baos.toByteArray();
     }
 
     private Bitmap generateQrCode(String text) throws WriterException {

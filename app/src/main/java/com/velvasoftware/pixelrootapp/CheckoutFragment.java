@@ -327,8 +327,9 @@ public class CheckoutFragment extends Fragment {
         binding.btnPay.setEnabled(false);
 
         Integer sucursalIdToSend = selectedBranchId > 0 ? selectedBranchId : null;
+        String codigoPedido = com.velvasoftware.pixelrootapp.utils.OrderCodeGenerator.generate();
         OrderApi api = RetrofitClient.getOrderApi();
-        api.confirmarPedido(new ConfirmOrderRequest(sucursalIdToSend, "TARJETA")).enqueue(new Callback<ApiResponse<Order>>() {
+        api.confirmarPedido(new ConfirmOrderRequest(sucursalIdToSend, "TARJETA", codigoPedido)).enqueue(new Callback<ApiResponse<Order>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<Order>> call, @NonNull Response<ApiResponse<Order>> response) {
                 if (binding == null) return;
