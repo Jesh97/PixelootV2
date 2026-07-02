@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                     );
 
                     startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+                    Toast.makeText(LoginActivity.this, "Sesión iniciada", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     String message = body != null ? body.getMessage() : "Credenciales inválidas";

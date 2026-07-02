@@ -38,6 +38,7 @@ public class ProductDetailFragment extends Fragment {
     private int currentProductId = -1;
     private double basePrice = 0;
     private static final double DELUXE_SURCHARGE = 20.0;
+    private boolean preselectDeluxe = false;
 
     public ProductDetailFragment() {}
 
@@ -77,6 +78,13 @@ public class ProductDetailFragment extends Fragment {
     }
 
     private void setupEditionSelector() {
+        if (preselectDeluxe) {
+            binding.chipDeluxe.setChecked(true);
+            binding.chipStandard.setChecked(false);
+            styleEditionChip(binding.chipStandard);
+            styleEditionChip(binding.chipDeluxe);
+        }
+
         binding.cgEditions.setOnCheckedStateChangeListener((group, checkedIds) -> {
             styleEditionChip(binding.chipStandard);
             styleEditionChip(binding.chipDeluxe);
@@ -105,13 +113,14 @@ public class ProductDetailFragment extends Fragment {
         int quantity = Integer.parseInt(binding.txtQuantity.getText().toString());
         double unitPrice = currentUnitPrice();
 
-        binding.txtPriceLarge.setText(String.format("$%.2f", unitPrice));
-        binding.txtTotalBottom.setText(String.format("$%.2f", unitPrice * quantity));
+        binding.txtPriceLarge.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(unitPrice));
+        binding.txtTotalBottom.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(unitPrice * quantity));
     }
 
     private void loadProductDetails() {
         int productId = getArguments() != null ? getArguments().getInt("productId") : -1;
         currentProductId = productId;
+        preselectDeluxe = "DELUXE".equals(getArguments() != null ? getArguments().getString("edition") : null);
 
         if (productId <= 0) {
             binding.txtDescriptionDetail.setText("No se encontró el juego.");

@@ -1,10 +1,6 @@
 package com.velvasoftware.pixelrootapp;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +20,11 @@ import com.velvasoftware.pixelrootapp.databinding.ItemCategoryHomeBinding;
 import com.velvasoftware.pixelrootapp.databinding.ItemGameCardBinding;
 import com.velvasoftware.pixelrootapp.models.Category;
 import com.velvasoftware.pixelrootapp.models.Product;
+import com.velvasoftware.pixelrootapp.network.api.CatalogApi;
 import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
-import com.velvasoftware.pixelrootapp.network.response.GamesPageResponse;
 import com.velvasoftware.pixelrootapp.ui.common.GenericAdapter;
+import com.velvasoftware.pixelrootapp.utils.CurrencyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,20 +32,22 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import com.velvasoftware.pixelrootapp.network.request.AddToCartRequest;
-import com.velvasoftware.pixelrootapp.network.response.CartResponse;
 
 public class HomeFragment extends Fragment {
 
-    private static final String TAG = "HomeFragment";
     private FragmentHomeBinding binding;
 
-    // Copia completa de los juegos populares, para poder restaurarla cuando se borra la búsqueda
-    private final List<Product> allPopularGames = new ArrayList<>();
+    private GenericAdapter<ItemCategoryHomeBinding, Category> categoriesAdapter;
+    private GenericAdapter<ItemGameCardBinding, Product> popularGamesAdapter;
 
-    // Debounce del buscador
-    private final Handler searchHandler = new Handler(Looper.getMainLooper());
-    private Runnable searchRunnable;
+    private final List<Category> categories = new ArrayList<>();
+    /** Todos los juegos populares tal como vienen de la API, sin filtrar. */
+    private final List<Product> allPopularGames = new ArrayList<>();
+    /** Lo que realmente se muestra (filtrado por categoría si hay alguna elegida). */
+    private final List<Product> popularGames = new ArrayList<>();
+
+    private int selectedCategoryId = 0; // 0 = ninguna categoría elegida (mostrar todos)
+    private static final double DELUXE_SURCHARGE = 20.0; // debe coincidir con ProductDetailFragment
 
     public HomeFragment() {}
 
@@ -66,47 +65,62 @@ public class HomeFragment extends Fragment {
         setupPopularGames();
         setupOffersCarousel();
         setupFooter();
-        setupSearch();
     }
 
-    // =========================================================================
-    // BACKEND: Juegos Populares -> GET /api/juegos/populares
-    // =========================================================================
-    private void setupPopularGames() {
-        binding.rvPopularGames.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+    // ================= CATEGORÍAS (Explorar) =================
 
-        RetrofitClient.getCatalogApi().getPopularProducts().enqueue(new Callback<ApiResponse<List<Product>>>() {
+    private void setupCategories() {
+        categoriesAdapter = new GenericAdapter<>(categories, ItemCategoryHomeBinding::inflate, (itemBinding, data) -> {
+            itemBinding.txtCategoryName.setText(data.getName());
+            styleCategoryItem(itemBinding, data.getId() == selectedCategoryId);
+
+            itemBinding.getRoot().setOnClickListener(v -> {
+                // Tocar la misma categoría otra vez la deselecciona (vuelve a mostrar todos).
+                selectedCategoryId = (data.getId() == selectedCategoryId) ? 0 : data.getId();
+                categoriesAdapter.notifyDataSetChanged();
+                applyPopularGamesFilter();
+            });
+        });
+
+        binding.rvCategories.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        binding.rvCategories.setAdapter(categoriesAdapter);
+
+        CatalogApi api = RetrofitClient.getCatalogApi();
+        api.getCategories().enqueue(new Callback<ApiResponse<List<Category>>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Response<ApiResponse<List<Product>>> response) {
-                if (!isAdded() || binding == null) return;
+            public void onResponse(@NonNull Call<ApiResponse<List<Category>>> call, @NonNull Response<ApiResponse<List<Category>>> response) {
+                if (binding == null) return;
 
-                if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
-                    List<Product> games = response.body().getData();
-                    if (games == null) games = new ArrayList<>();
-                    setPopularGamesAsMaster(games);
+                ApiResponse<List<Category>> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    categories.clear();
+                    categories.addAll(body.getData());
+                    categoriesAdapter.notifyDataSetChanged();
                 } else {
-                    Log.e(TAG, "Error respuesta populares: " + response.code());
-                    Toast.makeText(getContext(), "No se pudieron cargar los juegos populares", Toast.LENGTH_SHORT).show();
+                    Log.e("HOME_API", "No se pudieron cargar categorías: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {
-                Log.e(TAG, "Fallo conexión populares", t);
-                if (isAdded() && getContext() != null) {
-                    Toast.makeText(getContext(), "Sin conexión con el servidor", Toast.LENGTH_SHORT).show();
-                }
+            public void onFailure(@NonNull Call<ApiResponse<List<Category>>> call, @NonNull Throwable t) {
+                Log.e("HOME_API", "Fallo al cargar categorías", t);
             }
         });
     }
 
-    private void bindPopularGames(List<Product> games) {
-        if (binding == null) return;
+    private void styleCategoryItem(ItemCategoryHomeBinding itemBinding, boolean selected) {
+        itemBinding.viewCategoryBg.setBackgroundResource(selected ? R.drawable.bg_filter_button : R.drawable.bg_card_gaming);
+        itemBinding.imgCategoryIcon.setColorFilter(getResources().getColor(selected ? R.color.negro_oscuro : R.color.verde_claro_pixel));
+        itemBinding.txtCategoryName.setTextColor(getResources().getColor(selected ? R.color.verde_claro_pixel : R.color.blanco_intermedio));
+    }
 
-        binding.rvPopularGames.setAdapter(new GenericAdapter<ItemGameCardBinding, Product>(games, ItemGameCardBinding::inflate, (itemBinding, data) -> {
+    // ================= JUEGOS POPULARES =================
+
+    private void setupPopularGames() {
+        popularGamesAdapter = new GenericAdapter<>(popularGames, ItemGameCardBinding::inflate, (itemBinding, data) -> {
             itemBinding.txtGameTitle.setText(data.getTitle());
             itemBinding.txtCategory.setText(data.getCategory() != null ? data.getCategory() : "");
-            itemBinding.txtPrice.setText(String.format("$%.2f", data.getPrice()));
+            itemBinding.txtPrice.setText(CurrencyUtils.format(data.getPrice()));
             itemBinding.txtRating.setText(data.getRating());
 
             itemBinding.getRoot().setOnClickListener(v -> {
@@ -114,145 +128,91 @@ public class HomeFragment extends Fragment {
                 args.putInt("productId", data.getId());
                 Navigation.findNavController(v).navigate(R.id.productDetailFragment, args);
             });
+        });
 
-            // NUEVO: el botón "+" del carrito agrega directo, sin navegar al detalle
-            itemBinding.btnAddCartHome.setOnClickListener(v -> agregarAlCarrito(data.getId()));
-        }));
-    }
+        binding.rvPopularGames.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        binding.rvPopularGames.setAdapter(popularGamesAdapter);
 
-    // =========================================================================
-// BACKEND: Agregar al carrito -> POST /api/carrito/productos (requiere login)
-// =========================================================================
-    private void agregarAlCarrito(int juegoId) {
-        AddToCartRequest body = new AddToCartRequest(juegoId, 1);
-
-        RetrofitClient.getCartApi().addProduct(body).enqueue(new Callback<ApiResponse<CartResponse>>() {
+        CatalogApi api = RetrofitClient.getCatalogApi();
+        api.getPopularProducts().enqueue(new Callback<ApiResponse<List<Product>>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Response<ApiResponse<CartResponse>> response) {
-                if (!isAdded() || getContext() == null) return;
+            public void onResponse(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Response<ApiResponse<List<Product>>> response) {
+                if (binding == null) return;
 
-                if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
-                    Toast.makeText(getContext(), "Añadido al carrito", Toast.LENGTH_SHORT).show();
-                } else if (response.code() == 401) {
-                    Toast.makeText(getContext(), "Inicia sesión para agregar al carrito", Toast.LENGTH_SHORT).show();
+                ApiResponse<List<Product>> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    allPopularGames.clear();
+                    allPopularGames.addAll(body.getData());
+                    applyPopularGamesFilter();
                 } else {
-                    Toast.makeText(getContext(), "No se pudo agregar al carrito", Toast.LENGTH_SHORT).show();
+                    Log.e("HOME_API", "No se pudieron cargar juegos populares: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Throwable t) {
-                Log.e(TAG, "Fallo conexión carrito", t);
-                if (isAdded() && getContext() != null) {
-                    Toast.makeText(getContext(), "Sin conexión con el servidor", Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {
+                Log.e("HOME_API", "Fallo al cargar juegos populares", t);
+                if (binding != null) {
+                    Toast.makeText(getContext(), "No se pudieron cargar los juegos populares", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-    // Guarda la copia "maestra" SOLO cuando viene de la carga inicial de populares
-    private void setPopularGamesAsMaster(List<Product> games) {
-        allPopularGames.clear();
-        allPopularGames.addAll(games);
-        bindPopularGames(games);
+
+    /** Filtra allPopularGames por selectedCategoryId (0 = sin filtro) y refresca la grilla. */
+    private void applyPopularGamesFilter() {
+        popularGames.clear();
+        for (Product p : allPopularGames) {
+            if (selectedCategoryId == 0 || p.getCategoriaId() == selectedCategoryId) {
+                popularGames.add(p);
+            }
+        }
+        popularGamesAdapter.notifyDataSetChanged();
     }
 
-    // =========================================================================
-    // BACKEND: Buscador -> GET /api/juegos/buscar?q=texto&pagina=1
-    // =========================================================================
-    private void setupSearch() {
-        binding.etSearchHome.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
-
-                String query = s.toString().trim();
-
-                if (query.isEmpty()) {
-                    bindPopularGames(allPopularGames);
-                    return;
-                }
-
-                // Debounce: espera 400ms sin que el usuario escriba antes de llamar al API
-                searchRunnable = () -> buscarJuegos(query);
-                searchHandler.postDelayed(searchRunnable, 400);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-    }
-
-    private void buscarJuegos(String query) {
-        RetrofitClient.getCatalogApi().buscarJuegos(query, 1).enqueue(new Callback<ApiResponse<GamesPageResponse>>() {
-            @Override
-            public void onResponse(@NonNull Call<ApiResponse<GamesPageResponse>> call, @NonNull Response<ApiResponse<GamesPageResponse>> response) {
-                if (!isAdded() || binding == null) return;
-
-                if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
-                    GamesPageResponse page = response.body().getData();
-                    List<Product> resultados = (page != null && page.getJuegos() != null) ? page.getJuegos() : new ArrayList<>();
-                    bindPopularGames(resultados);
-                } else {
-                    Log.e(TAG, "Error búsqueda: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ApiResponse<GamesPageResponse>> call, @NonNull Throwable t) {
-                Log.e(TAG, "Fallo conexión búsqueda", t);
-            }
-        });
-    }
-
-    // =========================================================================
-    // BACKEND: Carrusel de Ofertas -> aún no existe endpoint en velva-api, queda mock
-    // =========================================================================
     private void setupOffersCarousel() {
-        List<String> offers = new ArrayList<>();
-        offers.add("FLASH SALE: -70%");
-        offers.add("WEEKEND DEAL: -50%");
+        List<Product> deluxeGames = new ArrayList<>();
+
+        GenericAdapter<ItemBannerPromoBinding, Product> adapter = new GenericAdapter<>(deluxeGames, ItemBannerPromoBinding::inflate, (itemBinding, data) -> {
+            itemBinding.txtGameTitle.setText(data.getTitle());
+            itemBinding.txtOldPrice.setText(CurrencyUtils.format(data.getPrice()));
+            itemBinding.txtPrice.setText(CurrencyUtils.format(data.getPrice() + DELUXE_SURCHARGE));
+
+            View.OnClickListener openDeluxeDetail = v -> {
+                Bundle args = new Bundle();
+                args.putInt("productId", data.getId());
+                args.putString("edition", "DELUXE");
+                Navigation.findNavController(v).navigate(R.id.productDetailFragment, args);
+            };
+
+            itemBinding.getRoot().setOnClickListener(openDeluxeDetail);
+            itemBinding.btnAddToCartBanner.setOnClickListener(openDeluxeDetail); // el recargo Deluxe se confirma en el detalle, no se agrega a ciegas desde aquí
+        });
 
         binding.rvOffersCarousel.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-        binding.rvOffersCarousel.setAdapter(new GenericAdapter<ItemBannerPromoBinding, String>(offers, ItemBannerPromoBinding::inflate, (itemBinding, data) -> {
-            itemBinding.txtGameTitle.setText(data);
-        }));
-    }
+        binding.rvOffersCarousel.setAdapter(adapter);
 
-    // =========================================================================
-    // BACKEND: Categorías Home -> GET /api/categorias/
-    // =========================================================================
-    private void setupCategories() {
-        binding.rvCategories.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-
-        RetrofitClient.getCatalogApi().getCategories().enqueue(new Callback<ApiResponse<List<Category>>>() {
+        CatalogApi api = RetrofitClient.getCatalogApi();
+        api.getFeaturedProducts().enqueue(new Callback<ApiResponse<List<Product>>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<List<Category>>> call, @NonNull Response<ApiResponse<List<Category>>> response) {
-                if (!isAdded() || binding == null) return;
+            public void onResponse(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Response<ApiResponse<List<Product>>> response) {
+                if (binding == null) return;
 
-                if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
-                    List<Category> categories = response.body().getData();
-                    if (categories == null) categories = new ArrayList<>();
-                    bindCategories(categories);
+                ApiResponse<List<Product>> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus() && body.getData() != null) {
+                    deluxeGames.clear();
+                    deluxeGames.addAll(body.getData());
+                    adapter.notifyDataSetChanged();
                 } else {
-                    Log.e(TAG, "Error respuesta categorías: " + response.code());
+                    Log.e("HOME_API", "No se pudieron cargar ediciones deluxe: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<Category>>> call, @NonNull Throwable t) {
-                Log.e(TAG, "Fallo conexión categorías", t);
+            public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {
+                Log.e("HOME_API", "Fallo al cargar ediciones deluxe", t);
             }
         });
-    }
-
-    private void bindCategories(List<Category> categories) {
-        if (binding == null) return;
-        binding.rvCategories.setAdapter(new GenericAdapter<ItemCategoryHomeBinding, Category>(categories, ItemCategoryHomeBinding::inflate, (itemBinding, data) -> {
-            itemBinding.txtCategoryName.setText(data.getName());
-        }));
     }
 
     private void setupFooter() {
@@ -263,7 +223,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
         binding = null;
     }
 }

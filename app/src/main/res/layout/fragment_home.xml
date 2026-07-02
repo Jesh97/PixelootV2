@@ -176,13 +176,13 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_game_card" />
 
-        <!-- Special Offers Section -->
+        <!-- Deluxe Editions Section -->
         <TextView
             style="@style/AppText.Subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:text="@string/home_title_offers"
+            android:text="EDICIONES DELUXE"
             android:letterSpacing="0.1"/>
         <View android:layout_width="60dp" android:layout_height="2dp" android:background="@color/verde_claro_pixel" android:layout_marginTop="4dp"/>
 

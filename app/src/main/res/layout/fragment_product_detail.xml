@@ -189,7 +189,7 @@
                         style="@style/AppText.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="$59.99"
+                        android:text="S/ 59.99"
                         android:textSize="36sp" />
 
                     <TextView
@@ -200,7 +200,7 @@
                         android:layout_toEndOf="@id/txtPriceLarge"
                         android:layout_marginStart="@dimen/spacing_medium"
                         android:layout_alignBaseline="@id/txtPriceLarge"
-                        android:text="$79.99" />
+                        android:text="S/ 79.99" />
 
                     <!-- Edition Selection -->
                     <TextView
@@ -300,7 +300,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignBottom="@id/containerQuantity"
-                        android:text="$59.99"
+                        android:text="S/ 59.99"
                         android:textColor="@color/verde_claro_pixel"
                         android:textSize="24sp" />
 
