@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +18,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.velvasoftware.pixelrootapp.databinding.FragmentSearchBinding;
 import com.velvasoftware.pixelrootapp.databinding.ItemSearchResultBinding;
+import com.velvasoftware.pixelrootapp.models.Product;
+import com.velvasoftware.pixelrootapp.network.api.RetrofitClient;
+import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
+import com.velvasoftware.pixelrootapp.network.response.GamesPageResponse;
 import com.velvasoftware.pixelrootapp.ui.common.GenericAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SearchFragment extends Fragment {
+
+    private static final String TAG = "SearchFragment";
 
     private FragmentSearchBinding binding;
     private final Handler searchHandler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
-    private GenericAdapter<ItemSearchResultBinding, String> adapter;
-    private List<String> resultsList = new ArrayList<>();
-    private final List<String> allItems = new ArrayList<>();
+    private GenericAdapter<ItemSearchResultBinding, Product> adapter;
+    private final List<Product> resultsList = new ArrayList<>();
 
     public SearchFragment() {}
 
@@ -43,36 +53,21 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setupMockData();
         setupRecyclerView();
         setupSearchLogic();
 
         binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
     }
 
-    private void setupMockData() {
-        allItems.add("Elden Ring");
-        allItems.add("Cyberpunk 2077");
-        allItems.add("God of War Ragnarök");
-        allItems.add("Stray");
-        allItems.add("Halo Infinite");
-    }
-
     private void setupRecyclerView() {
         adapter = new GenericAdapter<>(resultsList, ItemSearchResultBinding::inflate, (itemBinding, data) -> {
-            // =========================================================================
-            // BLOQUE DE VINCULACIÓN DE DATOS (PARA DESARROLLADOR BACKEND)
-            // =========================================================================
-            // Mapeo de controles del item_search_result.xml
-            
-            // 1. Nombre del resultado (Juego, Consola, etc.)
-            itemBinding.txtResultName.setText(data);
-            
-            // 2. Acción al seleccionar resultado
+            itemBinding.txtResultName.setText(data.getTitle());
+
             itemBinding.getRoot().setOnClickListener(v -> {
-                // Navegar al detalle o aplicar búsqueda
+                Bundle args = new Bundle();
+                args.putInt("productId", data.getId());
+                Navigation.findNavController(v).navigate(R.id.productDetailFragment, args);
             });
-            // =========================================================================
         });
 
         binding.rvSearchResults.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -102,17 +97,35 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    // =========================================================================
+    // BACKEND: Buscador -> GET /api/juegos/buscar?q=texto&pagina=1
+    // =========================================================================
     private void performSearch(String query) {
-        List<String> results = new ArrayList<>();
-        for (String item : allItems) {
-            if (item.toLowerCase().contains(query.toLowerCase())) {
-                results.add(item);
+        RetrofitClient.getCatalogApi().buscarJuegos(query, 1).enqueue(new Callback<ApiResponse<GamesPageResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<GamesPageResponse>> call, @NonNull Response<ApiResponse<GamesPageResponse>> response) {
+                if (binding == null) return;
+
+                ApiResponse<GamesPageResponse> body = response.body();
+                if (response.isSuccessful() && body != null && body.isStatus()
+                        && body.getData() != null && body.getData().getJuegos() != null) {
+                    updateResults(body.getData().getJuegos());
+                } else {
+                    Log.e(TAG, "Error búsqueda: " + response.code());
+                    updateResults(new ArrayList<>());
+                }
             }
-        }
-        updateResults(results);
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<GamesPageResponse>> call, @NonNull Throwable t) {
+                Log.e(TAG, "Fallo conexión búsqueda", t);
+                if (binding != null) updateResults(new ArrayList<>());
+            }
+        });
     }
 
-    private void updateResults(List<String> newList) {
+    private void updateResults(List<Product> newList) {
+        if (binding == null) return;
         resultsList.clear();
         resultsList.addAll(newList);
         adapter.notifyDataSetChanged();
