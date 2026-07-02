@@ -129,8 +129,16 @@ public class DropboxUploader {
                     String rawLink = json.getString("url");
 
                     // Convierte el link de vista previa en uno de descarga directa
-                    String directLink = rawLink.replace("?dl=0", "?raw=1");
-
+                    String directLink;
+                    if (rawLink.contains("?dl=0")) {
+                        directLink = rawLink.replace("?dl=0", "?raw=1");
+                    } else if (rawLink.contains("&dl=0")) {
+                        directLink = rawLink.replace("&dl=0", "&raw=1");
+                    } else if (rawLink.contains("dl=0")) {
+                        directLink = rawLink.replace("dl=0", "raw=1");
+                    } else {
+                        directLink = rawLink + (rawLink.contains("?") ? "&raw=1" : "?raw=1");
+                    }
                     callback.onSuccess(directLink);
                 }
 
