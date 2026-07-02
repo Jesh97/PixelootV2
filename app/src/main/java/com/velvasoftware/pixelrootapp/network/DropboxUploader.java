@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,8 +19,10 @@ import okhttp3.Response;
 
 public class DropboxUploader {
 
-
-    private static final String ACCESS_TOKEN = "sl.u.AGk4SPfkm5qZUqZQdjHyXX66z0SDcqhttAoDIRoXRwIihs4zRhoW-_a80bk4oqIiinhNYDU2kw3TF9mnQzsAV8OLzJv82UheFio0Xb4bpvhSV07DxGJ9e8Rh-wsELX4ufbbkPSEeB4uua6EYmMvOBfRUnkhRsjdDpIyluyKv2hD1rmv_frjnbKaL0C9Ba500oS5KYqtR6UDVB6PcMd0zRTv_hm_yBLlp-rR_APK3IA6chKkebrhjlBvAIiV9ZmuMdzFi6NJwaJ9yVOPyh1eVCtuKdCSjWqosYKxzKpBbAVBtdj4M1rsVpFMBtmEEGEckIqnH9sGM3NxVsYtBVUr7yzWnQxAUag8QUaVNSHLB6rmkaIjNynGVJlwSib8H3SZAFuX1EiSMeB5DPOLWE-SAv5G16fHV2OUTPz96hCzvOtOSk20ZcAbz_AwTvn2F1K8RZIdD3kaTNyQUfNy9yJMS9WRHie40y1zxUQxCTZmrUoK6ygxETZ-qtDMnffKfHNZOu_miuaWrdPcnwcSOwYuZyd22ajxaB5DZxVHVyw5hThq6NxlCDpah0T6fyQGv0qBDCj3htq4EQIx2LnEgrcQQRe1t5Te9eGJvZxQf10ho5jyO-ydYz1155iRJ2cOPDtfdmtWaqiyBEgzzXHUXviPBcKJBMwXRwmKCR8qUtvQy2Zck1ts3UbcWZvzUAGg04XPA66GY3ewKcAQleoBwkX6auz7W3xj6KG-hkM2rkU0y-1csSfPJ2QFO809E9GAyuhIvcfgvRav4Xbw1ASnb-OwTUaSP4NAcaQK925dev-gpzFANsXF4YBg2mLGzmNEjsf5_Wjx_34-ZhWWSqSb2a8GKohzMzUx7DVseveSFidqcm_ws9qXG6L2QO_lgXdoOt3fFafeF99EFXYdZomZZ9jELoofXe3AAnEk6k7tE978BzZhA_-aVcoGWFGlz-YllCnk4cNaZbvuGOMDZ7CVFF8IU2PLgvJ3Vqe2jY4CQRMsPXMTtSkJjR7wVFo_RFAYLuO1bWE2YSyaNqCvJK3lkH5otVPiROFrNA6-FcdqkyTRkGa_AQYuyByl5HzV4msM-m5TPLHvvbXfb_WRdpLu60b-lR92YAwFjt0Eo8CUSexRuqCDFsYQvyFHgBso5gEgW9CWQJOhM7n9s67veRNZ4mC8Ii9ogM1zFxlDe9YWeG87CE0Fk7gSK6igMMNsEayBhDsblBEJh29A0OlG0H3p_hNjmabQdkM6wv83d0ywNfg1YBiLZJQnxrODz06NSrz8mz_I-5As9fEH-wgeupqQLavlZ7T1NC9WFHwX42Ng15hpvx3KBoOXPt7pv9gBqPJdXvJwNiXPsP7fFj2tvDoD4GzFHP60tamToxixpBd8H-Krv-YF3Bze0EGRZMCsUow6NiXgYaSGVLSrDlsZ35LwtU7ZJ84tjvwyu4lsL02kk-f1v8sZc7HySRVyl_TPfSCufjsmvcpl4LoCNs6GrSbvIsF4iEjb6qMJDcwRDhWFmkxaQXaqqqQ";
+    // ⚠️ Solo para demo académica. En producción real esto NO debe ir hardcodeado.
+    private static final String APP_KEY = "i9vag11wlgwmdd0";
+    private static final String APP_SECRET = "fw70qe2gwwgudni";
+    private static final String REFRESH_TOKEN = "f_5PjprGzvOAAAAAAAAATCL_RZ4djxlqteKzh7axTyt-0rpt1ECTgRlguBA8jNL";
 
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
@@ -32,10 +35,40 @@ public class DropboxUploader {
         void onError(String message);
     }
 
+    /** Pide un access_token nuevo usando el refresh_token (este último nunca expira). */
+    private static String getFreshAccessToken() throws IOException {
+        RequestBody body = new FormBody.Builder()
+                .add("grant_type", "refresh_token")
+                .add("refresh_token", REFRESH_TOKEN)
+                .add("client_id", APP_KEY)
+                .add("client_secret", APP_SECRET)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://api.dropboxapi.com/oauth2/token")
+                .post(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("No se pudo renovar el token: " + response.code());
+            }
+            String json = response.body().string();
+            try {
+                return new JSONObject(json).getString("access_token");
+            } catch (Exception e) {
+                throw new IOException("Respuesta inesperada al renovar token");
+            }
+        }
+    }
+
     /** Sube un archivo desde una Uri local (galería) a Dropbox y devuelve el link compartido. */
     public static void uploadFile(Context context, Uri fileUri, UploadCallback callback) {
         new Thread(() -> {
             try {
+                // 0. Renovar el access_token antes de cualquier operación
+                String accessToken = getFreshAccessToken();
+
                 InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
                 if (inputStream == null) {
                     callback.onError("No se pudo leer el archivo");
@@ -54,11 +87,11 @@ public class DropboxUploader {
                 dropboxArg.put("mode", "add");
                 dropboxArg.put("autorename", true);
 
-                RequestBody body = RequestBody.create(fileBytes, MediaType.parse("application/octet-stream"));
+                RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), fileBytes);
 
                 Request uploadRequest = new Request.Builder()
                         .url("https://content.dropboxapi.com/2/files/upload")
-                        .addHeader("Authorization", "Bearer " + ACCESS_TOKEN)
+                        .addHeader("Authorization", "Bearer " + accessToken)
                         .addHeader("Dropbox-API-Arg", dropboxArg.toString())
                         .addHeader("Content-Type", "application/octet-stream")
                         .post(body)
@@ -77,9 +110,9 @@ public class DropboxUploader {
 
                 Request shareRequest = new Request.Builder()
                         .url("https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings")
-                        .addHeader("Authorization", "Bearer " + ACCESS_TOKEN)
+                        .addHeader("Authorization", "Bearer " + accessToken)
                         .addHeader("Content-Type", "application/json")
-                        .post(RequestBody.create(sharedArg.toString(), MediaType.parse("application/json")))
+                        .post(RequestBody.create(MediaType.parse("application/json"), sharedArg.toString()))
                         .build();
 
                 try (Response shareResponse = client.newCall(shareRequest).execute()) {
