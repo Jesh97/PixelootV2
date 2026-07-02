@@ -46,8 +46,23 @@ public class PaymentFragment extends Fragment {
         sucursalId = getArguments() != null ? getArguments().getInt("sucursalId", -1) : -1;
 
         setupExpiryDateFormatting();
+        setupCardBrandSelector();
 
         binding.btnConfirmPayment.setOnClickListener(v -> confirmarPedido());
+    }
+
+    private void setupCardBrandSelector() {
+        binding.cgCardBrand.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            styleBrandChip(binding.chipVisa);
+            styleBrandChip(binding.chipMastercard);
+        });
+    }
+
+    private void styleBrandChip(com.google.android.material.chip.Chip chip) {
+        boolean checked = chip.isChecked();
+        chip.setChipBackgroundColorResource(checked ? R.color.verde_claro_pixel : R.color.negro_oscuro);
+        chip.setTextColor(getResources().getColor(checked ? R.color.negro_oscuro : R.color.blanco_claro));
+        chip.setChipStrokeColorResource(checked ? R.color.verde_claro_pixel : R.color.verde_oscuro_pixel);
     }
 
     /**

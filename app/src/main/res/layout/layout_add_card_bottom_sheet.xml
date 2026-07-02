@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/app_dialog_background"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agregar Tarjeta"
+        android:textColor="@color/verde_claro_pixel"
+        android:textSize="22sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Solo guardamos los últimos 4 dígitos, nunca el número completo ni el CVV"
+        android:textColor="@color/blanco_intermedio"
+        android:textSize="12sp"/>
+
+    <!-- Número de tarjeta -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="NÚMERO DE TARJETA"
+        android:textColor="@color/blanco_intermedio"
+        android:textSize="11sp"
+        android:textStyle="bold"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="false">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNewCardNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="XXXX XXXX XXXX XXXX"
+            android:textColorHint="@color/blanco_intermedio"
+            android:inputType="number"
+            android:maxLength="19"
+            android:textColor="@color/blanco_claro"
+            android:textSize="15sp"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Titular -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="NOMBRE DEL TITULAR"
+        android:textColor="@color/blanco_intermedio"
+        android:textSize="11sp"
+        android:textStyle="bold"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="false">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNewCardHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre como aparece en la tarjeta"
+            android:textColorHint="@color/blanco_intermedio"
+            android:inputType="textPersonName|textCapWords"
+            android:textColor="@color/blanco_claro"
+            android:textSize="15sp"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Expiración -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="FECHA DE EXPIRACIÓN"
+        android:textColor="@color/blanco_intermedio"
+        android:textSize="11sp"
+        android:textStyle="bold"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="false">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNewCardExpiry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="MM/YY"
+            android:textColorHint="@color/blanco_intermedio"
+            android:inputType="number"
+            android:digits="0123456789/"
+            android:maxLength="5"
+            android:textColor="@color/blanco_claro"
+            android:textSize="15sp"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Marca -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="MARCA DE LA TARJETA"
+        android:textColor="@color/blanco_intermedio"
+        android:textSize="11sp"
+        android:textStyle="bold"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cgNewCardBrand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipNewCardVisa"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Visa"
+            app:checkedIconVisible="false"
+            app:chipStrokeColor="@color/verde_claro_pixel"
+            android:textColor="@color/negro_oscuro"
+            app:chipBackgroundColor="@color/verde_claro_pixel"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipNewCardMastercard"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mastercard"
+            app:checkedIconVisible="false"
+            app:chipStrokeColor="@color/verde_oscuro_pixel"
+            android:textColor="@color/blanco_claro"
+            app:chipBackgroundColor="@color/negro_oscuro"/>
+    </com.google.android.material.chip.ChipGroup>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSaveNewCard"
+        style="@style/AppButton.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="24dp"
+        android:text="Guardar Tarjeta"/>
+
+</LinearLayout>

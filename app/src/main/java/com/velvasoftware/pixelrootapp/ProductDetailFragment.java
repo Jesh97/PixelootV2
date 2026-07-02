@@ -77,7 +77,18 @@ public class ProductDetailFragment extends Fragment {
     }
 
     private void setupEditionSelector() {
-        binding.cgEditions.setOnCheckedStateChangeListener((group, checkedIds) -> updateDisplayedPrice());
+        binding.cgEditions.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            styleEditionChip(binding.chipStandard);
+            styleEditionChip(binding.chipDeluxe);
+            updateDisplayedPrice();
+        });
+    }
+
+    private void styleEditionChip(com.google.android.material.chip.Chip chip) {
+        boolean checked = chip.isChecked();
+        chip.setChipBackgroundColorResource(checked ? R.color.verde_claro_pixel : R.color.negro_oscuro);
+        chip.setTextColor(getResources().getColor(checked ? R.color.negro_oscuro : R.color.blanco_claro));
+        chip.setChipStrokeColorResource(checked ? R.color.verde_claro_pixel : R.color.verde_oscuro_pixel);
     }
 
     private boolean isDeluxeSelected() {

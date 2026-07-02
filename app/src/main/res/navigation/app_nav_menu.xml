@@ -117,6 +117,11 @@
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" />
     <fragment
+        android:id="@+id/paymentMethodsFragment"
+        android:name="com.velvasoftware.pixelrootapp.PaymentMethodsFragment"
+        android:label="fragment_payment_methods"
+        tools:layout="@layout/fragment_payment_methods" />
+    <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.velvasoftware.pixelrootapp.EditProfileFragment"
         android:label="fragment_edit_profile"
