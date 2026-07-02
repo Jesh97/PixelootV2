@@ -49,25 +49,25 @@ public class ProductListFragment extends Fragment {
             // BLOQUE DE VINCULACIÓN DE DATOS (PARA DESARROLLADOR BACKEND)
             // =========================================================================
             // Mapeo de controles del item_game_card_vertical.xml
-            
+
             // 1. Título del juego
             itemBinding.txtGameTitle.setText(data.getTitle());
-            
+
             // 2. Categoría / Género
             itemBinding.txtCategory.setText(data.getCategory());
-            
+
             // 3. Precio formateado
-            itemBinding.txtPrice.setText("$" + data.getPrice());
-            
+            itemBinding.txtPrice.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(data.getPrice()));
+
             // 4. Calificación (Estrellas)
             itemBinding.txtRating.setText(data.getRating());
-            
+
             // 5. Plataforma (PS5, Xbox, PC, etc.)
             itemBinding.txtPlatform.setText("PS5"); // Placeholder, añadir a modelo si es necesario
-            
+
             // 6. Imagen del producto (Implementar Glide/Picasso)
             // Glide.with(getContext()).load(data.getImageUrl()).into(itemBinding.imgGame);
-            
+
             // 7. Navegación al detalle
             itemBinding.getRoot().setOnClickListener(v -> {
                 Bundle args = new Bundle();

@@ -209,7 +209,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:text="$12.50"
+                    android:text="S/ 12.50"
                     android:textColor="@color/verde_claro_pixel"
                     android:textStyle="bold" />
                 <ImageView

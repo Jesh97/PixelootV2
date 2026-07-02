@@ -62,7 +62,7 @@ public class OrdersFragment extends Fragment {
             itemBinding.txtOrderId.setText("Pedido #" + data.getOrderId());
             itemBinding.txtOrderDate.setText("Fecha: " + data.getDate());
             itemBinding.txtOrderStatus.setText(data.getStatus());
-            itemBinding.txtOrderTotal.setText(String.format("$%.2f", data.getTotal()));
+            itemBinding.txtOrderTotal.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(data.getTotal()));
             itemBinding.txtItemCount.setText(
                     data.getItems() != null ? data.getItems().size() + " producto(s)" : "");
 

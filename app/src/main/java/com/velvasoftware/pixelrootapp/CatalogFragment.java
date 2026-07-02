@@ -1,10 +1,6 @@
 package com.velvasoftware.pixelrootapp;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +44,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import com.velvasoftware.pixelrootapp.network.request.AddToCartRequest;
-import com.velvasoftware.pixelrootapp.network.response.CartResponse;
-
 public class CatalogFragment extends Fragment {
 
     private FragmentCatalogBinding binding;
@@ -76,11 +69,6 @@ public class CatalogFragment extends Fragment {
     private int minYear = 2015;
     private float minRating = 0f;
 
-    // ---- NUEVO: estado del buscador en vivo ----
-    private String searchQuery = "";
-    private final Handler searchHandler = new Handler(Looper.getMainLooper());
-    private Runnable searchRunnable;
-
     private enum SortMode { POPULAR, PRECIO_ASC, RECIENTE }
     private SortMode currentSort = SortMode.POPULAR;
 
@@ -96,48 +84,27 @@ public class CatalogFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Si venimos de Home tocando una categoría, la dejamos preseleccionada.
+        if (getArguments() != null && getArguments().containsKey("categoryId")) {
+            selectedCategoryId = getArguments().getInt("categoryId");
+        }
+
         setupCategoryTabs();
         setupGamesGrid();
         setupSortBar();
-        setupSearch(); // <-- NUEVO
 
         binding.btnClearAll.setOnClickListener(v -> clearFilters());
         binding.chipActiveFilter.setOnClickListener(v -> clearFilters());
 
         binding.btnOpenFiltersResults.setOnClickListener(v -> showFilterBottomSheet());
 
-        // MODIFICADO: antes navegaba al hacer click en TODO el EditText.
-        // Ahora solo el ícono de la lupa navega; escribir en el campo filtra en vivo.
-        binding.searchCatalogLayout.setStartIconOnClickListener(v ->
+        binding.etSearchCatalog.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.searchFragment)
         );
 
         loadCategories();
         loadPlatforms();
         loadGames();
-    }
-
-    // ================= BUSCADOR EN VIVO (NUEVO) =================
-
-    private void setupSearch() {
-        binding.etSearchCatalog.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
-
-                searchRunnable = () -> {
-                    searchQuery = s.toString().trim();
-                    applyFiltersAndSort();
-                };
-                searchHandler.postDelayed(searchRunnable, 400);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
     }
 
     // ================= CATEGORÍAS (pestañas rápidas) =================
@@ -182,6 +149,7 @@ public class CatalogFragment extends Fragment {
                     while (categoryTabs.size() > 1) categoryTabs.remove(1);
                     categoryTabs.addAll(body.getData());
                     tabsAdapter.notifyDataSetChanged();
+                    updateActiveFilterChip();
                     applyFiltersAndSort();
                 } else {
                     Log.e("CATALOG_API", "No se pudieron cargar categorías: " + response.code());
@@ -299,11 +267,13 @@ public class CatalogFragment extends Fragment {
         TextView btnResetFilters = view.findViewById(R.id.btnResetFilters);
         View btnApplyFilters = view.findViewById(R.id.btnApplyFilters);
 
+        // --- Ordenar por: sincroniza con el estado actual ---
         int sortChipIndex = currentSort == SortMode.POPULAR ? 0 : currentSort == SortMode.PRECIO_ASC ? 1 : 2;
         if (cgSort.getChildCount() > sortChipIndex) {
             ((Chip) cgSort.getChildAt(sortChipIndex)).setChecked(true);
         }
 
+        // --- Plataformas: chips dinámicos desde la API ---
         cgPlatforms.removeAllViews();
         for (Platform platform : platforms) {
             Chip chip = createFilterChip(platform.getName());
@@ -313,6 +283,7 @@ public class CatalogFragment extends Fragment {
             cgPlatforms.addView(chip);
         }
 
+        // --- Categorías: chips dinámicos desde la API (sin la opción "Todos") ---
         cgCategories.removeAllViews();
         for (Category category : categoryTabs) {
             if (category.getId() == 0) continue;
@@ -323,23 +294,27 @@ public class CatalogFragment extends Fragment {
             cgCategories.addView(chip);
         }
 
+        // --- Precio ---
         priceSlider.setValues(minPrice, maxPrice);
-        tvPriceRangeValue.setText("$" + (int) minPrice + " - $" + (int) maxPrice);
+        tvPriceRangeValue.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(minPrice) + " - " + com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(maxPrice));
         priceSlider.addOnChangeListener((slider, value, fromUser) -> {
             List<Float> values = slider.getValues();
-            tvPriceRangeValue.setText("$" + values.get(0).intValue() + " - $" + values.get(1).intValue());
+            tvPriceRangeValue.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(values.get(0)) + " - " + com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(values.get(1)));
         });
+        // El slider vive dentro de un NestedScrollView: sin esto, el scroll "roba" el gesto de arrastre.
         priceSlider.setOnTouchListener((v, event) -> {
             view.getParent().requestDisallowInterceptTouchEvent(true);
             return false;
         });
 
+        // --- Año ---
         yearSlider.setValue(minYear);
         yearSlider.setOnTouchListener((v, event) -> {
             view.getParent().requestDisallowInterceptTouchEvent(true);
             return false;
         });
 
+        // --- Rating mínimo ---
         ratingFilter.setRating(minRating);
 
         btnResetFilters.setOnClickListener(v -> {
@@ -348,31 +323,38 @@ public class CatalogFragment extends Fragment {
         });
 
         btnApplyFilters.setOnClickListener(v -> {
+            // Categorías seleccionadas en el sheet
             advancedCategoryIds.clear();
             for (int i = 0; i < cgCategories.getChildCount(); i++) {
                 Chip chip = (Chip) cgCategories.getChildAt(i);
                 if (chip.isChecked()) advancedCategoryIds.add((Integer) chip.getTag());
             }
+            // Si se eligió más de una categoría (o ninguna) en el sheet, la pestaña rápida pasa a "Todos"
             selectedCategoryId = advancedCategoryIds.size() == 1
                     ? advancedCategoryIds.iterator().next()
                     : 0;
 
+            // Plataformas seleccionadas
             selectedPlatformIds.clear();
             for (int i = 0; i < cgPlatforms.getChildCount(); i++) {
                 Chip chip = (Chip) cgPlatforms.getChildAt(i);
                 if (chip.isChecked()) selectedPlatformIds.add((Integer) chip.getTag());
             }
 
+            // Orden
             int checkedId = cgSort.getCheckedChipId();
             int index = cgSort.indexOfChild(view.findViewById(checkedId));
             currentSort = index == 1 ? SortMode.PRECIO_ASC : index == 2 ? SortMode.RECIENTE : SortMode.POPULAR;
 
+            // Precio
             List<Float> priceValues = priceSlider.getValues();
             minPrice = priceValues.get(0);
             maxPrice = priceValues.get(1);
 
+            // Año
             minYear = (int) yearSlider.getValue();
 
+            // Rating
             minRating = ratingFilter.getRating();
 
             tabsAdapter.notifyDataSetChanged();
@@ -396,6 +378,7 @@ public class CatalogFragment extends Fragment {
         chip.setTextColor(getResources().getColor(R.color.blanco_intermedio));
         chip.setChipStrokeColorResource(R.color.verde_oscuro_pixel);
         chip.setChipStrokeWidth(1.5f);
+        // Toggle explícito: no confiamos en el comportamiento por defecto del estilo del Chip.
         chip.setOnClickListener(v -> {
             chip.setChecked(!chip.isChecked());
             styleChip(chip);
@@ -417,57 +400,31 @@ public class CatalogFragment extends Fragment {
         gamesAdapter = new GenericAdapter<>(gameList, ItemGameCardVerticalBinding::inflate, (itemBinding, data) -> {
             itemBinding.txtGameTitle.setText(data.getTitle());
             itemBinding.txtCategory.setText(data.getCategory() != null ? data.getCategory() : "");
-            itemBinding.txtPrice.setText("$" + data.getPrice());
+            itemBinding.txtPrice.setText(com.velvasoftware.pixelrootapp.utils.CurrencyUtils.format(data.getPrice()));
             itemBinding.txtRating.setText(data.getRating());
+
+            // TODO: cuando se agregue una librería de imágenes (Glide/Coil), cargar data.getImageUrl()
 
             itemBinding.getRoot().setOnClickListener(v -> {
                 Bundle args = new Bundle();
                 args.putInt("productId", data.getId());
                 Navigation.findNavController(v).navigate(R.id.productDetailFragment, args);
             });
-
-            // NUEVO: el botón "+" agrega al carrito directo, sin navegar al detalle
-            itemBinding.btnAddCart.setOnClickListener(v -> agregarAlCarrito(data.getId()));
         });
 
         binding.rvCatalog.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.rvCatalog.setAdapter(gamesAdapter);
     }
 
-    // =========================================================================
-// BACKEND: Agregar al carrito -> POST /api/carrito/productos (requiere login)
-// =========================================================================
-    private void agregarAlCarrito(int juegoId) {
-        AddToCartRequest body = new AddToCartRequest(juegoId, 1);
-
-        RetrofitClient.getCartApi().addProduct(body).enqueue(new Callback<ApiResponse<CartResponse>>() {
-            @Override
-            public void onResponse(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Response<ApiResponse<CartResponse>> response) {
-                if (getContext() == null) return;
-
-                if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
-                    Toast.makeText(getContext(), "Añadido al carrito", Toast.LENGTH_SHORT).show();
-                } else if (response.code() == 401) {
-                    Toast.makeText(getContext(), "Inicia sesión para agregar al carrito", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "No se pudo agregar al carrito", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ApiResponse<CartResponse>> call, @NonNull Throwable t) {
-                Log.e("CATALOG_API", "Fallo conexión carrito", t);
-                if (getContext() != null) {
-                    Toast.makeText(getContext(), "Sin conexión con el servidor", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     private void loadGames() {
         loadGamesPage(1);
     }
 
+    /**
+     * El backend pagina en bloques fijos de 20 (por_pagina=20, no configurable desde query).
+     * Para traer TODOS los juegos, pedimos página por página hasta cubrir total_paginas
+     * y vamos acumulando en allGames; el filtrado/orden se hace en el cliente.
+     */
     private void loadGamesPage(int pagina) {
         CatalogApi api = RetrofitClient.getCatalogApi();
 
@@ -509,7 +466,7 @@ public class CatalogFragment extends Fragment {
         });
     }
 
-    /** Aplica todos los filtros activos (rápido + avanzado + búsqueda) y el orden actual sobre allGames -> gameList. */
+    /** Aplica todos los filtros activos (rápido + avanzado) y el orden actual sobre allGames -> gameList. */
     private void applyFiltersAndSort() {
         List<Product> filtered = new ArrayList<>();
         for (Product p : allGames) {
@@ -519,8 +476,6 @@ public class CatalogFragment extends Fragment {
             if (p.getPrice() < minPrice || p.getPrice() > maxPrice) continue;
             if (p.getRatingValue() < minRating) continue;
             if (minYear > 2015 && !releaseYearAtLeast(p, minYear)) continue;
-            // NUEVO: filtro por texto de búsqueda
-            if (!searchQuery.isEmpty() && (p.getTitle() == null || !p.getTitle().toLowerCase().contains(searchQuery.toLowerCase()))) continue;
 
             p.setCategory(categoryNameFor(p.getCategoriaId()));
             filtered.add(p);
@@ -575,7 +530,6 @@ public class CatalogFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
         binding = null;
     }
 }

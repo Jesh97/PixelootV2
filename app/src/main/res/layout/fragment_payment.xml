@@ -176,9 +176,10 @@
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:text="Visa"
+                        app:checkedIconVisible="false"
                         app:chipStrokeColor="@color/verde_claro_pixel"
-                        android:textColor="@color/blanco_claro"
-                        app:chipBackgroundColor="@color/negro_oscuro"/>
+                        android:textColor="@color/negro_oscuro"
+                        app:chipBackgroundColor="@color/verde_claro_pixel"/>
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipMastercard"
@@ -186,8 +187,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mastercard"
-                        app:chipStrokeColor="@color/verde_claro_pixel"
-                        android:textColor="@color/blanco_claro"/>
+                        app:checkedIconVisible="false"
+                        app:chipStrokeColor="@color/verde_oscuro_pixel"
+                        android:textColor="@color/blanco_claro"
+                        app:chipBackgroundColor="@color/negro_oscuro"/>
                 </com.google.android.material.chip.ChipGroup>
 
                 <com.google.android.material.checkbox.MaterialCheckBox

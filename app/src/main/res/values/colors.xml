@@ -13,4 +13,7 @@
     <color name="verde_oscuro_pixel">#015D33</color>
     <color name="amarillo_claro_pixel">#A5E51A</color>
     <color name="amarillo_oscuro_pixel">#6B970C</color>
+
+    <!-- Color de acciones destructivas -->
+    <color name="rojo_error">#FF4C4C</color>
 </resources>

@@ -32,6 +32,7 @@ import com.velvasoftware.pixelrootapp.network.api.UserApi;
 import com.velvasoftware.pixelrootapp.network.request.ConfirmOrderRequest;
 import com.velvasoftware.pixelrootapp.network.response.ApiResponse;
 import com.velvasoftware.pixelrootapp.network.response.CartResponse;
+import com.velvasoftware.pixelrootapp.utils.CurrencyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +105,7 @@ public class CheckoutFragment extends Fragment {
 
                 TextView row = new TextView(requireContext());
                 row.setTextColor(getResources().getColor(R.color.blanco_claro));
-                row.setText(String.format("%dx %s — $%.2f", item.getQuantity(), item.getTitle(), item.getSubtotal()));
+                row.setText(item.getQuantity() + "x " + item.getTitle() + " — " + CurrencyUtils.format(item.getSubtotal()));
                 row.setPadding(0, 4, 0, 4);
                 binding.containerOrderItems.addView(row);
             }
@@ -120,10 +121,10 @@ public class CheckoutFragment extends Fragment {
         double igv = Math.round(cartSubtotal * 0.18 * 100) / 100.0;
         double total = cartSubtotal + igv;
 
-        binding.txtSubtotalValue.setText(String.format("$%.2f", cartSubtotal));
-        binding.txtTaxValue.setText(String.format("$%.2f", igv));
-        binding.txtTotalValue.setText(String.format("$%.2f", total));
-        binding.btnPay.setText(String.format("$%.2f", total));
+        binding.txtSubtotalValue.setText(CurrencyUtils.format(cartSubtotal));
+        binding.txtTaxValue.setText(CurrencyUtils.format(igv));
+        binding.txtTotalValue.setText(CurrencyUtils.format(total));
+        binding.btnPay.setText(CurrencyUtils.format(total));
     }
 
     private void loadBranches() {

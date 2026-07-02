@@ -41,9 +41,9 @@ public class SettingsFragment extends Fragment {
             Toast.makeText(getContext(), "Direcciones Guardadas - Próximamente", Toast.LENGTH_SHORT).show();
         });
 
-        binding.btnPaymentMethods.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Medios de Pago - Próximamente", Toast.LENGTH_SHORT).show();
-        });
+        binding.btnPaymentMethods.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.paymentMethodsFragment)
+        );
 
         binding.btnPixelCredits.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Detalle de Créditos - Próximamente", Toast.LENGTH_SHORT).show();
